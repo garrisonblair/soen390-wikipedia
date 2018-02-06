@@ -19,3 +19,6 @@ licenses:
       - 'android-sdk-license-.+'
       - 'google-gdk-license-.+'
 script: ./gradlew testDevDebug
+
+before_install:
+  - yes | sdkmanager "platforms;android-27"
