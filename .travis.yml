@@ -13,7 +13,8 @@ android:
     - android-27
 
 
-  licenses:
+
+licenses:
       - 'android-sdk-preview-license-.+'
       - 'android-sdk-license-.+'
       - 'google-gdk-license-.+'
