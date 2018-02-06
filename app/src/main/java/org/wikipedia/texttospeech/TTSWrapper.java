@@ -5,6 +5,8 @@ import android.content.Context;
 import android.os.Build;
 import android.speech.tts.TextToSpeech;
 
+
+
 /**
  * Created by Fred on 2018-02-05.
  * Abstraction on top of the Android TextToSpeech class.  Eliminates certain details and handles loading the Preferences.
@@ -14,6 +16,7 @@ import android.speech.tts.TextToSpeech;
 public class TTSWrapper {
 
     private static TTSWrapper instance;
+
 
     private TextToSpeech tts;
 
@@ -53,6 +56,10 @@ public class TTSWrapper {
 
     public void stop() {
         tts.stop();
+    }
+
+    public void setTTS(TextToSpeech tts) {
+        this.tts = tts;
     }
 
 }
