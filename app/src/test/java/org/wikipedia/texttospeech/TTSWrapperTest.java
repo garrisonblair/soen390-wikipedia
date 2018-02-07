@@ -43,6 +43,12 @@ public class TTSWrapperTest {
     @Test
     public void testSpeak() {
         ttsWrapper.speak("Test");
-        verify(tts).speak("Test", TextToSpeech.QUEUE_ADD, null,  "0");
+        verify(tts).speak(eq("Test"), eq(TextToSpeech.QUEUE_ADD), eq(null),  anyString());
+    }
+
+    @Test
+    public void testGetVoices() {
+        ttsWrapper.getVoices();
+        verify(tts).getVoices();
     }
 }
