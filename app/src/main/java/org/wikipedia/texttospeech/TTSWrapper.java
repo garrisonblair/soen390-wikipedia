@@ -4,7 +4,9 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.Voice;
 
+import java.util.Set;
 
 
 /**
@@ -62,4 +64,7 @@ public class TTSWrapper {
         this.tts = tts;
     }
 
+    public Set<Voice> getVoices() {
+        return tts.getVoices();
+    }
 }
