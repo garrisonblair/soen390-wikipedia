@@ -10,9 +10,9 @@ All documentation is kept on [our wiki](https://www.mediawiki.org/wiki/Wikimedia
 
 ### Conventions
 
-## Branch naming:
+#### Branch naming:
 camelCase
 
-## Resource file naming (@string, xml layouts etc.)
+#### Resource file naming (@string, xml layouts etc.)
 lowercase_and_underscores
 
