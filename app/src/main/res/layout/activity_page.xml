@@ -88,13 +88,13 @@
         </FrameLayout>
 
     </LinearLayout>
+
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/page_stop_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="visible"
-        android:layout_marginTop="60dp"
         android:layout_alignParentRight="true"
-        app:srcCompat="@mipmap/ic_stop_button"
-        />
+        android:layout_marginTop="60dp"
+        android:visibility="gone"
+        app:srcCompat="@mipmap/ic_stop_button" />
 </RelativeLayout>

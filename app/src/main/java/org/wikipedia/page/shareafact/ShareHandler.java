@@ -5,11 +5,13 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import org.apache.commons.lang3.StringUtils;
@@ -27,6 +29,7 @@ import org.wikipedia.onboarding.PrefsOnboardingStateMachine;
 import org.wikipedia.page.Namespace;
 import org.wikipedia.page.NoDimBottomSheetDialog;
 import org.wikipedia.page.Page;
+import org.wikipedia.page.PageActivity;
 import org.wikipedia.page.PageFragment;
 import org.wikipedia.page.PageProperties;
 import org.wikipedia.page.PageTitle;
@@ -182,6 +185,20 @@ public class ShareHandler {
             public boolean onMenuItemClick(MenuItem menuItem) {
                 fragment.getWebView().copyToClipboard();
                 showCopySnackbar();
+                leaveActionMode();
+                return true;
+            }
+        });
+        MenuItem toSpeechItem = menu.findItem(R.id.menu_text_to_speech);
+        toSpeechItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                FragmentActivity currentActivity = fragment.getActivity();
+                if (currentActivity instanceof PageActivity) {
+                    ImageButton stopButton = ((PageActivity) currentActivity).getStopButton();
+                    stopButton.setVisibility(View.VISIBLE);
+                }
+
                 leaveActionMode();
                 return true;
             }
