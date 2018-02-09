@@ -28,6 +28,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -98,6 +99,7 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
     @BindView(R.id.page_toolbar) Toolbar toolbar;
     @BindView(R.id.page_toolbar_button_search) ImageView searchButton;
     @BindView(R.id.page_toolbar_button_show_tabs) ImageView tabsButton;
+    @BindView(R.id.page_stop_button) ImageButton stopButton;
     @Nullable private Unbinder unbinder;
 
     private PageFragment pageFragment;
@@ -244,6 +246,11 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
     @OnClick(R.id.page_toolbar_button_show_tabs)
     public void onShowTabsButtonClicked() {
         pageFragment.enterTabMode(false);
+    }
+
+    @OnClick(R.id.page_stop_button)
+    public void onStopButtonClicked(){
+        stopButton.setVisibility(View.GONE);
     }
 
     private void finishActionMode() {
@@ -926,5 +933,9 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    public ImageButton getStopButton(){
+        return this.stopButton;
     }
 }
