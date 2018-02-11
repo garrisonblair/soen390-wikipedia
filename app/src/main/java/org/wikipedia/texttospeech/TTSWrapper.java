@@ -28,6 +28,8 @@ public class TTSWrapper {
     //Identifies requests to TTS instance
     private int requestCounter;
 
+    private boolean queueMode;
+
     private  TTSWrapper (Context context, TextToSpeech.OnInitListener listener) {
         contextID = context.toString();
         tts = new TextToSpeech(context, listener);
@@ -53,7 +55,13 @@ public class TTSWrapper {
     }
 
     public void speak(String text) {
-        tts.speak(text, TextToSpeech.QUEUE_ADD, null,"" + requestCounter++ );
+        int mode = TextToSpeech.QUEUE_FLUSH;
+
+        if(queueMode) {
+            mode = TextToSpeech.QUEUE_ADD;
+        }
+
+        tts.speak(text, mode, null,"" + requestCounter++ );
     }
 
     public void stop() {
