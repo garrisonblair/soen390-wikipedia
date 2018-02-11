@@ -15,7 +15,6 @@ import org.wikipedia.activity.BaseActivity;
 import org.wikipedia.theme.ThemeFittingRoomActivity;
 import org.wikipedia.util.ReleaseUtil;
 import org.wikipedia.util.StringUtil;
-import org.wikipedia.texttospeech.TTSSettingsActivity;
 
 import static org.apache.commons.lang3.StringUtils.defaultString;
 
