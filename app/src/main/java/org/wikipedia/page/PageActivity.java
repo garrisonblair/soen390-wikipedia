@@ -78,6 +78,11 @@ import butterknife.Unbinder;
 import static org.wikipedia.settings.Prefs.isLinkPreviewEnabled;
 import static org.wikipedia.util.UriUtil.visitInExternalBrowser;
 
+import android.speech.tts.TextToSpeech;
+
+import java.util.ArrayList;
+import java.util.Locale;
+
 public class PageActivity extends BaseActivity implements PageFragment.Callback,
         LinkPreviewDialog.Callback, SearchFragment.Callback, ThemeChooserDialog.Callback,
         WiktionaryDialog.Callback {
@@ -119,6 +124,8 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
             pageFragment.updateBookmarkAndMenuOptionsFromDao();
         }
     };
+
+    public TextToSpeech TTS;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -187,6 +194,8 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
             // then we must have been launched with an Intent, so... handle it!
             handleIntent(getIntent());
         }
+
+        initTTS();
     }
 
     @Override
@@ -938,4 +947,54 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
     public ImageButton getStopButton(){
         return this.stopButton;
     }
+
+    public void initTTS(){
+
+        //retrieve wiki language code, transfer it to high level language which Locale can recognize
+        String language = app.getAppLanguageCanonicalName(app.getAppOrSystemLanguageCode());
+
+        //both Tranditional Chinese and Simplified Chinese can be classified as Chinese
+        if(language.contains("Chinese")){
+            language = "Chinese";
+        }
+
+        //get Locale by passing the system language
+        final Locale setLang = getLocaleForTTS(language);
+
+        //initialize Text to speech object
+        TTS = new TextToSpeech(PageActivity.this, new TextToSpeech.OnInitListener(){
+            @Override
+            public void onInit(int status){
+                if(status==TextToSpeech.SUCCESS){
+                    //set TTS language to the stored Locale language
+                    TTS.setLanguage(setLang);
+                    Toast.makeText(app,"TTS Language is set to " + TTS.getLanguage().getDisplayLanguage(), Toast.LENGTH_LONG).show();
+                }else Toast.makeText(app,"Language is not supported by TTS engine", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    //find the Locale from the given language
+    public Locale getLocaleForTTS(String language){
+        Locale locale = Locale.getDefault();
+        boolean foundLanguage = false;
+        Locale[] locales = Locale.getAvailableLocales();
+
+        //loop untill the matched language found
+        for(Locale loc : locales){
+            if(loc.getDisplayLanguage().equals(language)){
+                locale = loc;
+                foundLanguage=true;
+                break;
+            }
+        }
+
+        //give the user feedback about why the TTS language is not the same as the page
+        if(!foundLanguage){
+            Toast.makeText(app,"Language has not been found. Default language will be applied.", Toast.LENGTH_LONG).show();
+
+        }
+        return locale;
+    }
+
 }
