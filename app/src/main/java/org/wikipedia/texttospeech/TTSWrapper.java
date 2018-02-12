@@ -4,7 +4,10 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 import android.speech.tts.Voice;
+
+import org.w3c.dom.Text;
 
 import java.util.Locale;
 import java.util.Set;
@@ -31,13 +34,14 @@ public class TTSWrapper {
 
     private boolean queueMode;
 
-    private  TTSWrapper (Context context, TextToSpeech.OnInitListener listener) {
+    private  TTSWrapper (Context context, UtteranceProgressListener listener) {
         contextID = context.toString();
-        tts = new TextToSpeech(context, listener);
+
+        this.instantiateTextToSpeech(context, listener);
         //TODO: Load Preferences
     }
 
-    public static TTSWrapper getInstance(Context context, TextToSpeech.OnInitListener listener) {
+    public static TTSWrapper getInstance(Context context, UtteranceProgressListener listener) {
 
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             return null;
@@ -50,7 +54,7 @@ public class TTSWrapper {
         // If requesting TTS from a different context, reinstantiate TTS
         if(!context.toString().equals(instance.contextID)) {
             instance.tts.shutdown();
-            instance.tts = new TextToSpeech(context, listener);
+            instance.instantiateTextToSpeech(context, listener);
         }
 
         return instance;
@@ -96,6 +100,21 @@ public class TTSWrapper {
 
     public void setTTS(TextToSpeech tts) {
         this.tts = tts;
+    }
+
+    private void instantiateTextToSpeech(Context context, UtteranceProgressListener listener) {
+        if (listener != null) {
+            tts = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
+                @Override
+                public void onInit(int status) {
+                    if (status != TextToSpeech.ERROR) {
+                        tts.setOnUtteranceProgressListener(listener);
+                    }
+                }
+            });
+        } else {
+            tts = new TextToSpeech(context, null);
+        }
     }
 
 }
