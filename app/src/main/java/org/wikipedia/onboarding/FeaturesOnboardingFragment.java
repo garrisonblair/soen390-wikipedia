@@ -111,8 +111,8 @@ public class FeaturesOnboardingFragment extends OnboardingFragment {
 
     private enum OnboardingPage implements EnumCode {
         PAGE_WELCOME(R.layout.inflate_features_onboarding_page_zero),
-        PAGE_EXPLORE(R.layout.inflate_initial_onboarding_page_one),
-        PAGE_READING_LISTS(R.layout.inflate_initial_onboarding_page_two),
+//        PAGE_EXPLORE(R.layout.inflate_initial_onboarding_page_one),
+//        PAGE_READING_LISTS(R.layout.inflate_initial_onboarding_page_two),
         PAGE_USAGE_DATA(R.layout.inflate_initial_onboarding_page_three);
 
         private static EnumCodeMap<OnboardingPage> MAP

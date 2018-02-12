@@ -17,7 +17,7 @@ public class FeaturesOnboardingActivity
 
     @Override public void onComplete() {
         setResult(RESULT_OK);
-        Prefs.setInitialOnboardingEnabled(false);
+        Prefs.setFeaturesOnboardingEnabled(false);
         finish();
     }
 
