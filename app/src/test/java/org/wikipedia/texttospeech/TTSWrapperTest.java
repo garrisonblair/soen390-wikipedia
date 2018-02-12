@@ -107,8 +107,6 @@ public class TTSWrapperTest {
         Assert.assertFalse(tts1 == tts2);
     }
 
-
-
     @Before
     public void before() throws Exception {
         this.sharedPrefs = Mockito.mock(SharedPreferences.class);
