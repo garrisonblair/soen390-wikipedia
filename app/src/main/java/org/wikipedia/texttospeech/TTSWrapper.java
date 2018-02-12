@@ -17,7 +17,7 @@ import java.util.Set;
  */
 
 @TargetApi(21)
-public class TTSWrapper {
+public final class TTSWrapper {
 
     private static TTSWrapper INSTANCE;
 
