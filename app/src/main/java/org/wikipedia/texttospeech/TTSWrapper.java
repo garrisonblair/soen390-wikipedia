@@ -49,7 +49,8 @@ public class TTSWrapper {
 
         // If requesting TTS from a different context, reinstantiate TTS
         if(!context.toString().equals(instance.contextID)) {
-            instance.tts = (new TextToSpeech(context, listener));
+            instance.tts.shutdown();
+            instance.tts = new TextToSpeech(context, listener);
         }
 
         return instance;
@@ -69,9 +70,7 @@ public class TTSWrapper {
         tts.stop();
     }
 
-    public void setTTS(TextToSpeech tts) {
-        this.tts = tts;
-    }
+
 
     public Set<Voice> getVoices() {
         return tts.getVoices();
@@ -84,4 +83,19 @@ public class TTSWrapper {
     public Set<Locale> getLanguages() {
         return tts.getAvailableLanguages();
     }
+
+    public void setQueueMode(boolean queueMode) {
+        this.queueMode = queueMode;
+    }
+
+
+    // tts getter and setter only for testing purposes
+    public TextToSpeech getTTS() {
+        return tts;
+    }
+
+    public void setTTS(TextToSpeech tts) {
+        this.tts = tts;
+    }
+
 }
