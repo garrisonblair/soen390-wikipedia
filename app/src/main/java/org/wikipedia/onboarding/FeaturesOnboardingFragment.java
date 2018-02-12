@@ -51,9 +51,7 @@ public class FeaturesOnboardingFragment extends OnboardingFragment {
 
     private class PageViewCallback implements OnboardingPageView.Callback {
         @Override public void onSwitchChange(@NonNull OnboardingPageView view, boolean checked) {
-            if (OnboardingPage.of((int) view.getTag()).equals(OnboardingPage.PAGE_USAGE_DATA)) {
-                Prefs.setEventLoggingEnabled(checked);
-            }
+
         }
 
         @Override public void onLinkClick(@NonNull OnboardingPageView view, @NonNull String url) {
@@ -79,9 +77,6 @@ public class FeaturesOnboardingFragment extends OnboardingFragment {
             OnboardingPageView view = inflate(page, container);
             view.setTag(position);
             view.setCallback(pageViewCallback);
-            if (page.equals(OnboardingPage.PAGE_USAGE_DATA)) {
-                view.setSwitchChecked(Prefs.isEventLoggingEnabled());
-            }
             return view;
         }
 
@@ -111,9 +106,8 @@ public class FeaturesOnboardingFragment extends OnboardingFragment {
 
     private enum OnboardingPage implements EnumCode {
         PAGE_WELCOME(R.layout.inflate_features_onboarding_page_zero),
-//        PAGE_EXPLORE(R.layout.inflate_initial_onboarding_page_one),
-//        PAGE_READING_LISTS(R.layout.inflate_initial_onboarding_page_two),
-        PAGE_USAGE_DATA(R.layout.inflate_initial_onboarding_page_three);
+        PAGE_EXPLORE(R.layout.inflate_initial_onboarding_page_one),
+        PAGE_READING_LISTS(R.layout.inflate_initial_onboarding_page_two);
 
         private static EnumCodeMap<OnboardingPage> MAP
                 = new EnumCodeMap<>(OnboardingPage.class);
