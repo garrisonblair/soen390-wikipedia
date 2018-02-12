@@ -70,6 +70,8 @@ import org.wikipedia.views.ObservableWebView;
 import org.wikipedia.widgets.WidgetProviderFeaturedPage;
 import org.wikipedia.wiktionary.WiktionaryDialog;
 
+import org.wikipedia.texttospeech.TTSWrapper;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -250,7 +252,9 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
 
     @OnClick(R.id.page_stop_button)
     public void onStopButtonClicked(){
+        TTSWrapper.getInstance(this,null).stop();
         stopButton.setVisibility(View.GONE);
+
     }
 
     private void finishActionMode() {
