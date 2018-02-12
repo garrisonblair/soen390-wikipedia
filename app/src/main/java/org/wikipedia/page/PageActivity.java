@@ -51,6 +51,7 @@ import org.wikipedia.events.ChangeTextSizeEvent;
 import org.wikipedia.feed.mainpage.MainPageClient;
 import org.wikipedia.gallery.GalleryActivity;
 import org.wikipedia.history.HistoryEntry;
+import org.wikipedia.language.AppLanguageLookUpTable;
 import org.wikipedia.language.LangLinksActivity;
 import org.wikipedia.page.linkpreview.LinkPreviewDialog;
 import org.wikipedia.page.tabs.TabsProvider;
@@ -126,6 +127,7 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
     };
 
     public TextToSpeech TTS;
+    public String pageLanguage;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -195,6 +197,9 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
             handleIntent(getIntent());
         }
 
+        //initial page language to the app language
+        pageLanguage = app.getAppLanguageCanonicalName(app.getAppOrSystemLanguageCode());
+        //initialize TTS engine
         initTTS();
     }
 
@@ -244,6 +249,9 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
             themeChooserItem.setEnabled(true);
             updateMenuPageInfo(menu);
         }
+
+        //Detect the current page language, be really for the TTS
+        pageLanguage = getPageLanguage();
         return true;
     }
 
@@ -599,7 +607,7 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
 
     @Override
     public void onPageAddToReadingList(@NonNull PageTitle title,
-                                @NonNull AddToReadingListDialog.InvokeSource source) {
+                                       @NonNull AddToReadingListDialog.InvokeSource source) {
         showAddToListDialog(title, source);
     }
 
@@ -945,21 +953,21 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
     }
 
     public ImageButton getStopButton(){
+        //if the TTS engine does not support the page language, do something else
+        if(!setTTSLanguage(getLocaleForTTS(setLanguageName(pageLanguage)))){
+            Toast.makeText(app,"Failed to set TTS Language",Toast.LENGTH_LONG).show();
+        }else {
+            //set the TTS language as the page language when the user starts the TTS
+            Toast.makeText(app, "TTS Language is set to " + TTS.getLanguage().getDisplayLanguage(), Toast.LENGTH_LONG).show();
+        }
         return this.stopButton;
     }
 
     public void initTTS(){
 
-        //retrieve wiki language code, transfer it to high level language which Locale can recognize
-        String language = app.getAppLanguageCanonicalName(app.getAppOrSystemLanguageCode());
-
-        //both Tranditional Chinese and Simplified Chinese can be classified as Chinese
-        if(language.contains("Chinese")){
-            language = "Chinese";
-        }
-
-        //get Locale by passing the system language
-        final Locale setLang = getLocaleForTTS(language);
+        //since the wiki language code can be different from the Locale language code, comparing language names seems better
+        //get Locale by passing the current page language
+        final Locale setLang = getLocaleForTTS(setLanguageName(pageLanguage));
 
         //initialize Text to speech object
         TTS = new TextToSpeech(PageActivity.this, new TextToSpeech.OnInitListener(){
@@ -968,7 +976,7 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
                 if(status==TextToSpeech.SUCCESS){
                     //set TTS language to the stored Locale language
                     TTS.setLanguage(setLang);
-                    Toast.makeText(app,"TTS Language is set to " + TTS.getLanguage().getDisplayLanguage(), Toast.LENGTH_LONG).show();
+                    //Toast.makeText(app,"TTS Language is set to " + TTS.getLanguage().getDisplayLanguage(), Toast.LENGTH_LONG).show();
                 }else Toast.makeText(app,"Language is not supported by TTS engine", Toast.LENGTH_LONG).show();
             }
         });
@@ -980,7 +988,7 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
         boolean foundLanguage = false;
         Locale[] locales = Locale.getAvailableLocales();
 
-        //loop untill the matched language found
+        //loop until the matched language found
         for(Locale loc : locales){
             if(loc.getDisplayLanguage().equals(language)){
                 locale = loc;
@@ -990,11 +998,45 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
         }
 
         //give the user feedback about why the TTS language is not the same as the page
+        //will be replaced by the select language feature
         if(!foundLanguage){
+            //locale = Locale.getDefault();
             Toast.makeText(app,"Language has not been found. Default language will be applied.", Toast.LENGTH_LONG).show();
-
+            //loadMainPageInForegroundTab();
         }
         return locale;
+    }
+
+    //retrieve the language name instead of the language code
+    public String getPageLanguage(){
+        AppLanguageLookUpTable lookup = new AppLanguageLookUpTable(app);
+        String lang = lookup.getCanonicalName(pageFragment.getTitle().getWikiSite().languageCode());
+        //Toast.makeText(app, "New Page language: "+ lang, Toast.LENGTH_SHORT).show();
+        return lang;
+    }
+
+    public String setLanguageName(String language){
+        String lang = language;
+        //both Tranditional Chinese and Simplified Chinese can be classified as Chinese
+        //because they can be both read in mandarin, which is supported by the TTS engine
+        if(language.contains("Chinese")){
+            lang = "Chinese";
+        }
+
+        //if the language does not have any other constraint, return the original
+        return lang;
+    }
+
+    //set the TTS language
+    public boolean setTTSLanguage(Locale locale){
+        //Toast.makeText(app, "setting TTS language: "+ locale.getDisplayLanguage(), Toast.LENGTH_SHORT).show();
+        int result = TTS.isLanguageAvailable(locale);
+        //Toast.makeText(app, "result setting TTS: "+ result, Toast.LENGTH_SHORT).show();
+        if(result == TextToSpeech.LANG_AVAILABLE || result == TextToSpeech.LANG_COUNTRY_AVAILABLE || result == TextToSpeech.LANG_COUNTRY_VAR_AVAILABLE){
+            TTS.setLanguage(locale);
+            return true;
+        }
+        return false;
     }
 
 }
