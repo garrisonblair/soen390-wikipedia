@@ -36,7 +36,7 @@ public class FeaturesOnboardingFragment extends OnboardingFragment {
     }
 
     @Override protected int getBackgroundResId() {
-        return R.drawable.onboarding_gradient_background_135;
+        return R.drawable.features_onboarding_gradient_background_135;
     }
 
     @Override public void onActivityResult(int requestCode, int resultCode, final Intent data) {
