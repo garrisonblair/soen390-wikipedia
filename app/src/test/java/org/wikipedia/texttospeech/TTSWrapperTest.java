@@ -2,20 +2,27 @@ package org.wikipedia.texttospeech;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.speech.tts.TextToSpeech;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.junit.Assert;
-import static org.mockito.Mockito.*;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
-
 import org.wikipedia.testutils.TestUtils;
 
 import java.util.Locale;
+
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by Fred on 2018-02-05.
@@ -34,6 +41,8 @@ public class TTSWrapperTest {
     private TextToSpeech.OnInitListener listener = mock(TextToSpeech.OnInitListener.class);
 
     private TTSWrapper ttsWrapper;
+
+    private SharedPreferences sharedPrefs = Mockito.mock(SharedPreferences.class);
 
     @Before
     public void setUp() throws Throwable {
@@ -96,6 +105,21 @@ public class TTSWrapperTest {
 
         // because of the new context, the TextToSpeech instance should have changed
         Assert.assertFalse(tts1 == tts2);
+    }
+
+
+
+    @Before
+    public void before() throws Exception {
+        this.sharedPrefs = Mockito.mock(SharedPreferences.class);
+        this.context = Mockito.mock(Context.class);
+        Mockito.when(context.getSharedPreferences(anyString(), anyInt())).thenReturn(sharedPrefs);
+    }
+
+    @Test
+    public void testGetValidPreferences() throws Exception {
+        Mockito.when(sharedPrefs.getString(anyString(), anyString())).thenReturn(STRING);
+        Assert.assertEquals(STRING, VALUE);
     }
 
 }
