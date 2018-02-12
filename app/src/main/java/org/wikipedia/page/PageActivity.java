@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -961,10 +962,14 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
     public ImageButton getStopButton(){
         //if the TTS engine does not support the page language, do something else
         if(!setTTSLanguage(getLocaleForTTS(setLanguageName(pageLanguage)))){
-            Toast.makeText(app,"Failed to set TTS Language",Toast.LENGTH_LONG).show();
+            Toast.makeText(app,"Failed to set TTS Language. The current language is not supported by the TTS engine.",Toast.LENGTH_LONG).show();
         }else {
             //set the TTS language as the page language when the user starts the TTS
             Toast.makeText(app, "TTS Language is set to " + TTS.getTTSLanguage(), Toast.LENGTH_LONG).show();
+        }
+
+        if(isVolumeOff()){
+            Toast.makeText(app, "Device volmue is off. Please turn it on.", Toast.LENGTH_SHORT).show();
         }
         return this.stopButton;
     }
@@ -1026,4 +1031,21 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
         return false;
     }
 
+    //detect if the device's volmue is off
+    public boolean isVolumeOff(){
+        AudioManager myAudioManager;
+        myAudioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+        boolean volumnOff;
+
+        switch( myAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC)){
+
+            case 0:
+                volumnOff = true;
+                break;
+            default:
+                volumnOff=false;
+                break;
+        }
+        return volumnOff;
+    }
 }
