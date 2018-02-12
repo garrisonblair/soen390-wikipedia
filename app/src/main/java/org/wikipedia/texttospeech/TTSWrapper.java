@@ -80,6 +80,8 @@ public class TTSWrapper {
         tts.setLanguage(locale);
     }
 
+    public int isTTSLanguageAvailable (Locale locale) { return tts.isLanguageAvailable(locale); }
+
     public Set<Locale> getLanguages() {
         return tts.getAvailableLanguages();
     }
