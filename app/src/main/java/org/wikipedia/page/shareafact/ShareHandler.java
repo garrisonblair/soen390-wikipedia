@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.ValueCallback;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
@@ -44,6 +45,8 @@ import org.wikipedia.wiktionary.WiktionaryDialog;
 import java.util.Arrays;
 import java.util.Locale;
 
+import org.wikipedia.texttospeech.TTSWrapper;
+
 import retrofit2.Call;
 
 import static org.wikipedia.analytics.ShareAFactFunnel.ShareMode;
@@ -62,6 +65,7 @@ public class ShareHandler {
     @NonNull private final CommunicationBridge bridge;
     @Nullable private ActionMode webViewActionMode;
     @Nullable private ShareAFactFunnel funnel;
+    static private TTSWrapper textToSpeech;
 
     private void createFunnel() {
         WikipediaApp app = WikipediaApp.getInstance();
@@ -74,6 +78,7 @@ public class ShareHandler {
     public ShareHandler(@NonNull PageFragment fragment, @NonNull CommunicationBridge bridge) {
         this.fragment = fragment;
         this.bridge = bridge;
+        textToSpeech = TTSWrapper.getInstance(fragment.getContext(), null);
 
         bridge.addListener("onGetTextSelection", new CommunicationBridge.JSEventListener() {
             @Override
@@ -193,12 +198,8 @@ public class ShareHandler {
         toSpeechItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                FragmentActivity currentActivity = fragment.getActivity();
-                if (currentActivity instanceof PageActivity) {
-                    ImageButton stopButton = ((PageActivity) currentActivity).getStopButton();
-                    stopButton.setVisibility(View.VISIBLE);
-                }
-
+                showStopButton();
+                selectedTextToSpeech();
                 leaveActionMode();
                 return true;
             }
@@ -216,7 +217,24 @@ public class ShareHandler {
 
         onHighlightText();
     }
+    private void showStopButton(){
+        FragmentActivity currentActivity = fragment.getActivity();
+        if (currentActivity instanceof PageActivity) {
+            ImageButton stopButton = ((PageActivity) currentActivity).getStopButton();
+            stopButton.setVisibility(View.VISIBLE);
+        }
+    }
+    private void selectedTextToSpeech(){
 
+        fragment.getWebView().evaluateJavascript("(function(){return window.getSelection().toString()})()",
+                new ValueCallback<String>() {
+                    @Override
+                    public void onReceiveValue(String value) {
+                        textToSpeech.speak(value);
+
+                    }
+                });
+    }
     private boolean shouldEnableWiktionaryDialog() {
         return Prefs.useRestBase() && isWiktionaryDialogEnabledForArticleLanguage();
     }
