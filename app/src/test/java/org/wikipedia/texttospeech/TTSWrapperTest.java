@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -38,7 +39,7 @@ public class TTSWrapperTest {
     private Context context = mock(Context.class);
 
     @Mock
-    private TextToSpeech.OnInitListener listener = mock(TextToSpeech.OnInitListener.class);
+    private UtteranceProgressListener listener = mock(UtteranceProgressListener.class);
 
     private TTSWrapper ttsWrapper;
 
