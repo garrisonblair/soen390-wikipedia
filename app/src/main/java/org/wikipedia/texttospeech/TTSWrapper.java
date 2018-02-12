@@ -2,12 +2,17 @@ package org.wikipedia.texttospeech;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.Voice;
+import android.support.v7.preference.PreferenceManager;
+
+import org.wikipedia.settings.SettingsActivity;
 
 import java.util.Locale;
 import java.util.Set;
+
 
 
 /**
@@ -29,12 +34,27 @@ public class TTSWrapper {
     //Identifies requests to TTS instance
     private int requestCounter;
 
+    private String language;
+    private String voice;
+    private String pitch;
+    private String speed;
     private boolean queueMode;
 
     private  TTSWrapper (Context context, TextToSpeech.OnInitListener listener) {
         contextID = context.toString();
         tts = new TextToSpeech(context, listener);
-        //TODO: Load Preferences
+        loadPreferences(context);
+    }
+
+    //get preferences from settings stored in xml
+    private void loadPreferences(Context context) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        this.language = sharedPref.getString(SettingsActivity.KEY_, "");
+        this.voice = sharedPref.getString(SettingsActivity.KEY_, "");
+        this.pitch = sharedPref.getString(SettingsActivity.KEY_, "");
+        this.speed = sharedPref.getString(SettingsActivity.KEY_, "");
+        this.queueMode = sharedPref.getString(SettingsActivity.KEY_, "");
+
     }
 
     public static TTSWrapper getInstance(Context context, TextToSpeech.OnInitListener listener) {
