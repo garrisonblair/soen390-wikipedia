@@ -4,6 +4,7 @@ package org.wikipedia.texttospeech;
 import android.content.Context;
 import android.os.Build;
 import android.speech.tts.TextToSpeech;
+import android.widget.Toast;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -98,4 +99,10 @@ public class TTSWrapperTest {
         Assert.assertFalse(tts1 == tts2);
     }
 
+    @Test
+    public void testIsLanguageAvailable() {
+        int result = ttsWrapper.isTTSLanguageAvailable(Locale.forLanguageTag("en"));
+        Assert.assertEquals(result,0);
+
+    }
 }
