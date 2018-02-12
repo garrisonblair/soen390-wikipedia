@@ -7,8 +7,6 @@ import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.speech.tts.Voice;
 
-import org.w3c.dom.Text;
-
 import java.util.Locale;
 import java.util.Set;
 
@@ -21,20 +19,20 @@ import java.util.Set;
 @TargetApi(21)
 public class TTSWrapper {
 
-    private static TTSWrapper instance;
+    private static TTSWrapper INSTANCE;
 
 
     private TextToSpeech tts;
 
-    // Store Context.toString() of last use.  If a different Context tries to use it the instance needs to be reinstantiated.
+    // Store Context.toString() of last use.  If a different Context tries to use it the INSTANCE needs to be reinstantiated.
     private String contextID;
 
-    //Identifies requests to TTS instance
+    //Identifies requests to TTS INSTANCE
     private int requestCounter;
 
     private boolean queueMode;
 
-    private  TTSWrapper (Context context, UtteranceProgressListener listener) {
+    private  TTSWrapper(Context context, UtteranceProgressListener listener) {
         contextID = context.toString();
 
         this.instantiateTextToSpeech(context, listener);
@@ -43,27 +41,27 @@ public class TTSWrapper {
 
     public static TTSWrapper getInstance(Context context, UtteranceProgressListener listener) {
 
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             return null;
         }
 
-        if(instance == null) {
-            instance = new TTSWrapper(context, listener);
+        if (INSTANCE == null) {
+            INSTANCE = new TTSWrapper(context, listener);
         }
 
         // If requesting TTS from a different context, reinstantiate TTS
-        if(!context.toString().equals(instance.contextID)) {
-            instance.tts.shutdown();
-            instance.instantiateTextToSpeech(context, listener);
+        if (!context.toString().equals(INSTANCE.contextID)) {
+            INSTANCE.tts.shutdown();
+            INSTANCE.instantiateTextToSpeech(context, listener);
         }
 
-        return instance;
+        return INSTANCE;
     }
 
     public void speak(String text) {
         int mode = TextToSpeech.QUEUE_FLUSH;
 
-        if(queueMode) {
+        if (queueMode) {
             mode = TextToSpeech.QUEUE_ADD;
         }
 
