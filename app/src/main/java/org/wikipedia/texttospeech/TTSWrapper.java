@@ -6,6 +6,7 @@ import android.os.Build;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.Voice;
 
+import java.util.Locale;
 import java.util.Set;
 
 
@@ -28,6 +29,8 @@ public class TTSWrapper {
     //Identifies requests to TTS instance
     private int requestCounter;
 
+    private boolean queueMode;
+
     private  TTSWrapper (Context context, TextToSpeech.OnInitListener listener) {
         contextID = context.toString();
         tts = new TextToSpeech(context, listener);
@@ -46,25 +49,53 @@ public class TTSWrapper {
 
         // If requesting TTS from a different context, reinstantiate TTS
         if(!context.toString().equals(instance.contextID)) {
-            instance.tts = (new TextToSpeech(context, listener));
+            instance.tts.shutdown();
+            instance.tts = new TextToSpeech(context, listener);
         }
 
         return instance;
     }
 
     public void speak(String text) {
-        tts.speak(text, TextToSpeech.QUEUE_ADD, null,"" + requestCounter++ );
+        int mode = TextToSpeech.QUEUE_FLUSH;
+
+        if(queueMode) {
+            mode = TextToSpeech.QUEUE_ADD;
+        }
+
+        tts.speak(text, mode, null,"" + requestCounter++ );
     }
 
     public void stop() {
         tts.stop();
     }
 
-    public void setTTS(TextToSpeech tts) {
-        this.tts = tts;
-    }
+
 
     public Set<Voice> getVoices() {
         return tts.getVoices();
     }
+
+    public void setLanguage(Locale locale) {
+        tts.setLanguage(locale);
+    }
+
+    public Set<Locale> getLanguages() {
+        return tts.getAvailableLanguages();
+    }
+
+    public void setQueueMode(boolean queueMode) {
+        this.queueMode = queueMode;
+    }
+
+
+    // tts getter and setter only for testing purposes
+    public TextToSpeech getTTS() {
+        return tts;
+    }
+
+    public void setTTS(TextToSpeech tts) {
+        this.tts = tts;
+    }
+
 }
