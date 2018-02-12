@@ -4,6 +4,7 @@ package org.wikipedia.texttospeech;
 import android.content.Context;
 import android.os.Build;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -31,7 +32,7 @@ public class TTSWrapperTest {
     private Context context = mock(Context.class);
 
     @Mock
-    private TextToSpeech.OnInitListener listener = mock(TextToSpeech.OnInitListener.class);
+    private UtteranceProgressListener listener = mock(UtteranceProgressListener.class);
 
     private TTSWrapper ttsWrapper;
 
