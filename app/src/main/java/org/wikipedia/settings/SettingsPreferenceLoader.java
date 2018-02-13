@@ -123,27 +123,27 @@ class SettingsPreferenceLoader extends BasePreferenceLoader {
             }
         });
         */
-        /*
+        //*
         ttsVoicePref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                VoicePreferenceDialog voicePrefDialog = new VoicePreferenceDialog(getActivity(), false);
+                TTSVoicePreferenceDialog voicePrefDialog = new TTSVoicePreferenceDialog(getActivity(), false, tts);
                 voicePrefDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
                         // Need to change this to get the current voice being used
                         //String voice = defaultString(WikipediaApp.getInstance().getAppOrSystemLanguageLocalizedName());
-                        if (getActivity() != null && !findPreference(R.string.preference_key_language).getSummary().equals(voice)) {
-                            findPreference(R.string.preference_key_language).setSummary(voice);
-                            getActivity().setResult(SettingsActivity.ACTIVITY_RESULT_VOICE_CHANGED);
-                        }
+//                        if (getActivity() != null && !findPreference(R.string.preference_key_language).getSummary().equals(voice)) {
+//                            findPreference(R.string.preference_key_language).setSummary(voice);
+//                            getActivity().setResult(SettingsActivity.ACTIVITY_RESULT_VOICE_CHANGED);
+//                        }
                     }
                 });
-                langPrefDialog.show();
+                voicePrefDialog.show();
                 return true;
             }
         });
-        */
+        //*/
         // End of work in progress of onclick listening for tts settings to be combined with the code of team members
 
         if (!BuildConfig.APPLICATION_ID.equals("org.wikipedia")) {

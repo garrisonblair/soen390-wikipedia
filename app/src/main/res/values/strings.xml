@@ -644,4 +644,8 @@
     <string name="tts_preview_default">Testing text to speech</string>
     <!-- /On This Day -->
 
+    <!-- TTS Voice Settings -->
+    <string name="preference_title_TTS_voice">Text to Speech Voice</string>
+    <string name="preference_summary_TTS_voice">Different voices for Text to Speech</string>
+
 </resources>

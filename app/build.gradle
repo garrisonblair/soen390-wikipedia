@@ -53,11 +53,12 @@ android {
 
     defaultConfig {
         applicationId 'org.wikipedia'
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 27
         versionCode 224
         testApplicationId 'org.wikipedia.test'
         testInstrumentationRunner 'org.wikipedia.test.AndroidTestRunner'
+//        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
 
         javaCompileOptions {
@@ -240,6 +241,17 @@ dependencies {
     androidTestImplementation "com.android.support.test:rules:$testingSupportVersion" // JUnit Rules
     androidTestImplementation "com.android.support.test:runner:$testingSupportVersion" // Android JUnit Runner
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$espressoVersion"
+
+    // Required by Espresso
+//    androidTestCompile 'com.android.support.test.espresso:espresso-core:3.0.1'
+//    androidTestCompile 'com.android.support.test.espresso:espresso-contrib:3.0.1'
+//    androidTestCompile 'com.android.support.test.espresso:espresso-intents:3.0.1'
+//    androidTestCompile 'com.android.support.test.espresso:espresso-accessibility:3.0.1'
+//    androidTestCompile 'com.android.support.test.espresso:espresso-web:3.0.1'
+//    androidTestCompile 'com.android.support.test.espresso.idling:idling-concurrent:3.0.1'
+//    androidTestCompile 'com.android.support.test:runner:1.0.1'
+//
+//    androidTestCompile 'com.android.support.test.espresso:espresso-idling-resource:3.0.1'
 }
 
 private setSigningConfigKey(config, Properties props) {
