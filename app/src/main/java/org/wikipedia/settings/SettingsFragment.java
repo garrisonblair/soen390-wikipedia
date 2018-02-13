@@ -7,6 +7,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import org.wikipedia.R;
+import org.wikipedia.texttospeech.TTSPreviewPreference;
 
 public class SettingsFragment extends PreferenceLoaderFragment {
     public static SettingsFragment newInstance() {
@@ -30,6 +31,12 @@ public class SettingsFragment extends PreferenceLoaderFragment {
     public void onResume() {
         super.onResume();
         getActivity().invalidateOptionsMenu();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        ((TTSPreviewPreference)findPreference("ttsPreview")).shutdownTTS();
     }
 
     @Override

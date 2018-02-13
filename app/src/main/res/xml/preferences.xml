@@ -71,8 +71,9 @@
             android:summary="@string/preference_speed_summary_tts"
             android:defaultValue="1"
             android:min="1"
-            android:max="4"/>
-        <org.wikipedia.texttospeech.TTSPreviewPreference />
+            android:max="10"/>
+        <org.wikipedia.texttospeech.TTSPreviewPreference
+            android:key="@string/preference_key_preview_tts"/>
     </PreferenceCategory>
     <!-- /Additional menu settings for text to speech settings. Additional functionality to be added by teammates -->
     <PreferenceCategory android:title="@string/preferences_privacy_settings_heading">

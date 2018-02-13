@@ -25,10 +25,6 @@ public class TTSPreviewPreference extends android.support.v7.preference.Preferen
         tts = TTSWrapper.getInstance(context, null);
     }
 
-    public void onClick() {
-
-    }
-
     @Override
     public void onBindViewHolder(PreferenceViewHolder holder) {
         Button ttsPreviewBtn = (Button) holder.findViewById(R.id.tts_preview_btn);
@@ -40,5 +36,8 @@ public class TTSPreviewPreference extends android.support.v7.preference.Preferen
             }
         });
     }
-}
 
+    public void shutdownTTS() {
+        tts.shutdown();
+    }
+}
