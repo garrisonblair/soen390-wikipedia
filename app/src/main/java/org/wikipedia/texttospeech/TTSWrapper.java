@@ -69,7 +69,7 @@ public final class TTSWrapper {
             mode = TextToSpeech.QUEUE_ADD;
         }
 
-        tts.speak(text, mode, null,"" + requestCounter++ );
+        tts.speak(text, mode, null, "" + requestCounter++);
     }
 
     public void stop() {
