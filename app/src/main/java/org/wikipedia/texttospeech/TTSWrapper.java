@@ -90,7 +90,6 @@ public final class TTSWrapper {
 
         // If requesting TTS from a different context, reinstantiate TTS
         if (!context.toString().equals(INSTANCE.contextID)) {
-            INSTANCE.tts.shutdown();
             INSTANCE.instantiateTextToSpeech(context, listener);
         }
 
@@ -98,20 +97,27 @@ public final class TTSWrapper {
     }
 
     public void speak(String text) {
+
+        if (text.equals("")) {
+            return;
+        }
+
         int mode = TextToSpeech.QUEUE_FLUSH;
 
         if (queueMode) {
             mode = TextToSpeech.QUEUE_ADD;
         }
 
-        tts.speak(text, mode, null,"" + requestCounter++ );
+        tts.speak(text, mode, null, "" + requestCounter++);
     }
 
     public void stop() {
         tts.stop();
     }
 
-
+    public void shutdown() {
+        tts.shutdown();
+    }
 
     public Set<Voice> getVoices() {
         return tts.getVoices();

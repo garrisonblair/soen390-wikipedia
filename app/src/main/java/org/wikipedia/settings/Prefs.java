@@ -519,6 +519,14 @@ public final class Prefs {
         setBoolean(R.string.preference_key_initial_onboarding_enabled, enabled);
     }
 
+    public static boolean isFeaturesOnboardingEnabled() {
+        return getBoolean(R.string.preference_key_features_onboarding_enabled, true);
+    }
+
+    public static void setFeaturesOnboardingEnabled(boolean enabled) {
+        setBoolean(R.string.preference_key_features_onboarding_enabled, enabled);
+    }
+
     public static boolean askedForPermissionOnce(@NonNull String permission) {
         return getBoolean(R.string.preference_key_permission_asked + permission, false);
     }
