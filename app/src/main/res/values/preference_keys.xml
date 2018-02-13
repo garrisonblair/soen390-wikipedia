@@ -11,6 +11,18 @@
     <string name="preference_key_reading_app_install_id">readingAppInstallID</string>
     <string name="preference_key_text_size_multiplier">textSizeMultiplier</string>
     <string name="preference_key_color_theme">colorTheme</string>
+    <!-- Start of text to speech keys for storing preferences -->
+    <string name="preference_key_settings_tts">ttsSettings</string>
+    <string name="preference_key_voice_tts">ttsVoice</string>
+    <string name="preference_key_pitch_tts">ttsPitch</string>
+    <string name="preference_key_speed_tts">ttsSpeed</string>
+    <string name="preference_key_language_tts">ttsLanguage</string>
+    <string name="preference_key_queue_tts">ttsQueue</string>
+    <!-- alternative option key -->
+    <string name="preference_key_tts">ttsActivitySettings</string>
+    <string name="preference_title_tts">ttsActivitySettingsTitle</string>
+    <!-- /end of alternative option -->
+    <!-- /of text to speech keys for storing preferences -->
     <string name="preference_key_app_channel">channel</string>
     <string name="preference_key_language_mru">languageMru</string>
     <string name="preference_key_select_text_tutorial_enabled">selectTextTutorialEnabled</string>
