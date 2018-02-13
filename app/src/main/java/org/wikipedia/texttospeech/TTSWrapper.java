@@ -9,7 +9,6 @@ import android.speech.tts.UtteranceProgressListener;
 import android.speech.tts.Voice;
 import android.support.v7.preference.PreferenceManager;
 
-import org.apache.commons.lang3.LocaleUtils;
 import org.wikipedia.settings.SettingsActivity;
 
 import java.util.Locale;
@@ -38,23 +37,22 @@ public final class TTSWrapper {
 
     private boolean queueMode;
 
-    private  TTSWrapper(Context context, UtteranceProgressListener listener) {
-        contextID = context.toString();
+    private SharedPreferences preferences;
 
+    private  TTSWrapper(Context context, UtteranceProgressListener listener, SharedPreferences preferences) {
+        contextID = context.toString();
+        this.preferences = preferences;
         this.instantiateTextToSpeech(context, listener);
-        loadPreferences(context);
+        loadPreferences();
     }
 
     //get preferences from settings stored in xml
-    public void loadPreferences(Context context) {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        String languagePreference = sharedPref.getString("preference_key_language_tts", "english");
-        String voicePreference = sharedPref.getString("preference_key_voice_tts", "");
-        float pitchPreference = sharedPref.getFloat("preference_key_pitch_tts", 0);
-        float speechRatePreference = sharedPref.getFloat("preference_key_speed_tts", 0);
-        int queueModePreference = sharedPref.getInt("preference_key_queue_tts", 0);
+    public void loadPreferences() {
+        String voicePreference = preferences.getString("preference_key_voice_tts", "");
+        float pitchPreference = preferences.getFloat("preference_key_pitch_tts", 0);
+        float speechRatePreference = preferences.getFloat("preference_key_speed_tts", 0);
+        int queueModePreference = preferences.getInt("preference_key_queue_tts", 0);
 
-        tts.setLanguage(LocaleUtils.toLocale(languagePreference));
 //        tts.setVoice();
         tts.setPitch(pitchPreference);
         tts.setSpeechRate(speechRatePreference);
@@ -73,7 +71,26 @@ public final class TTSWrapper {
         }
 
         if (INSTANCE == null) {
-            INSTANCE = new TTSWrapper(context, listener);
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+            INSTANCE = new TTSWrapper(context, listener, sharedPref);
+        }
+
+        // If requesting TTS from a different context, reinstantiate TTS
+        if (!context.toString().equals(INSTANCE.contextID)) {
+            INSTANCE.tts.shutdown();
+            INSTANCE.instantiateTextToSpeech(context, listener);
+        }
+
+        return INSTANCE;
+    }
+
+    public static TTSWrapper getTestInstance(Context context, UtteranceProgressListener listener, SharedPreferences preferences) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            return null;
+        }
+
+        if (INSTANCE == null) {
+            INSTANCE = new TTSWrapper(context, listener, preferences);
         }
 
         // If requesting TTS from a different context, reinstantiate TTS
@@ -116,6 +133,8 @@ public final class TTSWrapper {
     public void setQueueMode(boolean queueMode) {
         this.queueMode = queueMode;
     }
+
+    public boolean getQueueMode() { return this.queueMode; }
 
 
     // tts getter and setter only for testing purposes
