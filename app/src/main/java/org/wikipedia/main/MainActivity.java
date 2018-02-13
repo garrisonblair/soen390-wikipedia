@@ -13,6 +13,7 @@ import org.wikipedia.activity.SingleFragmentToolbarActivity;
 import org.wikipedia.appshortcuts.AppShortcuts;
 import org.wikipedia.navtab.NavTab;
 import org.wikipedia.onboarding.InitialOnboardingActivity;
+import org.wikipedia.onboarding.FeaturesOnboardingActivity;
 import org.wikipedia.settings.Prefs;
 import org.wikipedia.util.ResourceUtil;
 
@@ -28,6 +29,10 @@ public class MainActivity extends SingleFragmentToolbarActivity<MainFragment>
         super.onCreate(savedInstanceState);
         setSharedElementTransitions();
         new AppShortcuts().init();
+
+        if (Prefs.isFeaturesOnboardingEnabled() && savedInstanceState == null) {
+            startActivity(FeaturesOnboardingActivity.newIntent(this));
+        }
 
         if (Prefs.isInitialOnboardingEnabled() && savedInstanceState == null) {
             startActivity(InitialOnboardingActivity.newIntent(this));
