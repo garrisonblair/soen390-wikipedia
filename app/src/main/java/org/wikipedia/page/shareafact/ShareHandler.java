@@ -3,7 +3,6 @@ package org.wikipedia.page.shareafact;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
-import android.speech.tts.UtteranceProgressListener;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
@@ -32,6 +31,7 @@ import org.wikipedia.page.Namespace;
 import org.wikipedia.page.NoDimBottomSheetDialog;
 import org.wikipedia.page.Page;
 import org.wikipedia.page.PageActivity;
+import org.wikipedia.page.listeners.HideStopButtonOnDoneListener;
 import org.wikipedia.page.PageFragment;
 import org.wikipedia.page.PageProperties;
 import org.wikipedia.page.PageTitle;
@@ -79,29 +79,8 @@ public class ShareHandler {
     public ShareHandler(@NonNull PageFragment fragment, @NonNull CommunicationBridge bridge) {
         this.fragment = fragment;
         this.bridge = bridge;
-
-        textToSpeech = TTSWrapper.getInstance(fragment.getActivity(), new UtteranceProgressListener() {
-            @Override
-            public void onStart(String s) {}
-
-            @Override
-            public void onDone(String s) {
-                fragment.getActivity().
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        setStopButtonVisibility(View.INVISIBLE);
-
-                    }
-                });
-
-
-            }
-
-            @Override
-            public void onError(String utteranceId) {}
-        });
+        PageActivity pageActivity = (PageActivity) fragment.getActivity();
+        textToSpeech = TTSWrapper.getInstance(pageActivity, new HideStopButtonOnDoneListener(pageActivity));
 
         bridge.addListener("onGetTextSelection", new CommunicationBridge.JSEventListener() {
             @Override

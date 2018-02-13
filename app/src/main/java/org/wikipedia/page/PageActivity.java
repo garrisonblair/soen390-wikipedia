@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.speech.tts.UtteranceProgressListener;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
@@ -54,6 +53,7 @@ import org.wikipedia.gallery.GalleryActivity;
 import org.wikipedia.history.HistoryEntry;
 import org.wikipedia.language.LangLinksActivity;
 import org.wikipedia.page.linkpreview.LinkPreviewDialog;
+import org.wikipedia.page.listeners.HideStopButtonOnDoneListener;
 import org.wikipedia.page.tabs.TabsProvider;
 import org.wikipedia.page.tabs.TabsProvider.TabPosition;
 import org.wikipedia.readinglist.AddToReadingListDialog;
@@ -735,26 +735,7 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
         app.resetWikiSite();
         app.getSessionFunnel().touchSession();
 
-        textToSpeech = TTSWrapper.getInstance(this, new UtteranceProgressListener() {
-            @Override
-            public void onStart(String s) {}
-
-            @Override
-            public void onDone(String s) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        stopButton.setVisibility(View.INVISIBLE);
-
-                    }
-                });
-
-            }
-
-            @Override
-            public void onError(String utteranceId) {}
-        });
+        textToSpeech = TTSWrapper.getInstance(this, new HideStopButtonOnDoneListener(this));
     }
 
     @Override
@@ -966,4 +947,6 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
     public ImageButton getStopButton(){
         return this.stopButton;
     }
+
+
 }
