@@ -444,14 +444,12 @@ public class ShareHandler {
         try {
             if (result == TextToSpeech.LANG_AVAILABLE || result == TextToSpeech.LANG_COUNTRY_AVAILABLE || result == TextToSpeech.LANG_COUNTRY_VAR_AVAILABLE) {
                 textToSpeech.setLanguage(locale);
-                lock.unlock();
-            }
-            else {
+            } else {
                 showAlternateLanguageDialog();
                 textToSpeech.setLanguage(selectedLocale);
-                lock.unlock();
             }
         } finally {
+            lock.unlock();
             Toast.makeText(fragment.getActivity(), "TTS language has set to : " + textToSpeech.getTTSLanguage(), Toast.LENGTH_SHORT).show();
             selectedTextToSpeech();
         }
@@ -475,7 +473,7 @@ public class ShareHandler {
         builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String selectedItem = arrayAdapter.getItem(which).toString();
+                String selectedItem = arrayAdapter.getItem(which);
                 selectedLanguage = selectedItem;
                 AlertDialog.Builder builderInner = new AlertDialog.Builder(currentActivity);
                 builderInner.setMessage(selectedItem);
