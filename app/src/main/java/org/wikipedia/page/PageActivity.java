@@ -1,7 +1,6 @@
 package org.wikipedia.page;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.app.SearchManager;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
@@ -30,7 +29,6 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -54,7 +52,6 @@ import org.wikipedia.events.ChangeTextSizeEvent;
 import org.wikipedia.feed.mainpage.MainPageClient;
 import org.wikipedia.gallery.GalleryActivity;
 import org.wikipedia.history.HistoryEntry;
-import org.wikipedia.language.AppLanguageLookUpTable;
 import org.wikipedia.language.LangLinksActivity;
 import org.wikipedia.page.linkpreview.LinkPreviewDialog;
 import org.wikipedia.page.tabs.TabsProvider;
@@ -63,6 +60,7 @@ import org.wikipedia.readinglist.AddToReadingListDialog;
 import org.wikipedia.search.SearchFragment;
 import org.wikipedia.search.SearchInvokeSource;
 import org.wikipedia.settings.SettingsActivity;
+import org.wikipedia.texttospeech.TTSWrapper;
 import org.wikipedia.theme.ThemeChooserDialog;
 import org.wikipedia.util.ClipboardUtil;
 import org.wikipedia.util.DeviceUtil;
@@ -74,8 +72,6 @@ import org.wikipedia.views.ObservableWebView;
 import org.wikipedia.widgets.WidgetProviderFeaturedPage;
 import org.wikipedia.wiktionary.WiktionaryDialog;
 
-import org.wikipedia.texttospeech.TTSWrapper;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -83,12 +79,6 @@ import butterknife.Unbinder;
 
 import static org.wikipedia.settings.Prefs.isLinkPreviewEnabled;
 import static org.wikipedia.util.UriUtil.visitInExternalBrowser;
-
-import android.speech.tts.TextToSpeech;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Locale;
 
 public class PageActivity extends BaseActivity implements PageFragment.Callback,
         LinkPreviewDialog.Callback, SearchFragment.Callback, ThemeChooserDialog.Callback,
@@ -131,10 +121,6 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
             pageFragment.updateBookmarkAndMenuOptionsFromDao();
         }
     };
-
-    static private TTSWrapper TTS;
-    public String pageLanguage;
-    public String selectedLanguage;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -203,13 +189,6 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
             // then we must have been launched with an Intent, so... handle it!
             handleIntent(getIntent());
         }
-
-        //initial page language to the app language
-        pageLanguage = app.getAppLanguageCanonicalName(app.getAppOrSystemLanguageCode());
-
-        //initialize TTS
-        TTS = TTSWrapper.getInstance(pageFragment.getContext(), null);
-
     }
 
     @Override
@@ -258,9 +237,6 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
             themeChooserItem.setEnabled(true);
             updateMenuPageInfo(menu);
         }
-
-        //Detect the current page language, be really for the TTS
-        pageLanguage = getPageLanguage();
         return true;
     }
 
@@ -275,8 +251,8 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
     }
 
     @OnClick(R.id.page_stop_button)
-    public void onStopButtonClicked(){
-        TTSWrapper.getInstance(this,null).stop();
+    public void onStopButtonClicked() {
+        TTSWrapper.getInstance(this, null).stop();
         stopButton.setVisibility(View.GONE);
 
     }
@@ -963,157 +939,20 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
         return super.onKeyDown(keyCode, event);
     }
 
-    public ImageButton getStopButton(){
-        //if the TTS engine does not support the page language, do something else
-        if (!setTTSLanguage(getLocaleForTTS(setLanguageName(pageLanguage)))) {
-            Toast.makeText(app,"Failed to set TTS Language. The current language is not supported by the TTS engine." , Toast.LENGTH_LONG).show();
-        } else {
-            //set the TTS language as the page language when the user starts the TTS
-            Toast.makeText(app, "TTS Language is set to " + TTS.getTTSLanguage(), Toast.LENGTH_LONG).show();
-        }
-
-        if(isVolumeOff()){
+    public ImageButton getStopButton() {
+        if (isVolumeOff()) {
             Toast.makeText(app, "Device volmue is off. Please turn it on.", Toast.LENGTH_SHORT).show();
         }
         return this.stopButton;
     }
 
-    //find the Locale from the given language
-    public Locale getLocaleForTTS(String language){
-        Locale locale = Locale.getDefault();
-        boolean foundLanguage = false;
-        Locale[] locales = Locale.getAvailableLocales();
-
-        //loop until the matched language found
-        for (Locale loc : locales) {
-            if (loc.getDisplayLanguage().equals(language)) {
-                locale = loc;
-                foundLanguage = true;
-                break;
-            }
-        }
-
-        //give the user feedback about why the TTS language is not the same as the page
-        //will be replaced by the select language feature
-        if(!foundLanguage){
-            //locale = Locale.getDefault();
-            Toast.makeText(app, "Language has not been found. Default language will be applied.", Toast.LENGTH_LONG).show();
-            //loadMainPageInForegroundTab();
-            getAlternateLanguageDialog();
-            //locale = getLocaleForTTS(pageLanguage);
-        }
-        return locale;
-    }
-
-    public void getAlternateLanguageDialog(){
-        AlertDialog.Builder builderSingle = new AlertDialog.Builder(PageActivity.this);
-        builderSingle.setTitle("Select alternate language for TTS: ");
-        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(PageActivity.this, android.R.layout.select_dialog_singlechoice, getTTSLanguages());
-
-        builderSingle.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
-        builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String selectedItem = arrayAdapter.getItem(which).toString();
-                selectedLanguage = selectedItem;
-                AlertDialog.Builder builderInner = new AlertDialog.Builder(PageActivity.this);
-                builderInner.setMessage(selectedItem);
-
-                ArrayList<Locale> locales = getTTSLocales();
-                for (Locale loc : locales) {
-                    if (selectedLanguage.contains(loc.getDisplayLanguage())) {
-                        pageLanguage = loc.getDisplayLanguage();
-                        break;
-                    }
-                }
-                builderInner.setTitle("Select alternate TTS language : " );
-                builderInner.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog,int which) {
-                        dialog.dismiss();
-                    }
-                });
-                builderInner.show();
-            }
-        });
-        builderSingle.show();
-
-    }
-
-    public ArrayList getTTSLanguages(){
-        ///show TTS languages
-        Locale[] locales = Locale.getAvailableLocales();
-        ArrayList<Locale> localeList = new ArrayList<Locale>();
-        ArrayList<String> TTSLanguages = new ArrayList<>();
-        for (Locale locale : locales) {
-            int res = TTS.isTTSLanguageAvailable(locale);
-            if (res == TextToSpeech.LANG_COUNTRY_AVAILABLE) {
-                localeList.add(locale);
-                TTSLanguages.add(locale.getDisplayCountry()+ " " + locale.getDisplayLanguage());
-            }
-        }
-        return TTSLanguages;
-    }
-    public ArrayList getTTSLocales(){
-        ///show TTS languages
-        Locale[] locales = Locale.getAvailableLocales();
-        ArrayList<Locale> localeList = new ArrayList<Locale>();
-        ArrayList<String> TTSLanguages = new ArrayList<>();
-        for (Locale locale : locales) {
-            int res = TTS.isTTSLanguageAvailable(locale);
-            if (res == TextToSpeech.LANG_COUNTRY_AVAILABLE) {
-                localeList.add(locale);
-                TTSLanguages.add(locale.getDisplayCountry()+ " " + locale.getDisplayLanguage());
-            }
-        }
-        return localeList;
-    }
-
-    //retrieve the language name instead of the language code
-    public String getPageLanguage(){
-        AppLanguageLookUpTable lookup = new AppLanguageLookUpTable(app);
-        String lang = lookup.getCanonicalName(pageFragment.getTitle().getWikiSite().languageCode());
-        //Toast.makeText(app, "New Page language: "+ lang, Toast.LENGTH_SHORT).show();
-        return lang;
-    }
-
-    public String setLanguageName(String language){
-        String lang = language;
-        //both Tranditional Chinese and Simplified Chinese can be classified as Chinese
-        //because they can be both read in mandarin, which is supported by the TTS engine
-        if (language.contains("Chinese")) {
-            lang = "Chinese";
-        }
-
-        //if the language does not have any other constraint, return the original
-        return lang;
-    }
-
-    //set the TTS language
-    public boolean setTTSLanguage(Locale locale){
-        //Toast.makeText(app, "setting TTS language: "+ locale.getDisplayLanguage(), Toast.LENGTH_SHORT).show();
-        int result = TTS.isTTSLanguageAvailable(locale);
-        //Toast.makeText(app, "result setting TTS: "+ result, Toast.LENGTH_SHORT).show();
-        if (result == TextToSpeech.LANG_AVAILABLE || result == TextToSpeech.LANG_COUNTRY_AVAILABLE || result == TextToSpeech.LANG_COUNTRY_VAR_AVAILABLE){
-            TTS.setLanguage(locale);
-            return true;
-        }
-        return false;
-    }
-
     //detect if the device's volmue is off
-    public boolean isVolumeOff(){
+    public boolean isVolumeOff() {
         AudioManager myAudioManager;
         myAudioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
         boolean volumnOff;
 
-        switch(myAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC)){
+        switch(myAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC)) {
 
             case 0:
                 volumnOff = true;

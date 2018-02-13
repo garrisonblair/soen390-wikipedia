@@ -1,19 +1,22 @@
 package org.wikipedia.page.shareafact;
-
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.ValueCallback;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
@@ -26,6 +29,7 @@ import org.wikipedia.bridge.CommunicationBridge;
 import org.wikipedia.dataclient.mwapi.MwQueryResponse;
 import org.wikipedia.gallery.ImageLicense;
 import org.wikipedia.gallery.ImageLicenseFetchClient;
+import org.wikipedia.language.AppLanguageLookUpTable;
 import org.wikipedia.onboarding.PrefsOnboardingStateMachine;
 import org.wikipedia.page.Namespace;
 import org.wikipedia.page.NoDimBottomSheetDialog;
@@ -35,6 +39,7 @@ import org.wikipedia.page.PageFragment;
 import org.wikipedia.page.PageProperties;
 import org.wikipedia.page.PageTitle;
 import org.wikipedia.settings.Prefs;
+import org.wikipedia.texttospeech.TTSWrapper;
 import org.wikipedia.util.FeedbackUtil;
 import org.wikipedia.util.ShareUtil;
 import org.wikipedia.util.StringUtil;
@@ -42,10 +47,10 @@ import org.wikipedia.util.UriUtil;
 import org.wikipedia.util.log.L;
 import org.wikipedia.wiktionary.WiktionaryDialog;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
-
-import org.wikipedia.texttospeech.TTSWrapper;
+import java.util.concurrent.locks.ReentrantLock;
 
 import retrofit2.Call;
 
@@ -60,15 +65,20 @@ public class ShareHandler {
     private static final String PAYLOAD_PURPOSE_DEFINE = "define";
     private static final String PAYLOAD_PURPOSE_EDIT_HERE = "edit_here";
     private static final String PAYLOAD_TEXT_KEY = "text";
+    private WikipediaApp app = WikipediaApp.getInstance();
 
     @NonNull private final PageFragment fragment;
     @NonNull private final CommunicationBridge bridge;
     @Nullable private ActionMode webViewActionMode;
     @Nullable private ShareAFactFunnel funnel;
-    static private TTSWrapper textToSpeech;
+    @Nullable private TTSWrapper textToSpeech;
+    @Nullable private String pageLanguage;
+    @Nullable private String selectedLanguage = "";
+    @Nullable private Locale selectedLocale;
+    @Nullable private final ReentrantLock lock = new ReentrantLock();
+
 
     private void createFunnel() {
-        WikipediaApp app = WikipediaApp.getInstance();
         final Page page = fragment.getPage();
         final PageProperties pageProperties = page.getPageProperties();
         funnel = new ShareAFactFunnel(app, page.getTitle(), pageProperties.getPageId(),
@@ -79,6 +89,7 @@ public class ShareHandler {
         this.fragment = fragment;
         this.bridge = bridge;
         textToSpeech = TTSWrapper.getInstance(fragment.getContext(), null);
+        pageLanguage = app.getAppLanguageCanonicalName(app.getAppOrSystemLanguageCode());
 
         bridge.addListener("onGetTextSelection", new CommunicationBridge.JSEventListener() {
             @Override
@@ -195,11 +206,14 @@ public class ShareHandler {
             }
         });
         MenuItem toSpeechItem = menu.findItem(R.id.menu_text_to_speech);
+
+
         toSpeechItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
+                pageLanguage = getPageLanguage();
+                setTTSLanguage(getLocaleForTTS(setLanguageName(pageLanguage)));
                 showStopButton();
-                selectedTextToSpeech();
                 leaveActionMode();
                 return true;
             }
@@ -217,21 +231,20 @@ public class ShareHandler {
 
         onHighlightText();
     }
-    private void showStopButton(){
+    private void showStopButton() {
         FragmentActivity currentActivity = fragment.getActivity();
         if (currentActivity instanceof PageActivity) {
             ImageButton stopButton = ((PageActivity) currentActivity).getStopButton();
             stopButton.setVisibility(View.VISIBLE);
         }
     }
-    private void selectedTextToSpeech(){
+    private void selectedTextToSpeech() {
 
-        fragment.getWebView().evaluateJavascript("(function(){return window.getSelection().toString()})()",
+        fragment.getWebView().evaluateJavascript("(function() { return window.getSelection().toString() }) ()",
                 new ValueCallback<String>() {
                     @Override
                     public void onReceiveValue(String value) {
                         textToSpeech.speak(value);
-
                     }
                 });
     }
@@ -376,5 +389,141 @@ public class ShareHandler {
         private static String constructShareText(String selectedText, String introText) {
             return selectedText + "\n\n" + introText;
         }
+    }
+
+    //retrieve the language name instead of the language code
+    private String getPageLanguage() {
+        AppLanguageLookUpTable lookup = new AppLanguageLookUpTable(app);
+        String lang = lookup.getCanonicalName(fragment.getTitle().getWikiSite().languageCode());
+        //Toast.makeText(app, "New Page language: "+ lang, Toast.LENGTH_SHORT).show();
+        return lang;
+    }
+
+    private String setLanguageName(String language) {
+        String lang = language;
+        //both Tranditional Chinese and Simplified Chinese can be classified as Chinese
+        //because they can be both read in mandarin, which is supported by the TTS engine
+        if (language.contains("Chinese")) {
+            lang = "Chinese";
+        }
+
+        //if the language does not have any other constraint, return the original
+        return lang;
+    }
+
+    //find the Locale from the given language
+    private Locale getLocaleForTTS(String language) {
+
+        Locale locale = Locale.getDefault();
+        boolean foundLanguage = false;
+        Locale[] locales = Locale.getAvailableLocales();
+
+        //loop until the matched language found
+        for (Locale loc : locales) {
+            if (loc.getDisplayLanguage().equals(language)) {
+                locale = loc;
+                foundLanguage = true;
+                break;
+            }
+        }
+        if (!foundLanguage) {
+            Toast.makeText(fragment.getActivity(), "Locale not found. Default language will be applied. ", Toast.LENGTH_SHORT).show();
+            locale = Locale.getDefault();
+        }
+
+        return locale;
+    }
+
+    //set the TTS language
+    private void setTTSLanguage(Locale locale) {
+        //Toast.makeText(app, "setting TTS language: "+ locale.getDisplayLanguage(), Toast.LENGTH_SHORT).show();
+        int result = textToSpeech.isTTSLanguageAvailable(locale);
+        //Toast.makeText(fragment.getActivity(), "result setting TTS: " + locale.getDisplayLanguage(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(fragment.getActivity(), "result setting TTS: " + result, Toast.LENGTH_SHORT).show();
+        lock.lock();
+        try {
+            if (result == TextToSpeech.LANG_AVAILABLE || result == TextToSpeech.LANG_COUNTRY_AVAILABLE || result == TextToSpeech.LANG_COUNTRY_VAR_AVAILABLE) {
+                textToSpeech.setLanguage(locale);
+                lock.unlock();
+            }
+            else {
+                showAlternateLanguageDialog();
+                textToSpeech.setLanguage(selectedLocale);
+                lock.unlock();
+            }
+        } finally {
+            Toast.makeText(fragment.getActivity(), "TTS language has set to : " + textToSpeech.getTTSLanguage(), Toast.LENGTH_SHORT).show();
+            selectedTextToSpeech();
+        }
+
+    }
+
+    private void showAlternateLanguageDialog() {
+
+        FragmentActivity currentActivity = fragment.getActivity();
+        AlertDialog.Builder builderSingle = new AlertDialog.Builder(currentActivity);
+        builderSingle.setTitle("Select alternate language for TTS: ");
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(currentActivity, android.R.layout.select_dialog_singlechoice, getTTSOptionList());
+
+        builderSingle.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String selectedItem = arrayAdapter.getItem(which).toString();
+                selectedLanguage = selectedItem;
+                AlertDialog.Builder builderInner = new AlertDialog.Builder(currentActivity);
+                builderInner.setMessage(selectedItem);
+
+                ArrayList<Locale> locales = getTTSLocales();
+                for (Locale loc : locales) {
+                    if (selectedLanguage.contains(loc.getDisplayLanguage())) {
+                        selectedLocale = loc;
+                        pageLanguage = loc.getDisplayLanguage();
+                        break;
+                    }
+                }
+                builderInner.setTitle("Select alternate TTS language : ");
+                builderInner.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builderInner.show();
+            }
+        });
+        builderSingle.show();
+    }
+
+    private ArrayList getTTSOptionList() {
+        ///show TTS language option list
+        Locale[] locales = Locale.getAvailableLocales();
+        ArrayList<String> ttsLanguages = new ArrayList<>();
+        for (Locale locale : locales) {
+            int res = textToSpeech.isTTSLanguageAvailable(locale);
+            if (res == TextToSpeech.LANG_COUNTRY_AVAILABLE) {
+                ttsLanguages.add(locale.getDisplayLanguage() + " : " + locale.getDisplayCountry());
+            }
+        }
+        return ttsLanguages;
+    }
+
+    private ArrayList getTTSLocales() {
+        ///show TTS languages
+        Locale[] locales = Locale.getAvailableLocales();
+        ArrayList<Locale> localeList = new ArrayList<Locale>();
+        for (Locale locale : locales) {
+            int res = textToSpeech.isTTSLanguageAvailable(locale);
+            if (res == TextToSpeech.LANG_COUNTRY_AVAILABLE) {
+                localeList.add(locale);
+            }
+        }
+        return localeList;
     }
 }
