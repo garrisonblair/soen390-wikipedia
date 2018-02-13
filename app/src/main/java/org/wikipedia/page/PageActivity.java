@@ -1,6 +1,7 @@
 package org.wikipedia.page;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.app.SearchManager;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
@@ -29,6 +30,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -84,6 +86,7 @@ import static org.wikipedia.util.UriUtil.visitInExternalBrowser;
 
 import android.speech.tts.TextToSpeech;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -131,6 +134,7 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
 
     static private TTSWrapper TTS;
     public String pageLanguage;
+    public String selectedLanguage;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -961,9 +965,9 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
 
     public ImageButton getStopButton(){
         //if the TTS engine does not support the page language, do something else
-        if(!setTTSLanguage(getLocaleForTTS(setLanguageName(pageLanguage)))){
-            Toast.makeText(app,"Failed to set TTS Language. The current language is not supported by the TTS engine.",Toast.LENGTH_LONG).show();
-        }else {
+        if (!setTTSLanguage(getLocaleForTTS(setLanguageName(pageLanguage)))) {
+            Toast.makeText(app,"Failed to set TTS Language. The current language is not supported by the TTS engine." , Toast.LENGTH_LONG).show();
+        } else {
             //set the TTS language as the page language when the user starts the TTS
             Toast.makeText(app, "TTS Language is set to " + TTS.getTTSLanguage(), Toast.LENGTH_LONG).show();
         }
@@ -981,10 +985,10 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
         Locale[] locales = Locale.getAvailableLocales();
 
         //loop until the matched language found
-        for(Locale loc : locales){
-            if(loc.getDisplayLanguage().equals(language)){
+        for (Locale loc : locales) {
+            if (loc.getDisplayLanguage().equals(language)) {
                 locale = loc;
-                foundLanguage=true;
+                foundLanguage = true;
                 break;
             }
         }
@@ -993,10 +997,82 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
         //will be replaced by the select language feature
         if(!foundLanguage){
             //locale = Locale.getDefault();
-            Toast.makeText(app,"Language has not been found. Default language will be applied.", Toast.LENGTH_LONG).show();
+            Toast.makeText(app, "Language has not been found. Default language will be applied.", Toast.LENGTH_LONG).show();
             //loadMainPageInForegroundTab();
+            getAlternateLanguageDialog();
+            //locale = getLocaleForTTS(pageLanguage);
         }
         return locale;
+    }
+
+    public void getAlternateLanguageDialog(){
+        AlertDialog.Builder builderSingle = new AlertDialog.Builder(PageActivity.this);
+        builderSingle.setTitle("Select alternate language for TTS: ");
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(PageActivity.this, android.R.layout.select_dialog_singlechoice, getTTSLanguages());
+
+        builderSingle.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String selectedItem = arrayAdapter.getItem(which).toString();
+                selectedLanguage = selectedItem;
+                AlertDialog.Builder builderInner = new AlertDialog.Builder(PageActivity.this);
+                builderInner.setMessage(selectedItem);
+
+                ArrayList<Locale> locales = getTTSLocales();
+                for (Locale loc : locales) {
+                    if (selectedLanguage.contains(loc.getDisplayLanguage())) {
+                        pageLanguage = loc.getDisplayLanguage();
+                        break;
+                    }
+                }
+                builderInner.setTitle("Select alternate TTS language : " );
+                builderInner.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog,int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builderInner.show();
+            }
+        });
+        builderSingle.show();
+
+    }
+
+    public ArrayList getTTSLanguages(){
+        ///show TTS languages
+        Locale[] locales = Locale.getAvailableLocales();
+        ArrayList<Locale> localeList = new ArrayList<Locale>();
+        ArrayList<String> TTSLanguages = new ArrayList<>();
+        for (Locale locale : locales) {
+            int res = TTS.isTTSLanguageAvailable(locale);
+            if (res == TextToSpeech.LANG_COUNTRY_AVAILABLE) {
+                localeList.add(locale);
+                TTSLanguages.add(locale.getDisplayCountry()+ " " + locale.getDisplayLanguage());
+            }
+        }
+        return TTSLanguages;
+    }
+    public ArrayList getTTSLocales(){
+        ///show TTS languages
+        Locale[] locales = Locale.getAvailableLocales();
+        ArrayList<Locale> localeList = new ArrayList<Locale>();
+        ArrayList<String> TTSLanguages = new ArrayList<>();
+        for (Locale locale : locales) {
+            int res = TTS.isTTSLanguageAvailable(locale);
+            if (res == TextToSpeech.LANG_COUNTRY_AVAILABLE) {
+                localeList.add(locale);
+                TTSLanguages.add(locale.getDisplayCountry()+ " " + locale.getDisplayLanguage());
+            }
+        }
+        return localeList;
     }
 
     //retrieve the language name instead of the language code
@@ -1011,7 +1087,7 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
         String lang = language;
         //both Tranditional Chinese and Simplified Chinese can be classified as Chinese
         //because they can be both read in mandarin, which is supported by the TTS engine
-        if(language.contains("Chinese")){
+        if (language.contains("Chinese")) {
             lang = "Chinese";
         }
 
@@ -1024,7 +1100,7 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
         //Toast.makeText(app, "setting TTS language: "+ locale.getDisplayLanguage(), Toast.LENGTH_SHORT).show();
         int result = TTS.isTTSLanguageAvailable(locale);
         //Toast.makeText(app, "result setting TTS: "+ result, Toast.LENGTH_SHORT).show();
-        if(result == TextToSpeech.LANG_AVAILABLE || result == TextToSpeech.LANG_COUNTRY_AVAILABLE || result == TextToSpeech.LANG_COUNTRY_VAR_AVAILABLE){
+        if (result == TextToSpeech.LANG_AVAILABLE || result == TextToSpeech.LANG_COUNTRY_AVAILABLE || result == TextToSpeech.LANG_COUNTRY_VAR_AVAILABLE){
             TTS.setLanguage(locale);
             return true;
         }
@@ -1037,13 +1113,13 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
         myAudioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
         boolean volumnOff;
 
-        switch( myAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC)){
+        switch(myAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC)){
 
             case 0:
                 volumnOff = true;
                 break;
             default:
-                volumnOff=false;
+                volumnOff = false;
                 break;
         }
         return volumnOff;
