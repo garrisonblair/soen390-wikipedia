@@ -8,8 +8,7 @@ import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.speech.tts.Voice;
 import android.support.v7.preference.PreferenceManager;
-
-import org.wikipedia.settings.SettingsActivity;
+import android.util.Log;
 
 import java.util.Locale;
 import java.util.Set;
@@ -42,26 +41,22 @@ public final class TTSWrapper {
     private  TTSWrapper(Context context, UtteranceProgressListener listener, SharedPreferences preferences) {
         contextID = context.toString();
         this.preferences = preferences;
+
         this.instantiateTextToSpeech(context, listener);
         loadPreferences();
     }
 
     //get preferences from settings stored in xml
     public void loadPreferences() {
-        String voicePreference = preferences.getString("preference_key_voice_tts", "");
-        float pitchPreference = preferences.getFloat("preference_key_pitch_tts", 0);
-        float speechRatePreference = preferences.getFloat("preference_key_speed_tts", 0);
-        int queueModePreference = preferences.getInt("preference_key_queue_tts", 0);
+//        String voicePreference = preferences.getString("preference_key_voice_tts", "");
+        int pitchPreference = preferences.getInt("ttsPitch", 0);
+        int speechRatePreference = preferences.getInt("ttsSpeed", 0);
+        boolean queueModePreference = preferences.getBoolean("ttsQueue", false);
 
 //        tts.setVoice();
-        tts.setPitch(pitchPreference);
-        tts.setSpeechRate(speechRatePreference);
-
-        if (queueModePreference == 0){
-            this.queueMode = false;
-        } else {
-            this.queueMode = true;
-        }
+        tts.setPitch((float) pitchPreference);
+        tts.setSpeechRate((float) speechRatePreference);
+        this.queueMode = queueModePreference;
     }
     
     public static TTSWrapper getInstance(Context context, UtteranceProgressListener listener) {
