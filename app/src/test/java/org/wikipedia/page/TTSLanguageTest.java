@@ -2,7 +2,9 @@ package org.wikipedia.page;
 import android.speech.tts.TextToSpeech;
 
 import org.junit.Test;
+import org.wikipedia.bridge.CommunicationBridge;
 import org.wikipedia.language.AppLanguageLookUpTable;
+import org.wikipedia.page.shareafact.ShareHandler;
 
 import java.util.Locale;
 
@@ -15,7 +17,10 @@ public class TTSLanguageTest {
 
     @Test
     public void testGetLocale() throws Throwable{
-        PageActivity page = new PageActivity();
+        Page page = new Page()
+        PageFragment fragment = new PageFragment();
+        PageActivity activity = fragment.getActivity();
+        ShareHandler handler = new ShareHandler(PageFragment.class, CommunicationBridge.class);
 
         //Test if the system passes a language to it, it will return the Locale
         Locale loc1 = page.getLocaleForTTS("Japanese");

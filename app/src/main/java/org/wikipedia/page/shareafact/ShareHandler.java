@@ -219,9 +219,8 @@ public class ShareHandler {
                     selectedTextToSpeech();
                     showStopButton();
                     leaveActionMode();
-                    return true;
                 }
-                return false;
+                return true;
             }
         });
         MenuItem defineItem = menu.findItem(R.id.menu_text_select_define);
@@ -453,8 +452,7 @@ public class ShareHandler {
             isNoLanguage = true;
         } else if (result == TextToSpeech.LANG_NOT_SUPPORTED){
             showAlternateLanguageDialog();
-            textToSpeech.setLanguage(selectedLocale);
-            isNoLanguage =  true;
+            isNoLanguage =  false;
         }
         Toast.makeText(fragment.getActivity(), "No Language: " + isNoLanguage, Toast.LENGTH_SHORT).show();
 
@@ -486,8 +484,12 @@ public class ShareHandler {
                 ArrayList<Locale> locales = getTTSLocales();
                 for (Locale loc : locales) {
                     if (selectedLanguage.contains(loc.getDisplayLanguage())) {
-                        selectedLocale = loc;
+                        //selectedLocale = loc;
                         pageLanguage = loc.getDisplayLanguage();
+                        textToSpeech.setLanguage(loc);
+                        selectedTextToSpeech();
+                        showStopButton();
+                        leaveActionMode();
                         break;
                     }
                 }
