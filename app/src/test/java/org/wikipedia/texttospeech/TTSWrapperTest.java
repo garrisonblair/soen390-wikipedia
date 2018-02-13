@@ -12,17 +12,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.wikipedia.testutils.TestUtils;
 
 import java.util.Locale;
 
-import static org.mockito.Matchers.anyFloat;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -51,7 +48,6 @@ public class TTSWrapperTest {
         TestUtils.setFinalStatic(Build.VERSION.class.getField("SDK_INT"), 22);
         ttsWrapper = TTSWrapper.getTestInstance(context, listener, sharedPrefs);
         ttsWrapper.setTTS(tts);
-        Mockito.when(sharedPrefs.getInt("preference_key_queue_tts", 0)).thenReturn(1);
     }
 
     @Test
@@ -107,27 +103,6 @@ public class TTSWrapperTest {
 
         // because of the new context, the TextToSpeech instance should have changed
         Assert.assertFalse(tts1 == tts2);
-    }
-
-    @Test
-    public void testGetValidPreferences() throws Exception {
-        TextToSpeech tts1 = mock(TextToSpeech.class);
-        TTSWrapper wrapper = TTSWrapper.getTestInstance(context, listener, sharedPrefs);
-        wrapper.setTTS(tts1);
-        reset(sharedPrefs);
-        wrapper.loadPreferences();
-
-        verify(sharedPrefs).getString("preference_key_voice_tts", "");
-        verify(sharedPrefs).getFloat("preference_key_pitch_tts", 0);
-        verify(sharedPrefs).getFloat("preference_key_speed_tts", 0);
-        verify(sharedPrefs).getInt("preference_key_queue_tts", 0);
-
-//        verify(tts1).setVoice();
-        verify(tts1).setPitch(anyFloat());
-        verify(tts1).setSpeechRate(anyFloat());
-        Assert.assertEquals(false,wrapper.getQueueMode());
-
-
     }
 
 }
