@@ -598,6 +598,12 @@
     <string name="onboarding_create_account_contributions">Keep track of your contributions</string>
     <string name="onboarding_create_account_preferences">Save your preferences</string>
     <string name="onboarding_got_it">Got it</string>
+
+    <string name="features_onboarding_welcome_title">Wikipedia New Updates!</string>
+    <string name="features_onboarding_welcome_text"> Version: RELEASE 1</string>
+    <string name="features_onboarding_feature_one_title">Text To Speech</string>
+    <string name="features_onboarding_feature_one_text"><![CDATA[Too lazy to read the document? Our Text To Speech engine can read it out loud for you! <a href="#tts">Learn More</a>]]></string>
+
     <!-- /Onboarding -->
 
     <!-- App Shortcuts -->
