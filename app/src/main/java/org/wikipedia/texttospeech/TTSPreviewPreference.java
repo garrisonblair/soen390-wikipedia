@@ -3,9 +3,9 @@ package org.wikipedia.texttospeech;
 import android.content.Context;
 import android.support.v7.preference.PreferenceViewHolder;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import org.wikipedia.R;
 
@@ -28,11 +28,11 @@ public class TTSPreviewPreference extends android.support.v7.preference.Preferen
     @Override
     public void onBindViewHolder(PreferenceViewHolder holder) {
         Button ttsPreviewBtn = (Button) holder.findViewById(R.id.tts_preview_btn);
-
+        EditText ttsPreviewEdit = (EditText) holder.findViewById(R.id.tts_edit_preview_text);
         ttsPreviewBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                tts.speak("Test String");
+                tts.speak(ttsPreviewEdit.getText().toString());
             }
         });
     }
