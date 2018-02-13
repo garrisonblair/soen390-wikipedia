@@ -51,7 +51,6 @@ public final class TTSWrapper {
 
         // If requesting TTS from a different context, reinstantiate TTS
         if (!context.toString().equals(INSTANCE.contextID)) {
-            INSTANCE.tts.shutdown();
             INSTANCE.instantiateTextToSpeech(context, listener);
         }
 
