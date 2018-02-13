@@ -156,4 +156,9 @@ public final class TTSWrapper {
         }
     }
 
+//    Decouples tests that are dependent on a singleton
+    public static void reset() {
+        INSTANCE = null;
+    }
+
 }
