@@ -74,7 +74,6 @@
             android:summary="@string/preference_queue_summary_tts" />
         <org.wikipedia.texttospeech.TTSPreviewPreference
             android:key="@string/preference_key_preview_tts"/>
-            android:max="4"/>
 
     </PreferenceCategory>
     <!-- /Additional menu settings for text to speech settings. Additional functionality to be added by teammates -->

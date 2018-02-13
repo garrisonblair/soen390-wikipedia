@@ -32,6 +32,7 @@ public class TTSPreviewPreference extends android.support.v7.preference.Preferen
         ttsPreviewBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                tts.loadPreferences();
                 tts.speak(ttsPreviewEdit.getText().toString());
             }
         });
