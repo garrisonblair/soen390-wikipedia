@@ -1,24 +1,20 @@
 package org.wikipedia.onboarding;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import org.wikipedia.Constants;
 import org.wikipedia.R;
-import org.wikipedia.analytics.LoginFunnel;
 import org.wikipedia.login.LoginActivity;
 import org.wikipedia.model.EnumCode;
 import org.wikipedia.model.EnumCodeMap;
-import org.wikipedia.settings.Prefs;
 import org.wikipedia.util.FeedbackUtil;
-
-import static org.wikipedia.util.UriUtil.handleExternalLink;
 
 public class FeaturesOnboardingFragment extends OnboardingFragment {
     private PageViewCallback pageViewCallback = new PageViewCallback();
@@ -55,18 +51,10 @@ public class FeaturesOnboardingFragment extends OnboardingFragment {
         }
 
         @Override public void onLinkClick(@NonNull OnboardingPageView view, @NonNull String url) {
-            if (url.equals("#login")) {
-                startActivityForResult(LoginActivity
-                                .newIntent(getContext(), LoginFunnel.SOURCE_ONBOARDING),
-                        Constants.ACTIVITY_REQUEST_LOGIN);
-            } else if (url.equals("#privacy")) {
-                FeedbackUtil.showPrivacyPolicy(getContext());
-            } else if (url.equals("#about")) {
-                FeedbackUtil.showAboutWikipedia(getContext());
-            } else if (url.equals("#offline")) {
-                FeedbackUtil.showOfflineReadingAndData(getContext());
-            } else {
-                handleExternalLink(getActivity(), Uri.parse(url));
+            if (url.equals("#tts")) {
+                new AlertDialog.Builder(getContext())
+                        .setView(R.layout.view_tts_ui)
+                        .show();
             }
         }
     }
