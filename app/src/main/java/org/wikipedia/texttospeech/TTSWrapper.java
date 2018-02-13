@@ -58,6 +58,11 @@ public final class TTSWrapper {
     }
 
     public void speak(String text) {
+
+        if (text.equals("")) {
+            return;
+        }
+
         int mode = TextToSpeech.QUEUE_FLUSH;
 
         if (queueMode) {
@@ -90,7 +95,6 @@ public final class TTSWrapper {
     public void setQueueMode(boolean queueMode) {
         this.queueMode = queueMode;
     }
-
 
     // tts getter and setter only for testing purposes
     public TextToSpeech getTTS() {
