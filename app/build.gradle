@@ -153,6 +153,10 @@ android {
         exclude 'META-INF/maven/com.google.guava/guava/pom.xml'
         exclude 'META-INF/maven/com.google.guava/guava/pom.properties'
     }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 apply from: '../gradle/src/test.gradle'
