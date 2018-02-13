@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.speech.tts.UtteranceProgressListener;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
@@ -110,6 +111,8 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
     @Nullable private Bus bus;
     private EventBusMethods busMethods;
     private ActionMode currentActionMode;
+
+    private static TTSWrapper textToSpeech;
 
     private PageToolbarHideHandler toolbarHideHandler;
 
@@ -252,9 +255,8 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
 
     @OnClick(R.id.page_stop_button)
     public void onStopButtonClicked(){
-        TTSWrapper.getInstance(this,null).stop();
-        stopButton.setVisibility(View.GONE);
-
+        textToSpeech.stop();
+        stopButton.setVisibility(View.INVISIBLE);
     }
 
     private void finishActionMode() {
@@ -732,6 +734,18 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
         super.onResume();
         app.resetWikiSite();
         app.getSessionFunnel().touchSession();
+        textToSpeech = TTSWrapper.getInstance(this, new UtteranceProgressListener() {
+            @Override
+            public void onStart(String s) {}
+
+            @Override
+            public void onDone(String s) {
+                stopButton.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onError(String utteranceId) {}
+        });
     }
 
     @Override
