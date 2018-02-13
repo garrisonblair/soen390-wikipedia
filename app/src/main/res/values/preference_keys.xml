@@ -18,6 +18,7 @@
     <string name="preference_key_speed_tts">ttsSpeed</string>
     <string name="preference_key_language_tts">ttsLanguage</string>
     <string name="preference_key_preview_tts">ttsPreview</string>
+    <string name="preference_key_queue_tts">ttsQueue</string>
     <!-- alternative option key -->
     <string name="preference_key_tts">ttsActivitySettings</string>
     <string name="preference_title_tts">ttsActivitySettingsTitle</string>
