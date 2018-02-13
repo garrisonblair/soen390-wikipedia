@@ -8,6 +8,7 @@ import android.view.MenuItem;
 
 import org.wikipedia.R;
 import org.wikipedia.texttospeech.TTSPreviewPreference;
+import org.wikipedia.texttospeech.TTSWrapper;
 
 public class SettingsFragment extends PreferenceLoaderFragment {
     public static SettingsFragment newInstance() {
@@ -15,6 +16,7 @@ public class SettingsFragment extends PreferenceLoaderFragment {
     }
 
     private SettingsPreferenceLoader preferenceLoader;
+    private TTSWrapper tts;
 
     @Override public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -23,7 +25,9 @@ public class SettingsFragment extends PreferenceLoaderFragment {
 
     @Override
     public void loadPreferences() {
+        tts = TTSWrapper.getInstance(getContext(), null);
         preferenceLoader = new SettingsPreferenceLoader(this);
+        preferenceLoader.setTTS(tts);
         preferenceLoader.loadPreferences();
     }
 
@@ -36,7 +40,7 @@ public class SettingsFragment extends PreferenceLoaderFragment {
     @Override
     public void onPause() {
         super.onPause();
-        ((TTSPreviewPreference)findPreference("ttsPreview")).shutdownTTS();
+        tts.shutdown();
     }
 
     @Override
