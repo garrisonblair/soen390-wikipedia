@@ -12,6 +12,8 @@ import org.wikipedia.BuildConfig;
 import org.wikipedia.R;
 import org.wikipedia.WikipediaApp;
 import org.wikipedia.activity.BaseActivity;
+import org.wikipedia.texttospeech.TTSPreviewPreference;
+import org.wikipedia.texttospeech.TTSWrapper;
 import org.wikipedia.theme.ThemeFittingRoomActivity;
 import org.wikipedia.util.ReleaseUtil;
 import org.wikipedia.util.StringUtil;
@@ -20,6 +22,8 @@ import static org.apache.commons.lang3.StringUtils.defaultString;
 
 /** UI code for app settings used by PreferenceFragment. */
 class SettingsPreferenceLoader extends BasePreferenceLoader {
+
+    private TTSWrapper tts;
 
     /*package*/ SettingsPreferenceLoader(@NonNull PreferenceFragmentCompat fragment) {
         super(fragment);
@@ -92,6 +96,9 @@ class SettingsPreferenceLoader extends BasePreferenceLoader {
         Preference ttsSpeedPref = findPreference(R.string.preference_key_speed_tts);
         Preference ttsPitchPref = findPreference(R.string.preference_key_pitch_tts);
         Preference ttsQueuePref = findPreference(R.string.preference_key_queue_tts);
+        TTSPreviewPreference ttsPreviewPreference = (TTSPreviewPreference) findPreference(R.string.preference_key_preview_tts);
+
+        ttsPreviewPreference.setTTS(tts);
         // End of of TTS preference settings logic to retrieve and load into local variable to be accessed during loading of preferences
 
         /*
@@ -142,6 +149,10 @@ class SettingsPreferenceLoader extends BasePreferenceLoader {
         if (!BuildConfig.APPLICATION_ID.equals("org.wikipedia")) {
             overridePackageName();
         }
+    }
+
+    public void setTTS(TTSWrapper tts) {
+        this.tts = tts;
     }
 
     /**

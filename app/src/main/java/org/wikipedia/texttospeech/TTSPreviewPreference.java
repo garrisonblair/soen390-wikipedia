@@ -22,7 +22,17 @@ public class TTSPreviewPreference extends android.support.v7.preference.Preferen
         setWidgetLayoutResource(R.layout.tts_preview_layout);
         setLayoutResource(R.layout.tts_preview_layout);
 
-        tts = TTSWrapper.getInstance(context, null);
+    }
+
+    //Test constructor
+    public TTSPreviewPreference(Context context, AttributeSet attrs, TTSWrapper tts) {
+        this(context, attrs);
+
+        this.tts = tts;
+    }
+
+    public void setTTS(TTSWrapper tts) {
+        this.tts = tts;
     }
 
     @Override
@@ -36,9 +46,5 @@ public class TTSPreviewPreference extends android.support.v7.preference.Preferen
                 tts.speak(ttsPreviewEdit.getText().toString());
             }
         });
-    }
-
-    public void shutdownTTS() {
-        tts.shutdown();
     }
 }
