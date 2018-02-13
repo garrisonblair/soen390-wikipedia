@@ -72,7 +72,9 @@ public final class TTSWrapper {
         tts.stop();
     }
 
-
+    public void shutdown() {
+        tts.shutdown();
+    }
 
     public Set<Voice> getVoices() {
         return tts.getVoices();
