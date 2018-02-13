@@ -3,6 +3,7 @@ package org.wikipedia.page.shareafact;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.speech.tts.UtteranceProgressListener;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
@@ -78,7 +79,18 @@ public class ShareHandler {
     public ShareHandler(@NonNull PageFragment fragment, @NonNull CommunicationBridge bridge) {
         this.fragment = fragment;
         this.bridge = bridge;
-        textToSpeech = TTSWrapper.getInstance(fragment.getContext(), null);
+        textToSpeech = TTSWrapper.getInstance(fragment.getActivity(), new UtteranceProgressListener() {
+            @Override
+            public void onStart(String s) {}
+
+            @Override
+            public void onDone(String s) {
+                setStopButtonVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onError(String utteranceId) {}
+        });
 
         bridge.addListener("onGetTextSelection", new CommunicationBridge.JSEventListener() {
             @Override
@@ -194,11 +206,13 @@ public class ShareHandler {
                 return true;
             }
         });
+
+        //Provide a listener to the speech button
         MenuItem toSpeechItem = menu.findItem(R.id.menu_text_to_speech);
         toSpeechItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                showStopButton();
+                setStopButtonVisibility(View.VISIBLE);
                 selectedTextToSpeech();
                 leaveActionMode();
                 return true;
@@ -217,13 +231,21 @@ public class ShareHandler {
 
         onHighlightText();
     }
-    private void showStopButton(){
+
+    /**
+     * Sets the visibility of the stopButton
+     */
+    private void setStopButtonVisibility(int visibility){
         FragmentActivity currentActivity = fragment.getActivity();
         if (currentActivity instanceof PageActivity) {
             ImageButton stopButton = ((PageActivity) currentActivity).getStopButton();
-            stopButton.setVisibility(View.VISIBLE);
+            stopButton.setVisibility(visibility);
         }
     }
+
+    /**
+     * Passes the selected text to the TTSWapper to make it speak
+     */
     private void selectedTextToSpeech(){
 
         fragment.getWebView().evaluateJavascript("(function(){return window.getSelection().toString()})()",
@@ -231,7 +253,6 @@ public class ShareHandler {
                     @Override
                     public void onReceiveValue(String value) {
                         textToSpeech.speak(value);
-
                     }
                 });
     }
