@@ -734,13 +734,22 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
         super.onResume();
         app.resetWikiSite();
         app.getSessionFunnel().touchSession();
+
         textToSpeech = TTSWrapper.getInstance(this, new UtteranceProgressListener() {
             @Override
             public void onStart(String s) {}
 
             @Override
             public void onDone(String s) {
-                stopButton.setVisibility(View.INVISIBLE);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        stopButton.setVisibility(View.INVISIBLE);
+
+                    }
+                });
+
             }
 
             @Override
@@ -754,6 +763,7 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
             // Explicitly close any current ActionMode (see T147191)
             finishActionMode();
         }
+        textToSpeech.shutdown();
         super.onPause();
     }
 

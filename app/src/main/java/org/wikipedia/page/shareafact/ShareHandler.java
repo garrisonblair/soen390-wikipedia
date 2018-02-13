@@ -79,13 +79,24 @@ public class ShareHandler {
     public ShareHandler(@NonNull PageFragment fragment, @NonNull CommunicationBridge bridge) {
         this.fragment = fragment;
         this.bridge = bridge;
+
         textToSpeech = TTSWrapper.getInstance(fragment.getActivity(), new UtteranceProgressListener() {
             @Override
             public void onStart(String s) {}
 
             @Override
             public void onDone(String s) {
-                setStopButtonVisibility(View.INVISIBLE);
+                fragment.getActivity().
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        setStopButtonVisibility(View.INVISIBLE);
+
+                    }
+                });
+
+
             }
 
             @Override
@@ -239,6 +250,7 @@ public class ShareHandler {
         FragmentActivity currentActivity = fragment.getActivity();
         if (currentActivity instanceof PageActivity) {
             ImageButton stopButton = ((PageActivity) currentActivity).getStopButton();
+
             stopButton.setVisibility(visibility);
         }
     }
