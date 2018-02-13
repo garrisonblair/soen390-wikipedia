@@ -52,11 +52,6 @@
             android:title="@string/preference_voice_title_tts"
             android:summary="@string/preference_voice_summary_tts">
         </org.wikipedia.settings.PreferenceMultiLine>
-        <org.wikipedia.settings.PreferenceMultiLine
-            android:key="@string/preference_key_language_tts"
-            android:title="@string/preference_language_title_tts"
-            android:summary="@string/preference_language_summary_tts">
-        </org.wikipedia.settings.PreferenceMultiLine>
         <!-- need to attach voice to voices from available TTS voice options (Garrison) and set default value -->
         <android.support.v7.preference.SeekBarPreference
             android:key="@string/preference_key_pitch_tts"
@@ -72,6 +67,11 @@
             android:defaultValue="1"
             android:min="1"
             android:max="4"/>
+        <SwitchPreferenceCompat
+            android:key="@string/preference_key_queue_tts"
+            android:defaultValue="true"
+            android:title="@string/preference_queue_title_tts"
+            android:summary="@string/preference_queue_summary_tts" />
     </PreferenceCategory>
     <!-- /Additional menu settings for text to speech settings. Additional functionality to be added by teammates -->
     <PreferenceCategory android:title="@string/preferences_privacy_settings_heading">

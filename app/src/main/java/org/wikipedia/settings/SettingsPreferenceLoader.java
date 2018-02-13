@@ -89,8 +89,9 @@ class SettingsPreferenceLoader extends BasePreferenceLoader {
         // Start of TTS preference settings logic to retrieve and load into local variable to be accessed during loading of preferences
         Preference ttsLanguagePref = findPreference(R.string.preference_key_language_tts);
         Preference ttsVoicePref = findPreference(R.string.preference_key_voice_tts);
-        Preference ttsPitchPref = findPreference(R.string.preference_key_pitch_tts);
         Preference ttsSpeedPref = findPreference(R.string.preference_key_speed_tts);
+        Preference ttsPitchPref = findPreference(R.string.preference_key_pitch_tts);
+        Preference ttsQueuePref = findPreference(R.string.preference_key_queue_tts);
         // End of of TTS preference settings logic to retrieve and load into local variable to be accessed during loading of preferences
 
         /*
