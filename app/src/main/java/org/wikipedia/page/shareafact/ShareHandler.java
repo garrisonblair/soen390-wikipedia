@@ -21,6 +21,7 @@ import android.widget.Toast;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 import org.wikipedia.R;
 import org.wikipedia.WikipediaApp;
 import org.wikipedia.activity.ActivityUtil;
@@ -212,10 +213,15 @@ public class ShareHandler {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 pageLanguage = getPageLanguage();
-                setTTSLanguage(getLocaleForTTS(setLanguageName(pageLanguage)));
-                showStopButton();
-                leaveActionMode();
-                return true;
+                boolean isSetLanguage = setTTSLanguage(getLocaleForTTS(setLanguageName(pageLanguage)));
+                Toast.makeText(fragment.getActivity(), "is set language: " + isSetLanguage, Toast.LENGTH_SHORT);
+                if (isSetLanguage){
+                    selectedTextToSpeech();
+                    showStopButton();
+                    leaveActionMode();
+                    return true;
+                }
+                return false;
             }
         });
         MenuItem defineItem = menu.findItem(R.id.menu_text_select_define);
@@ -435,29 +441,28 @@ public class ShareHandler {
     }
 
     //set the TTS language
-    private void setTTSLanguage(Locale locale) {
+    private boolean setTTSLanguage(Locale locale) {
         //Toast.makeText(app, "setting TTS language: "+ locale.getDisplayLanguage(), Toast.LENGTH_SHORT).show();
         int result = textToSpeech.isTTSLanguageAvailable(locale);
         //Toast.makeText(fragment.getActivity(), "result setting TTS: " + locale.getDisplayLanguage(), Toast.LENGTH_SHORT).show();
         Toast.makeText(fragment.getActivity(), "result setting TTS: " + result, Toast.LENGTH_SHORT).show();
-        lock.lock();
-        try {
-            if (result == TextToSpeech.LANG_AVAILABLE || result == TextToSpeech.LANG_COUNTRY_AVAILABLE || result == TextToSpeech.LANG_COUNTRY_VAR_AVAILABLE) {
-                textToSpeech.setLanguage(locale);
-            } else {
-                showAlternateLanguageDialog();
-                textToSpeech.setLanguage(selectedLocale);
-            }
-        } finally {
-            lock.unlock();
-            Toast.makeText(fragment.getActivity(), "TTS language has set to : " + textToSpeech.getTTSLanguage(), Toast.LENGTH_SHORT).show();
-            selectedTextToSpeech();
-        }
 
+        boolean isNoLanguage = false;
+        if (result == TextToSpeech.LANG_AVAILABLE || result == TextToSpeech.LANG_COUNTRY_AVAILABLE || result == TextToSpeech.LANG_COUNTRY_VAR_AVAILABLE) {
+            textToSpeech.setLanguage(locale);
+            isNoLanguage = true;
+        } else if (result == TextToSpeech.LANG_NOT_SUPPORTED){
+            showAlternateLanguageDialog();
+            textToSpeech.setLanguage(selectedLocale);
+            isNoLanguage =  true;
+        }
+        Toast.makeText(fragment.getActivity(), "No Language: " + isNoLanguage, Toast.LENGTH_SHORT).show();
+
+        Toast.makeText(fragment.getActivity(), "TTS language has set to : " + textToSpeech.getTTSLanguage(), Toast.LENGTH_SHORT).show();
+        return isNoLanguage;
     }
 
     private void showAlternateLanguageDialog() {
-
         FragmentActivity currentActivity = fragment.getActivity();
         AlertDialog.Builder builderSingle = new AlertDialog.Builder(currentActivity);
         builderSingle.setTitle("Select alternate language for TTS: ");
