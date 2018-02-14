@@ -11,6 +11,7 @@ import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 
 import java.util.Locale;
+import java.util.Optional;
 import java.util.Set;
 
 
@@ -48,15 +49,21 @@ public final class TTSWrapper {
 
     //get preferences from settings stored in xml
     public void loadPreferences() {
-        final int factor = 25;
-//        String voicePreference = preferences.getString("preference_key_voice_tts", "");
-        int pitchPreference = preferences.getInt("ttsPitch", 0);
-        int speechRatePreference = preferences.getInt("ttsSpeed", 0);
+        final int base = 25;
+        String voicePreference = preferences.getString("ttsVoice", "");
+        int pitchPreference = preferences.getInt("ttsPitch", base);
+        int speechRatePreference = preferences.getInt("ttsSpeed", base);
         boolean queueModePreference = preferences.getBoolean("ttsQueue", false);
 
-//        tts.setVoice();
-        tts.setPitch((float) pitchPreference / factor);
-        tts.setSpeechRate((float) speechRatePreference / factor);
+        if (voicePreference != "") {
+            Voice voice = this.getVoice(voicePreference);
+            if (!voice.equals(null)) {
+                tts.setVoice(voice);
+            }
+        }
+
+        tts.setPitch((float) pitchPreference / base);
+        tts.setSpeechRate((float) speechRatePreference / base);
         this.queueMode = queueModePreference;
     }
 
@@ -123,6 +130,16 @@ public final class TTSWrapper {
 
     public Set<Voice> getVoices() {
         return tts.getVoices();
+    }
+
+    public Voice getVoice(String voiceName) {
+        Set<Voice> voices = this.getVoices();
+        for (Voice voice : voices) {
+            if (voice.getName().equals(voiceName)) {
+                return voice;
+            }
+        }
+        return null;
     }
 
     public void setLanguage(Locale locale) {
