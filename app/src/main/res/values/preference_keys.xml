@@ -18,6 +18,7 @@
     <string name="preference_key_pitch_tts">ttsPitch</string>
     <string name="preference_key_speed_tts">ttsSpeed</string>
     <string name="preference_key_language_tts">ttsLanguage</string>
+    <string name="preference_key_preview_tts">ttsPreview</string>
     <string name="preference_key_queue_tts">ttsQueue</string>
     <!-- alternative option key -->
     <string name="preference_key_tts">ttsActivitySettings</string>
@@ -84,4 +85,6 @@
     <string name="preference_key_feed_customize_onboarding_card_enabled">feedCustomizeOnboardingCardEnabled</string>
     <string name="preference_key_add_articles">addArticles</string>
     <string name="preference_key_add_reading_lists">addReadingLists</string>
+    <!-- TTS Voice key -->
+    <string name="preference_key_show_TTS_voices">showVoices</string>
 </resources>

@@ -2,21 +2,29 @@ package org.wikipedia.texttospeech;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.junit.Assert;
-import static org.mockito.Mockito.*;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
-
 import org.wikipedia.testutils.TestUtils;
 
 import java.util.Locale;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyFloat;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
 
 /**
  * Created by Fred on 2018-02-05.
@@ -34,14 +42,39 @@ public class TTSWrapperTest {
     @Mock
     private UtteranceProgressListener listener = mock(UtteranceProgressListener.class);
 
+    @Mock
+    private SharedPreferences sharedPrefs = mock(SharedPreferences.class);
+
     private TTSWrapper ttsWrapper;
 
     @Before
     public void setUp() throws Throwable {
+        TTSWrapper.reset();
         TestUtils.setFinalStatic(Build.VERSION.class.getField("SDK_INT"), 22);
-        ttsWrapper = TTSWrapper.getInstance(context, listener);
+        ttsWrapper = TTSWrapper.getTestInstance(context, listener, sharedPrefs);
         ttsWrapper.setTTS(tts);
-        when(context.toString()).thenReturn("context");
+    }
+
+    @Test
+    public void testGetValidPreferences() throws Exception {
+        final int base = 25;
+        Mockito.when(sharedPrefs.getBoolean("ttsQueue", false)).thenReturn(false);
+
+        TextToSpeech tts1 = mock(TextToSpeech.class);
+        TTSWrapper wrapper = TTSWrapper.getTestInstance(context, listener, sharedPrefs);
+        wrapper.setTTS(tts1);
+        reset(sharedPrefs);
+        wrapper.loadPreferences();
+
+        verify(sharedPrefs).getString("ttsVoice", "");
+        verify(sharedPrefs).getInt("ttsPitch", base);
+        verify(sharedPrefs).getInt("ttsSpeed", base);
+        verify(sharedPrefs).getBoolean("ttsQueue", false);
+
+        verify(tts1).setVoice(any());
+        verify(tts1).setPitch(anyFloat());
+        verify(tts1).setSpeechRate(anyFloat());
+        Assert.assertFalse(wrapper.getQueueMode());
     }
 
     @Test
@@ -71,10 +104,10 @@ public class TTSWrapperTest {
 
     @Test
     public void testSingletonNoContextChange() {
-        TTSWrapper firstWrapper = TTSWrapper.getInstance(context, listener);
+        TTSWrapper firstWrapper = TTSWrapper.getTestInstance(context, listener, sharedPrefs);
         TextToSpeech tts1 = firstWrapper.getTTS();
 
-        TTSWrapper secondWrapper = TTSWrapper.getInstance(context, listener);
+        TTSWrapper secondWrapper = TTSWrapper.getTestInstance(context, listener, sharedPrefs);
         TextToSpeech tts2 = secondWrapper.getTTS();
 
         // both references should contain the same Object
@@ -86,10 +119,10 @@ public class TTSWrapperTest {
 
     @Test
     public void testSingletonContextChange() {
-        TTSWrapper firstWrapper = TTSWrapper.getInstance(context, listener);
+        TTSWrapper firstWrapper = TTSWrapper.getTestInstance(context, listener, sharedPrefs);
         TextToSpeech tts1 = firstWrapper.getTTS();
 
-        TTSWrapper secondWrapper = TTSWrapper.getInstance(mock(Context.class), listener);
+        TTSWrapper secondWrapper = TTSWrapper.getTestInstance(mock(Context.class), listener, sharedPrefs);
         TextToSpeech tts2 = secondWrapper.getTTS();
 
         // both references should contain the same Object

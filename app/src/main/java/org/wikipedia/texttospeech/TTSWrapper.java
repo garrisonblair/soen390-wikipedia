@@ -2,13 +2,18 @@ package org.wikipedia.texttospeech;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.speech.tts.Voice;
+import android.support.v7.preference.PreferenceManager;
+import android.util.Log;
 
 import java.util.Locale;
+import java.util.Optional;
 import java.util.Set;
+
 
 
 /**
@@ -32,11 +37,29 @@ public final class TTSWrapper {
 
     private boolean queueMode;
 
-    private  TTSWrapper(Context context, UtteranceProgressListener listener) {
+    private SharedPreferences preferences;
+
+    private  TTSWrapper(Context context, UtteranceProgressListener listener, SharedPreferences preferences) {
         contextID = context.toString();
+        this.preferences = preferences;
 
         this.instantiateTextToSpeech(context, listener);
-        //TODO: Load Preferences
+    }
+
+    //get preferences from settings stored in xml
+    public void loadPreferences() {
+        final int base = 25;
+        String voicePreference = preferences.getString("ttsVoice", "");
+        int pitchPreference = preferences.getInt("ttsPitch", base);
+        int speechRatePreference = preferences.getInt("ttsSpeed", base);
+        boolean queueModePreference = preferences.getBoolean("ttsQueue", false);
+
+        Voice voice = this.getVoice(voicePreference);
+
+        tts.setVoice(voice);
+        tts.setPitch((float) pitchPreference / base);
+        tts.setSpeechRate((float) speechRatePreference / base);
+        this.queueMode = queueModePreference;
     }
 
     public static TTSWrapper getInstance(Context context, UtteranceProgressListener listener) {
@@ -46,11 +69,31 @@ public final class TTSWrapper {
         }
 
         if (INSTANCE == null) {
-            INSTANCE = new TTSWrapper(context, listener);
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+            INSTANCE = new TTSWrapper(context, listener, sharedPref);
         }
 
         // If requesting TTS from a different context, reinstantiate TTS
         if (!context.toString().equals(INSTANCE.contextID)) {
+            INSTANCE.tts.shutdown();
+            INSTANCE.instantiateTextToSpeech(context, listener);
+        }
+
+        return INSTANCE;
+    }
+
+    public static TTSWrapper getTestInstance(Context context, UtteranceProgressListener listener, SharedPreferences preferences) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            return null;
+        }
+
+        if (INSTANCE == null) {
+            INSTANCE = new TTSWrapper(context, listener, preferences);
+        }
+
+        // If requesting TTS from a different context, reinstantiate TTS
+        if (!context.toString().equals(INSTANCE.contextID)) {
+            INSTANCE.tts.shutdown();
             INSTANCE.instantiateTextToSpeech(context, listener);
         }
 
@@ -84,6 +127,18 @@ public final class TTSWrapper {
         return tts.getVoices();
     }
 
+    public Voice getVoice(String voiceName) {
+        if (voiceName != ""){
+            Set<Voice> voices = this.getVoices();
+            for (Voice voice : voices) {
+                if (voice.getName().equals(voiceName)) {
+                    return voice;
+                }
+            }
+        }
+        return null;
+    }
+
     public void setLanguage(Locale locale) {
         tts.setLanguage(locale);
     }
@@ -95,6 +150,9 @@ public final class TTSWrapper {
     public void setQueueMode(boolean queueMode) {
         this.queueMode = queueMode;
     }
+
+    public boolean getQueueMode() { return this.queueMode; }
+
 
     // tts getter and setter only for testing purposes
     public TextToSpeech getTTS() {
@@ -111,6 +169,7 @@ public final class TTSWrapper {
                 @Override
                 public void onInit(int status) {
                     if (status != TextToSpeech.ERROR) {
+                        loadPreferences();
                         tts.setOnUtteranceProgressListener(listener);
                     }
                 }
@@ -118,6 +177,11 @@ public final class TTSWrapper {
         } else {
             tts = new TextToSpeech(context, null);
         }
+    }
+
+//    Decouples tests that are dependent on a singleton
+    public static void reset() {
+        INSTANCE = null;
     }
 
 }

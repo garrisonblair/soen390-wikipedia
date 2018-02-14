@@ -648,6 +648,13 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="TTS_preview">Preview Settings</string>
+    <string name="tts_preview_btn">Preview</string>
+    <string name="tts_preview_default">Testing text to speech</string>
     <!-- /On This Day -->
+
+    <!-- TTS Voice Settings -->
+    <string name="preference_title_TTS_voice">Text to Speech Voice</string>
+    <string name="preference_summary_TTS_voice">Different voices for Text to Speech</string>
 
 </resources>
