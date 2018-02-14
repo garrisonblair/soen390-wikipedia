@@ -14,7 +14,7 @@ import org.junit.Assert;
 import static org.mockito.Mockito.*;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import org.wikipedia.testutils.TestUtils;
+import org.wkipedia.testutils.TestUtils;
 
 import java.util.Locale;
 

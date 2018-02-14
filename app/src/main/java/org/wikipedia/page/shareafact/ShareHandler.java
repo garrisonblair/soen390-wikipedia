@@ -2,7 +2,6 @@ package org.wikipedia.page.shareafact;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
-import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
@@ -21,7 +20,6 @@ import android.widget.Toast;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 import org.wikipedia.R;
 import org.wikipedia.WikipediaApp;
 import org.wikipedia.activity.ActivityUtil;
@@ -48,9 +46,9 @@ import org.wikipedia.util.UriUtil;
 import org.wikipedia.util.log.L;
 import org.wikipedia.wiktionary.WiktionaryDialog;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
 
 import retrofit2.Call;
@@ -213,13 +211,22 @@ public class ShareHandler {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 pageLanguage = getPageLanguage();
-                boolean isSetLanguage = setTTSLanguage(getLocaleForTTS(setLanguageName(pageLanguage)));
-                Toast.makeText(fragment.getActivity(), "is set language: " + isSetLanguage, Toast.LENGTH_SHORT);
-                if (isSetLanguage){
-                    selectedTextToSpeech();
-                    showStopButton();
-                    leaveActionMode();
+                if (!textToSpeech.isLocaleFound(pageLanguage)) {
+                    //Example: Norsk is a language that cannot be found.
+                    showAlternateLanguageDialog();
+                } else {
+                    boolean isSetLanguage = textToSpeech.setTTSLanguage(textToSpeech.getLocaleForTTS(pageLanguage));
+                    if (isSetLanguage) {
+                        Toast.makeText(fragment.getActivity(), "Text to speech language has set to : " + textToSpeech.getTTSLanguage(), Toast.LENGTH_SHORT).show();
+                        selectedTextToSpeech();
+                        showStopButton();
+                        leaveActionMode();
+                    } else {
+                        //Example: Arabic can be found as locale but is not supported by the TTS engine
+                        showAlternateLanguageDialog();
+                    }
                 }
+
                 return true;
             }
         });
@@ -400,10 +407,10 @@ public class ShareHandler {
     private String getPageLanguage() {
         AppLanguageLookUpTable lookup = new AppLanguageLookUpTable(app);
         String lang = lookup.getCanonicalName(fragment.getTitle().getWikiSite().languageCode());
-        //Toast.makeText(app, "New Page language: "+ lang, Toast.LENGTH_SHORT).show();
         return lang;
     }
 
+    /*
     private String setLanguageName(String language) {
         String lang = language;
         //both Tranditional Chinese and Simplified Chinese can be classified as Chinese
@@ -414,57 +421,14 @@ public class ShareHandler {
 
         //if the language does not have any other constraint, return the original
         return lang;
-    }
-
-    //find the Locale from the given language
-    private Locale getLocaleForTTS(String language) {
-
-        Locale locale = Locale.getDefault();
-        boolean foundLanguage = false;
-        Locale[] locales = Locale.getAvailableLocales();
-
-        //loop until the matched language found
-        for (Locale loc : locales) {
-            if (loc.getDisplayLanguage().equals(language)) {
-                locale = loc;
-                foundLanguage = true;
-                break;
-            }
-        }
-        if (!foundLanguage) {
-            Toast.makeText(fragment.getActivity(), "Locale not found. Default language will be applied. ", Toast.LENGTH_SHORT).show();
-            locale = Locale.getDefault();
-        }
-
-        return locale;
-    }
-
-    //set the TTS language
-    private boolean setTTSLanguage(Locale locale) {
-        //Toast.makeText(app, "setting TTS language: "+ locale.getDisplayLanguage(), Toast.LENGTH_SHORT).show();
-        int result = textToSpeech.isTTSLanguageAvailable(locale);
-        //Toast.makeText(fragment.getActivity(), "result setting TTS: " + locale.getDisplayLanguage(), Toast.LENGTH_SHORT).show();
-        Toast.makeText(fragment.getActivity(), "result setting TTS: " + result, Toast.LENGTH_SHORT).show();
-
-        boolean isNoLanguage = false;
-        if (result == TextToSpeech.LANG_AVAILABLE || result == TextToSpeech.LANG_COUNTRY_AVAILABLE || result == TextToSpeech.LANG_COUNTRY_VAR_AVAILABLE) {
-            textToSpeech.setLanguage(locale);
-            isNoLanguage = true;
-        } else if (result == TextToSpeech.LANG_NOT_SUPPORTED){
-            showAlternateLanguageDialog();
-            isNoLanguage =  false;
-        }
-        Toast.makeText(fragment.getActivity(), "No Language: " + isNoLanguage, Toast.LENGTH_SHORT).show();
-
-        Toast.makeText(fragment.getActivity(), "TTS language has set to : " + textToSpeech.getTTSLanguage(), Toast.LENGTH_SHORT).show();
-        return isNoLanguage;
-    }
+    }*/
 
     private void showAlternateLanguageDialog() {
         FragmentActivity currentActivity = fragment.getActivity();
         AlertDialog.Builder builderSingle = new AlertDialog.Builder(currentActivity);
-        builderSingle.setTitle("Select alternate language for TTS: ");
-        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(currentActivity, android.R.layout.select_dialog_singlechoice, getTTSOptionList());
+        Toast.makeText(fragment.getActivity(), "Text to speech doesn not support this page language.", Toast.LENGTH_LONG).show();
+        builderSingle.setTitle("Please select alternate language for TTS: ");
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(currentActivity, android.R.layout.select_dialog_singlechoice, textToSpeech.getTTSOptionList());
 
         builderSingle.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
             @Override
@@ -481,7 +445,7 @@ public class ShareHandler {
                 AlertDialog.Builder builderInner = new AlertDialog.Builder(currentActivity);
                 builderInner.setMessage(selectedItem);
 
-                ArrayList<Locale> locales = getTTSLocales();
+                Set<Locale> locales = textToSpeech.getLanguages();
                 for (Locale loc : locales) {
                     if (selectedLanguage.contains(loc.getDisplayLanguage())) {
                         //selectedLocale = loc;
@@ -493,42 +457,8 @@ public class ShareHandler {
                         break;
                     }
                 }
-                builderInner.setTitle("Select alternate TTS language : ");
-                builderInner.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                builderInner.show();
             }
         });
         builderSingle.show();
-    }
-
-    private ArrayList getTTSOptionList() {
-        ///show TTS language option list
-        Locale[] locales = Locale.getAvailableLocales();
-        ArrayList<String> ttsLanguages = new ArrayList<>();
-        for (Locale locale : locales) {
-            int res = textToSpeech.isTTSLanguageAvailable(locale);
-            if (res == TextToSpeech.LANG_COUNTRY_AVAILABLE) {
-                ttsLanguages.add(locale.getDisplayLanguage() + " : " + locale.getDisplayCountry());
-            }
-        }
-        return ttsLanguages;
-    }
-
-    private ArrayList getTTSLocales() {
-        ///show TTS languages
-        Locale[] locales = Locale.getAvailableLocales();
-        ArrayList<Locale> localeList = new ArrayList<Locale>();
-        for (Locale locale : locales) {
-            int res = textToSpeech.isTTSLanguageAvailable(locale);
-            if (res == TextToSpeech.LANG_COUNTRY_AVAILABLE) {
-                localeList.add(locale);
-            }
-        }
-        return localeList;
     }
 }

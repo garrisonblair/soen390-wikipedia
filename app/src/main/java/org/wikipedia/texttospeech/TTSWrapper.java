@@ -7,8 +7,11 @@ import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.speech.tts.Voice;
 
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Set;
+
+import static java.util.Collections.sort;
 
 
 /**
@@ -88,9 +91,9 @@ public final class TTSWrapper {
         tts.setLanguage(locale);
     }
 
-    public int isTTSLanguageAvailable (Locale locale) { return tts.isLanguageAvailable(locale); }
-
-    public String getTTSLanguage(){ return tts.getLanguage().getDisplayLanguage(); }
+    public String getTTSLanguage() {
+        return tts.getLanguage().getDisplayLanguage();
+    }
 
     public Set<Locale> getLanguages() {
         return tts.getAvailableLanguages();
@@ -124,4 +127,63 @@ public final class TTSWrapper {
         }
     }
 
+    public int isTTSLanguageAvailable(Locale locale) {
+        return tts.isLanguageAvailable(locale);
+    }
+
+    public ArrayList getTTSOptionList() {
+        ArrayList<String> ttsLanguages = new ArrayList<>();
+        for (Locale locale : this.getLanguages()) {
+            String country = locale.getDisplayCountry();
+            if (locale.getDisplayCountry().equals("")) {
+                country = "None";
+            }
+            ttsLanguages.add(locale.getDisplayLanguage() + " : " + country);
+        }
+        sort(ttsLanguages);
+        return ttsLanguages;
+    }
+
+
+    //set the TTS language
+    public boolean setTTSLanguage(Locale locale) {
+        int result = this.isTTSLanguageAvailable(locale);
+
+        boolean isPageLanguage = false;
+        if (result == TextToSpeech.LANG_AVAILABLE || result == TextToSpeech.LANG_COUNTRY_AVAILABLE || result == TextToSpeech.LANG_COUNTRY_VAR_AVAILABLE) {
+            tts.setLanguage(locale);
+            isPageLanguage = true;
+        } else if (result == TextToSpeech.LANG_NOT_SUPPORTED) {
+            isPageLanguage =  false;
+        }
+        return isPageLanguage;
+    }
+
+    //find the Locale from the given language
+    public Locale getLocaleForTTS(String language) {
+
+        Locale locale = Locale.getDefault();
+        Locale[] locales = Locale.getAvailableLocales();
+
+        //loop until the matched language found
+        for (Locale loc : locales) {
+            if (loc.getDisplayLanguage().equals(language)) {
+                locale = loc;
+                break;
+            }
+        }
+        return locale;
+    }
+
+    public boolean isLocaleFound(String language) {
+        Locale[] locales = Locale.getAvailableLocales();
+
+        //loop until the matched language found
+        for (Locale loc : locales) {
+            if (loc.getDisplayLanguage().equals(language)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
