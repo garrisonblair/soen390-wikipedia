@@ -29,4 +29,7 @@ public class HideStopButtonOnDoneListener extends UtteranceProgressListener {
     public void onError(String s) {
 
     }
+    public void superSedeOnDone(PageActivity activity){
+        activity.getStopButton().setVisibility(View.INVISIBLE);
+    }
 }
