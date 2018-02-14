@@ -1,19 +1,21 @@
 package org.wikipedia.page.shareafact;
-
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.ValueCallback;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
@@ -26,16 +28,18 @@ import org.wikipedia.bridge.CommunicationBridge;
 import org.wikipedia.dataclient.mwapi.MwQueryResponse;
 import org.wikipedia.gallery.ImageLicense;
 import org.wikipedia.gallery.ImageLicenseFetchClient;
+import org.wikipedia.language.AppLanguageLookUpTable;
 import org.wikipedia.onboarding.PrefsOnboardingStateMachine;
 import org.wikipedia.page.Namespace;
 import org.wikipedia.page.NoDimBottomSheetDialog;
 import org.wikipedia.page.Page;
 import org.wikipedia.page.PageActivity;
-import org.wikipedia.page.listeners.HideStopButtonOnDoneListener;
 import org.wikipedia.page.PageFragment;
 import org.wikipedia.page.PageProperties;
 import org.wikipedia.page.PageTitle;
+import org.wikipedia.page.listeners.HideStopButtonOnDoneListener;
 import org.wikipedia.settings.Prefs;
+import org.wikipedia.texttospeech.TTSWrapper;
 import org.wikipedia.util.FeedbackUtil;
 import org.wikipedia.util.ShareUtil;
 import org.wikipedia.util.StringUtil;
@@ -45,8 +49,8 @@ import org.wikipedia.wiktionary.WiktionaryDialog;
 
 import java.util.Arrays;
 import java.util.Locale;
-
-import org.wikipedia.texttospeech.TTSWrapper;
+import java.util.Set;
+import java.util.concurrent.locks.ReentrantLock;
 
 import retrofit2.Call;
 
@@ -61,15 +65,20 @@ public class ShareHandler {
     private static final String PAYLOAD_PURPOSE_DEFINE = "define";
     private static final String PAYLOAD_PURPOSE_EDIT_HERE = "edit_here";
     private static final String PAYLOAD_TEXT_KEY = "text";
+    private WikipediaApp app = WikipediaApp.getInstance();
 
     @NonNull private final PageFragment fragment;
     @NonNull private final CommunicationBridge bridge;
     @Nullable private ActionMode webViewActionMode;
     @Nullable private ShareAFactFunnel funnel;
-    static private TTSWrapper textToSpeech;
+    @Nullable private TTSWrapper textToSpeech;
+    @Nullable private String pageLanguage;
+    @Nullable private String selectedLanguage = "";
+    @Nullable private Locale selectedLocale;
+    @Nullable private final ReentrantLock lock = new ReentrantLock();
+
 
     private void createFunnel() {
-        WikipediaApp app = WikipediaApp.getInstance();
         final Page page = fragment.getPage();
         final PageProperties pageProperties = page.getPageProperties();
         funnel = new ShareAFactFunnel(app, page.getTitle(), pageProperties.getPageId(),
@@ -79,6 +88,8 @@ public class ShareHandler {
     public ShareHandler(@NonNull PageFragment fragment, @NonNull CommunicationBridge bridge) {
         this.fragment = fragment;
         this.bridge = bridge;
+
+        pageLanguage = app.getAppLanguageCanonicalName(app.getAppOrSystemLanguageCode());
         PageActivity pageActivity = (PageActivity) fragment.getActivity();
         textToSpeech = TTSWrapper.getInstance(pageActivity, new HideStopButtonOnDoneListener(pageActivity));
 
@@ -199,12 +210,25 @@ public class ShareHandler {
 
         //Provide a listener to the speech button
         MenuItem toSpeechItem = menu.findItem(R.id.menu_text_to_speech);
+
+
         toSpeechItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                setStopButtonVisibility(View.VISIBLE);
-                selectedTextToSpeech();
-                leaveActionMode();
+                pageLanguage = getPageLanguage();
+                if (!textToSpeech.isLocaleFound(pageLanguage)) {
+                    showAlternateLanguageDialog();
+                } else {
+                    boolean isSetLanguage = textToSpeech.setTTSLanguage(textToSpeech.getLocaleForTTS(pageLanguage));
+                    if (isSetLanguage) {
+                        Toast.makeText(fragment.getActivity(), "Text to speech language has set to : " + textToSpeech.getTTSLanguage(), Toast.LENGTH_SHORT).show();
+                        selectedTextToSpeech();
+                        setStopButtonVisibility(View.VISIBLE);
+                        leaveActionMode();
+                    } else {
+                        showAlternateLanguageDialog();
+                    }
+                }
                 return true;
             }
         });
@@ -221,11 +245,10 @@ public class ShareHandler {
 
         onHighlightText();
     }
-
+    private void setStopButtonVisibility(int visibility){
     /**
      * Sets the visibility of the stopButton
      */
-    private void setStopButtonVisibility(int visibility){
         FragmentActivity currentActivity = fragment.getActivity();
         if (currentActivity instanceof PageActivity) {
             ImageButton stopButton = ((PageActivity) currentActivity).getStopButton();
@@ -233,13 +256,11 @@ public class ShareHandler {
             stopButton.setVisibility(visibility);
         }
     }
-
+    private void selectedTextToSpeech() {
     /**
      * Passes the selected text to the TTSWapper to make it speak
      */
-    private void selectedTextToSpeech(){
-
-        fragment.getWebView().evaluateJavascript("(function(){return window.getSelection().toString()})()",
+        fragment.getWebView().evaluateJavascript("(function() { return window.getSelection().toString() }) ()",
                 new ValueCallback<String>() {
                     @Override
                     public void onReceiveValue(String value) {
@@ -388,5 +409,64 @@ public class ShareHandler {
         private static String constructShareText(String selectedText, String introText) {
             return selectedText + "\n\n" + introText;
         }
+    }
+
+    //retrieve the language name instead of the language code
+    private String getPageLanguage() {
+        AppLanguageLookUpTable lookup = new AppLanguageLookUpTable(app);
+        String lang = lookup.getCanonicalName(fragment.getTitle().getWikiSite().languageCode());
+        return lang;
+    }
+
+    /*
+    private String setLanguageName(String language) {
+        String lang = language;
+        //both Tranditional Chinese and Simplified Chinese can be classified as Chinese
+        //because they can be both read in mandarin, which is supported by the TTS engine
+        if (language.contains("Chinese")) {
+            lang = "Chinese";
+        }
+
+        //if the language does not have any other constraint, return the original
+        return lang;
+    }*/
+
+    private void showAlternateLanguageDialog() {
+        FragmentActivity currentActivity = fragment.getActivity();
+        AlertDialog.Builder builderSingle = new AlertDialog.Builder(currentActivity);
+        Toast.makeText(fragment.getActivity(), "Text to speech doesn not support this page language.", Toast.LENGTH_LONG).show();
+        builderSingle.setTitle("Please select alternate language for TTS: ");
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(currentActivity, android.R.layout.select_dialog_singlechoice, textToSpeech.getTTSOptionList());
+
+        builderSingle.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String selectedItem = arrayAdapter.getItem(which);
+                selectedLanguage = selectedItem;
+                AlertDialog.Builder builderInner = new AlertDialog.Builder(currentActivity);
+                builderInner.setMessage(selectedItem);
+
+                Set<Locale> locales = textToSpeech.getLanguages();
+                for (Locale loc : locales) {
+                    if (selectedLanguage.contains(loc.getDisplayLanguage())) {
+                        //selectedLocale = loc;
+                        pageLanguage = loc.getDisplayLanguage();
+                        textToSpeech.setLanguage(loc);
+                        selectedTextToSpeech();
+                        setStopButtonVisibility(View.VISIBLE);
+                        leaveActionMode();
+                        break;
+                    }
+                }
+            }
+        });
+        builderSingle.show();
     }
 }

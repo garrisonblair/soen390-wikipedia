@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -60,6 +61,7 @@ import org.wikipedia.readinglist.AddToReadingListDialog;
 import org.wikipedia.search.SearchFragment;
 import org.wikipedia.search.SearchInvokeSource;
 import org.wikipedia.settings.SettingsActivity;
+import org.wikipedia.texttospeech.TTSWrapper;
 import org.wikipedia.theme.ThemeChooserDialog;
 import org.wikipedia.util.ClipboardUtil;
 import org.wikipedia.util.DeviceUtil;
@@ -70,8 +72,6 @@ import org.wikipedia.util.log.L;
 import org.wikipedia.views.ObservableWebView;
 import org.wikipedia.widgets.WidgetProviderFeaturedPage;
 import org.wikipedia.wiktionary.WiktionaryDialog;
-
-import org.wikipedia.texttospeech.TTSWrapper;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -596,7 +596,7 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
 
     @Override
     public void onPageAddToReadingList(@NonNull PageTitle title,
-                                @NonNull AddToReadingListDialog.InvokeSource source) {
+                                       @NonNull AddToReadingListDialog.InvokeSource source) {
         showAddToListDialog(title, source);
     }
 
@@ -944,9 +944,28 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
         return super.onKeyDown(keyCode, event);
     }
 
-    public ImageButton getStopButton(){
+    public ImageButton getStopButton() {
+        if (isVolumeOff()) {
+            Toast.makeText(app, "Device volmue is off. Please turn it on.", Toast.LENGTH_SHORT).show();
+        }
         return this.stopButton;
     }
 
+    //detect if the device's volmue is off
+    public boolean isVolumeOff() {
+        AudioManager myAudioManager;
+        myAudioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+        boolean volumnOff;
 
+        switch(myAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC)) {
+
+            case 0:
+                volumnOff = true;
+                break;
+            default:
+                volumnOff = false;
+                break;
+        }
+        return volumnOff;
+    }
 }

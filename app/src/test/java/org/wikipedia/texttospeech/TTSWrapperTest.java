@@ -16,6 +16,7 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.wikipedia.testutils.TestUtils;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 import static org.mockito.Matchers.any;
@@ -58,12 +59,17 @@ public class TTSWrapperTest {
     @Test
     public void testGetValidPreferences() throws Exception {
         final int base = 25;
-        Mockito.when(sharedPrefs.getBoolean("ttsQueue", false)).thenReturn(false);
+
 
         TextToSpeech tts1 = mock(TextToSpeech.class);
         TTSWrapper wrapper = TTSWrapper.getTestInstance(context, listener, sharedPrefs);
         wrapper.setTTS(tts1);
+
         reset(sharedPrefs);
+        Mockito.when(sharedPrefs.getBoolean("ttsQueue", false)).thenReturn(true);
+        Mockito.when(sharedPrefs.getString("ttsVoice", "")).thenReturn("");
+        Mockito.when(sharedPrefs.getInt("ttsPitch", base)).thenReturn(10);
+        Mockito.when(sharedPrefs.getInt("ttsSpeed", base)).thenReturn(20);
         wrapper.loadPreferences();
 
         verify(sharedPrefs).getString("ttsVoice", "");
@@ -71,10 +77,10 @@ public class TTSWrapperTest {
         verify(sharedPrefs).getInt("ttsSpeed", base);
         verify(sharedPrefs).getBoolean("ttsQueue", false);
 
-        verify(tts1).setVoice(any());
-        verify(tts1).setPitch(anyFloat());
-        verify(tts1).setSpeechRate(anyFloat());
-        Assert.assertFalse(wrapper.getQueueMode());
+        verify(tts1).setVoice(tts1.getDefaultVoice());
+        verify(tts1).setPitch(10f/base);
+        verify(tts1).setSpeechRate(20f/base);
+        Assert.assertTrue(wrapper.getQueueMode());
     }
 
     @Test
@@ -132,4 +138,35 @@ public class TTSWrapperTest {
         Assert.assertFalse(tts1 == tts2);
     }
 
+    @Test
+    public void testIsLanguageAvailable() {
+        int result = ttsWrapper.isTTSLanguageAvailable(Locale.forLanguageTag("en"));
+        Assert.assertEquals(result,0);
+    }
+
+    @Test
+    public void testIsLocalFound (){
+        String language = "Norsk";
+
+        //Example: Norsk is a language that cannot be found.
+        Assert.assertFalse(ttsWrapper.isLocaleFound(language));
+
+        //Example: English is a language that can be found
+        language = "English";
+        Assert.assertTrue(ttsWrapper.isLocaleFound(language));
+    }
+
+    @Test
+    public void testGetLocalForTTS(){
+        //does not need to test failure because no one should invoke getLocalForTTS before check it with isLocalFound
+
+        Locale locale = ttsWrapper.getLocaleForTTS("English");
+        Assert.assertEquals(locale.getDisplayCountry(), "United States");
+    }
+
+    @Test
+    public void testSetTTSLanguage(){
+        int result = ttsWrapper.isTTSLanguageAvailable(Locale.US);
+        Assert.assertEquals(result, 0);
+    }
 }
