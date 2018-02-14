@@ -28,6 +28,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -52,6 +53,7 @@ import org.wikipedia.gallery.GalleryActivity;
 import org.wikipedia.history.HistoryEntry;
 import org.wikipedia.language.LangLinksActivity;
 import org.wikipedia.page.linkpreview.LinkPreviewDialog;
+import org.wikipedia.page.listeners.HideStopButtonOnDoneListener;
 import org.wikipedia.page.tabs.TabsProvider;
 import org.wikipedia.page.tabs.TabsProvider.TabPosition;
 import org.wikipedia.readinglist.AddToReadingListDialog;
@@ -68,6 +70,8 @@ import org.wikipedia.util.log.L;
 import org.wikipedia.views.ObservableWebView;
 import org.wikipedia.widgets.WidgetProviderFeaturedPage;
 import org.wikipedia.wiktionary.WiktionaryDialog;
+
+import org.wikipedia.texttospeech.TTSWrapper;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -98,6 +102,7 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
     @BindView(R.id.page_toolbar) Toolbar toolbar;
     @BindView(R.id.page_toolbar_button_search) ImageView searchButton;
     @BindView(R.id.page_toolbar_button_show_tabs) ImageView tabsButton;
+    @BindView(R.id.page_stop_button) ImageButton stopButton;
     @Nullable private Unbinder unbinder;
 
     private PageFragment pageFragment;
@@ -106,6 +111,8 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
     @Nullable private Bus bus;
     private EventBusMethods busMethods;
     private ActionMode currentActionMode;
+
+    private static TTSWrapper textToSpeech;
 
     private PageToolbarHideHandler toolbarHideHandler;
 
@@ -244,6 +251,12 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
     @OnClick(R.id.page_toolbar_button_show_tabs)
     public void onShowTabsButtonClicked() {
         pageFragment.enterTabMode(false);
+    }
+
+    @OnClick(R.id.page_stop_button)
+    public void onStopButtonClicked(){
+        textToSpeech.stop();
+        stopButton.setVisibility(View.INVISIBLE);
     }
 
     private void finishActionMode() {
@@ -721,6 +734,8 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
         super.onResume();
         app.resetWikiSite();
         app.getSessionFunnel().touchSession();
+
+        textToSpeech = TTSWrapper.getInstance(this, new HideStopButtonOnDoneListener(this));
     }
 
     @Override
@@ -729,6 +744,7 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
             // Explicitly close any current ActionMode (see T147191)
             finishActionMode();
         }
+        textToSpeech.shutdown();
         super.onPause();
     }
 
@@ -927,4 +943,10 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
         }
         return super.onKeyDown(keyCode, event);
     }
+
+    public ImageButton getStopButton(){
+        return this.stopButton;
+    }
+
+
 }
