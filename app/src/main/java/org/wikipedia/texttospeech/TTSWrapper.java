@@ -48,14 +48,15 @@ public final class TTSWrapper {
 
     //get preferences from settings stored in xml
     public void loadPreferences() {
+        final int factor = 25;
 //        String voicePreference = preferences.getString("preference_key_voice_tts", "");
         int pitchPreference = preferences.getInt("ttsPitch", 0);
         int speechRatePreference = preferences.getInt("ttsSpeed", 0);
         boolean queueModePreference = preferences.getBoolean("ttsQueue", false);
 
 //        tts.setVoice();
-        tts.setPitch((float) pitchPreference);
-        tts.setSpeechRate((float) speechRatePreference);
+        tts.setPitch((float) pitchPreference / factor);
+        tts.setSpeechRate((float) speechRatePreference / factor);
         this.queueMode = queueModePreference;
     }
     
