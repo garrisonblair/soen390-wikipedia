@@ -44,7 +44,6 @@ public final class TTSWrapper {
         this.preferences = preferences;
 
         this.instantiateTextToSpeech(context, listener);
-        loadPreferences();
     }
 
     //get preferences from settings stored in xml
@@ -170,6 +169,7 @@ public final class TTSWrapper {
                 @Override
                 public void onInit(int status) {
                     if (status != TextToSpeech.ERROR) {
+                        loadPreferences();
                         tts.setOnUtteranceProgressListener(listener);
                     }
                 }

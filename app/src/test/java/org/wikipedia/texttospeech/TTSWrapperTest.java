@@ -18,6 +18,7 @@ import org.wikipedia.testutils.TestUtils;
 
 import java.util.Locale;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyFloat;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.eq;
@@ -65,12 +66,12 @@ public class TTSWrapperTest {
         reset(sharedPrefs);
         wrapper.loadPreferences();
 
-//        verify(sharedPrefs).getString("preference_key_voice_tts", "");
+        verify(sharedPrefs).getString("ttsVoice", "");
         verify(sharedPrefs).getInt("ttsPitch", base);
         verify(sharedPrefs).getInt("ttsSpeed", base);
         verify(sharedPrefs).getBoolean("ttsQueue", false);
 
-//        verify(tts1).setVoice();
+        verify(tts1).setVoice(any());
         verify(tts1).setPitch(anyFloat());
         verify(tts1).setSpeechRate(anyFloat());
         Assert.assertFalse(wrapper.getQueueMode());
