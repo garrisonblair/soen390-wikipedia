@@ -77,7 +77,7 @@ public class TTSWrapperTest {
         verify(sharedPrefs).getInt("ttsSpeed", base);
         verify(sharedPrefs).getBoolean("ttsQueue", false);
 
-        verify(tts1).setVoice(any());
+        verify(tts1).setVoice(tts1.getDefaultVoice());
         verify(tts1).setPitch(10f/base);
         verify(tts1).setSpeechRate(20f/base);
         Assert.assertTrue(wrapper.getQueueMode());
