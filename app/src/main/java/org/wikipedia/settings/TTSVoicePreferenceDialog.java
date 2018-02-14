@@ -1,5 +1,6 @@
 package org.wikipedia.settings;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -39,10 +40,12 @@ public class TTSVoicePreferenceDialog extends AppCompatDialog {
     private ListView voicesList;
     private final TTSWrapper tts;
     private Set<Voice> voices;
+    private Context cont;
 
     @NonNull
     private ArrayList<String> voiceNames;
 
+    ArrayList<Voice> voiceObjects;
 
     @NonNull
     private final WikipediaApp app;
@@ -51,16 +54,24 @@ public class TTSVoicePreferenceDialog extends AppCompatDialog {
         super(context);
         setContentView(R.layout.dialog_preference_tts_voices);
 
+        cont = context;
         app = WikipediaApp.getInstance();
         tts = tts_instance;
         voices = tts.getVoices();
         Iterator<Voice> it = voices.iterator();
         voiceNames = new ArrayList<String>();
+        voiceObjects = new ArrayList<Voice>();
+
+        String lang = app.getAppLanguageCode();
+        Locale locale = Locale.getDefault();
 
         while (it.hasNext()) {
-            voiceNames.add(it.next().getName());
+            Voice v = it.next();
+            if (v.getLocale().equals(locale)) {
+                voiceNames.add(v.getName());
+                voiceObjects.add(v);
+            }
         }
-        
     }
 
     @Override
@@ -73,15 +84,23 @@ public class TTSVoicePreferenceDialog extends AppCompatDialog {
         voicesList.setAdapter(new ArrayAdapter<String>(getContext(), /*R.layout.dialog_preference_tts_voices, */ R.layout.simple_row, voiceNames));
 
         // Adding Listener on Item click to the adapter view
-        AdapterView.OnItemClickListener ttsClickedHandler = new AdapterView.OnItemClickListener() {
+        voicesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // Set Voice selection in settings
-//                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
-//                sharedPref.edit()
+                String voiceName = (String) voicesList.getAdapter().getItem(position);
+                //SharedPreferences sharedPref = getContext().getSharedPreferences("preferences.xml", Context.MODE_MULTI_PROCESS);
+                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString("ttsVoice", voiceName);
+                editor.commit();
+
+                tts.getTTS().setVoice(voiceObjects.get(position));
+
+                dismiss();
 
             }
-        };
+        });
     }
 }
 

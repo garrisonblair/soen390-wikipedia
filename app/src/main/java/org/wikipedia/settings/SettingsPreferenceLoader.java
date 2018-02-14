@@ -1,7 +1,9 @@
 package org.wikipedia.settings;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.Preference;
@@ -99,6 +101,8 @@ class SettingsPreferenceLoader extends BasePreferenceLoader {
         TTSPreviewPreference ttsPreviewPreference = (TTSPreviewPreference) findPreference(R.string.preference_key_preview_tts);
 
         ttsPreviewPreference.setTTS(tts);
+
+
         // End of of TTS preference settings logic to retrieve and load into local variable to be accessed during loading of preferences
 
         /*
@@ -124,6 +128,8 @@ class SettingsPreferenceLoader extends BasePreferenceLoader {
         });
         */
         //*
+
+
         ttsVoicePref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -132,11 +138,14 @@ class SettingsPreferenceLoader extends BasePreferenceLoader {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
                         // Need to change this to get the current voice being used
-                        //String voice = defaultString(WikipediaApp.getInstance().getAppOrSystemLanguageLocalizedName());
-//                        if (getActivity() != null && !findPreference(R.string.preference_key_language).getSummary().equals(voice)) {
-//                            findPreference(R.string.preference_key_language).setSummary(voice);
-//                            getActivity().setResult(SettingsActivity.ACTIVITY_RESULT_VOICE_CHANGED);
-//                        }
+//                        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_MULTI_PROCESS);
+//                        String voice = sharedPref.getString("ttsVoice", "Voice for Text-to-Speech");
+                        String voice = tts.getTTS().getVoice().getName();
+                        if (getActivity() != null && !findPreference(R.string.preference_key_language).getSummary().equals(voice)) {
+                            findPreference(R.string.preference_key_voice_tts).setSummary(voice);
+                            //getActivity().setResult(SettingsActivity.ACTIVITY_RESULT_VOICE_CHANGED);
+                        }
+
                     }
                 });
                 voicePrefDialog.show();
