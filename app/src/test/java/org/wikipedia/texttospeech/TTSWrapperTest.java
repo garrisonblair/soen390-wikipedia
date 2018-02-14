@@ -59,12 +59,17 @@ public class TTSWrapperTest {
     @Test
     public void testGetValidPreferences() throws Exception {
         final int base = 25;
-        Mockito.when(sharedPrefs.getBoolean("ttsQueue", false)).thenReturn(false);
+
 
         TextToSpeech tts1 = mock(TextToSpeech.class);
         TTSWrapper wrapper = TTSWrapper.getTestInstance(context, listener, sharedPrefs);
         wrapper.setTTS(tts1);
+
         reset(sharedPrefs);
+        Mockito.when(sharedPrefs.getBoolean("ttsQueue", false)).thenReturn(true);
+        Mockito.when(sharedPrefs.getString("ttsVoice", "")).thenReturn("");
+        Mockito.when(sharedPrefs.getInt("ttsPitch", base)).thenReturn(10);
+        Mockito.when(sharedPrefs.getInt("ttsSpeed", base)).thenReturn(20);
         wrapper.loadPreferences();
 
         verify(sharedPrefs).getString("ttsVoice", "");
@@ -73,9 +78,9 @@ public class TTSWrapperTest {
         verify(sharedPrefs).getBoolean("ttsQueue", false);
 
         verify(tts1).setVoice(any());
-        verify(tts1).setPitch(anyFloat());
-        verify(tts1).setSpeechRate(anyFloat());
-        Assert.assertFalse(wrapper.getQueueMode());
+        verify(tts1).setPitch(10f/base);
+        verify(tts1).setSpeechRate(20f/base);
+        Assert.assertTrue(wrapper.getQueueMode());
     }
 
     @Test
