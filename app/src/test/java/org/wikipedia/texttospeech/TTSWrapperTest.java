@@ -14,8 +14,9 @@ import org.junit.Assert;
 import static org.mockito.Mockito.*;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import org.wkipedia.testutils.TestUtils;
+import org.wikipedia.testutils.TestUtils;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 /**
@@ -103,6 +104,31 @@ public class TTSWrapperTest {
     public void testIsLanguageAvailable() {
         int result = ttsWrapper.isTTSLanguageAvailable(Locale.forLanguageTag("en"));
         Assert.assertEquals(result,0);
+    }
 
+    @Test
+    public void testIsLocalFound (){
+        String language = "Norsk";
+
+        //Example: Norsk is a language that cannot be found.
+        Assert.assertFalse(ttsWrapper.isLocaleFound(language));
+
+        //Example: English is a language that can be found
+        language = "English";
+        Assert.assertTrue(ttsWrapper.isLocaleFound(language));
+    }
+
+    @Test
+    public void testGetLocalForTTS(){
+        //does not need to test failure because no one should invoke getLocalForTTS before check it with isLocalFound
+
+        Locale locale = ttsWrapper.getLocaleForTTS("English");
+        Assert.assertEquals(locale.getDisplayCountry(), "United States");
+    }
+
+    @Test
+    public void testSetTTSLanguage(){
+        int result = ttsWrapper.isTTSLanguageAvailable(Locale.US);
+        Assert.assertEquals(result, 0);
     }
 }

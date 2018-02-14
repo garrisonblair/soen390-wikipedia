@@ -212,7 +212,6 @@ public class ShareHandler {
             public boolean onMenuItemClick(MenuItem menuItem) {
                 pageLanguage = getPageLanguage();
                 if (!textToSpeech.isLocaleFound(pageLanguage)) {
-                    //Example: Norsk is a language that cannot be found.
                     showAlternateLanguageDialog();
                 } else {
                     boolean isSetLanguage = textToSpeech.setTTSLanguage(textToSpeech.getLocaleForTTS(pageLanguage));
@@ -222,7 +221,6 @@ public class ShareHandler {
                         showStopButton();
                         leaveActionMode();
                     } else {
-                        //Example: Arabic can be found as locale but is not supported by the TTS engine
                         showAlternateLanguageDialog();
                     }
                 }
