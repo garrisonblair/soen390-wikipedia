@@ -22,6 +22,11 @@
             android:defaultValue="0"
             android:title="@string/preference_title_app_theme"
             android:summary="@string/preference_summary_color_theme"/>
+        <org.wikipedia.settings.PreferenceMultiLine
+            android:key="@string/preference_key_show_TTS_voices"
+            android:defaultValue=""
+            android:title="@string/preference_title_TTS_voice"
+            android:summary="@string/preference_summary_TTS_voice"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:key="@string/preference_category_storage_sync"
@@ -42,6 +47,45 @@
             android:title="@string/preference_title_enable_offline_library"
             android:summary="@string/preference_summary_enable_offline_library" />
     </PreferenceCategory>
+    <!-- Additional menu settings for text to speech settings. Additional functionality to be added by teammates -->
+    <PreferenceCategory
+        android:key="@string/preference_key_settings_tts"
+        android:title="@string/preference_title_full_tts"
+        android:summary="@string/preference_summary_tts">
+        <Preference
+            android:key="@string/preference_key_settings_tts_demo"
+            android:title="@string/preference_title_demo_tts"
+            android:summary="@string/preference_demo_summary_tts"
+            android:icon="@drawable/round_info_button"/>
+        <org.wikipedia.settings.PreferenceMultiLine
+            android:key="@string/preference_key_voice_tts"
+            android:title="@string/preference_voice_title_tts"
+            android:summary="@string/preference_voice_summary_tts">
+        </org.wikipedia.settings.PreferenceMultiLine>
+        <!-- need to attach voice to voices from available TTS voice options (Garrison) and set default value -->
+        <android.support.v7.preference.SeekBarPreference
+            android:key="@string/preference_key_pitch_tts"
+            android:title="@string/preference_pitch_title_tts"
+            android:summary="@string/preference_pitch_summary_tts"
+            android:defaultValue="25"
+            android:min="1"
+            android:max="100"/>
+        <android.support.v7.preference.SeekBarPreference
+            android:key="@string/preference_key_speed_tts"
+            android:title="@string/preference_speed_title_tts"
+            android:summary="@string/preference_speed_summary_tts"
+            android:defaultValue="25"
+            android:min="1"
+            android:max="100"/>
+        <SwitchPreferenceCompat
+            android:key="@string/preference_key_queue_tts"
+            android:defaultValue="true"
+            android:title="@string/preference_queue_title_tts"
+            android:summary="@string/preference_queue_summary_tts" />
+        <org.wikipedia.texttospeech.TTSPreviewPreference
+            android:key="@string/preference_key_preview_tts"/>
+    </PreferenceCategory>
+    <!-- /Additional menu settings for text to speech settings. Additional functionality to be added by teammates -->
     <PreferenceCategory android:title="@string/preferences_privacy_settings_heading">
         <SwitchPreferenceCompat
             android:key="@string/preference_key_eventlogging_opt_in"

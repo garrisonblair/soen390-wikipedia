@@ -34,6 +34,7 @@ import org.wikipedia.page.Namespace;
 import org.wikipedia.page.NoDimBottomSheetDialog;
 import org.wikipedia.page.Page;
 import org.wikipedia.page.PageActivity;
+import org.wikipedia.page.listeners.HideStopButtonOnDoneListener;
 import org.wikipedia.page.PageFragment;
 import org.wikipedia.page.PageProperties;
 import org.wikipedia.page.PageTitle;
@@ -87,8 +88,11 @@ public class ShareHandler {
     public ShareHandler(@NonNull PageFragment fragment, @NonNull CommunicationBridge bridge) {
         this.fragment = fragment;
         this.bridge = bridge;
-        textToSpeech = TTSWrapper.getInstance(fragment.getContext(), null);
+
         pageLanguage = app.getAppLanguageCanonicalName(app.getAppOrSystemLanguageCode());
+        PageActivity pageActivity = (PageActivity) fragment.getActivity();
+        textToSpeech = TTSWrapper.getInstance(pageActivity, new HideStopButtonOnDoneListener(pageActivity));
+
 
         bridge.addListener("onGetTextSelection", new CommunicationBridge.JSEventListener() {
             @Override
@@ -204,6 +208,8 @@ public class ShareHandler {
                 return true;
             }
         });
+
+        //Provide a listener to the speech button
         MenuItem toSpeechItem = menu.findItem(R.id.menu_text_to_speech);
 
 
@@ -218,13 +224,12 @@ public class ShareHandler {
                     if (isSetLanguage) {
                         Toast.makeText(fragment.getActivity(), "Text to speech language has set to : " + textToSpeech.getTTSLanguage(), Toast.LENGTH_SHORT).show();
                         selectedTextToSpeech();
-                        showStopButton();
+                        setStopButtonVisibility(View.VISIBLE);
                         leaveActionMode();
                     } else {
                         showAlternateLanguageDialog();
                     }
                 }
-
                 return true;
             }
         });
@@ -241,15 +246,19 @@ public class ShareHandler {
 
         onHighlightText();
     }
-    private void showStopButton() {
+    private void setStopButtonVisibility(int visibility){
         FragmentActivity currentActivity = fragment.getActivity();
         if (currentActivity instanceof PageActivity) {
             ImageButton stopButton = ((PageActivity) currentActivity).getStopButton();
-            stopButton.setVisibility(View.VISIBLE);
+
+            stopButton.setVisibility(visibility);
         }
     }
-    private void selectedTextToSpeech() {
 
+    private void selectedTextToSpeech() {
+    /**
+     * Passes the selected text to the TTSWapper to make it speak
+     */
         fragment.getWebView().evaluateJavascript("(function() { return window.getSelection().toString() }) ()",
                 new ValueCallback<String>() {
                     @Override
@@ -450,7 +459,7 @@ public class ShareHandler {
                         pageLanguage = loc.getDisplayLanguage();
                         textToSpeech.setLanguage(loc);
                         selectedTextToSpeech();
-                        showStopButton();
+                        setStopButtonVisibility(View.VISIBLE);
                         leaveActionMode();
                         break;
                     }

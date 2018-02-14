@@ -54,6 +54,7 @@ import org.wikipedia.gallery.GalleryActivity;
 import org.wikipedia.history.HistoryEntry;
 import org.wikipedia.language.LangLinksActivity;
 import org.wikipedia.page.linkpreview.LinkPreviewDialog;
+import org.wikipedia.page.listeners.HideStopButtonOnDoneListener;
 import org.wikipedia.page.tabs.TabsProvider;
 import org.wikipedia.page.tabs.TabsProvider.TabPosition;
 import org.wikipedia.readinglist.AddToReadingListDialog;
@@ -110,6 +111,8 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
     @Nullable private Bus bus;
     private EventBusMethods busMethods;
     private ActionMode currentActionMode;
+
+    private static TTSWrapper textToSpeech;
 
     private PageToolbarHideHandler toolbarHideHandler;
 
@@ -251,10 +254,9 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
     }
 
     @OnClick(R.id.page_stop_button)
-    public void onStopButtonClicked() {
-        TTSWrapper.getInstance(this, null).stop();
-        stopButton.setVisibility(View.GONE);
-
+    public void onStopButtonClicked(){
+        textToSpeech.stop();
+        stopButton.setVisibility(View.INVISIBLE);
     }
 
     private void finishActionMode() {
@@ -732,6 +734,8 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
         super.onResume();
         app.resetWikiSite();
         app.getSessionFunnel().touchSession();
+
+        textToSpeech = TTSWrapper.getInstance(this, new HideStopButtonOnDoneListener(this));
     }
 
     @Override
@@ -740,6 +744,7 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
             // Explicitly close any current ActionMode (see T147191)
             finishActionMode();
         }
+        textToSpeech.shutdown();
         super.onPause();
     }
 
