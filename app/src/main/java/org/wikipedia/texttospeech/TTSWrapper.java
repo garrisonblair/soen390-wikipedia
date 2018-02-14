@@ -59,7 +59,7 @@ public final class TTSWrapper {
         tts.setSpeechRate((float) speechRatePreference / factor);
         this.queueMode = queueModePreference;
     }
-    
+
     public static TTSWrapper getInstance(Context context, UtteranceProgressListener listener) {
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
@@ -91,6 +91,7 @@ public final class TTSWrapper {
 
         // If requesting TTS from a different context, reinstantiate TTS
         if (!context.toString().equals(INSTANCE.contextID)) {
+            INSTANCE.tts.shutdown();
             INSTANCE.instantiateTextToSpeech(context, listener);
         }
 
