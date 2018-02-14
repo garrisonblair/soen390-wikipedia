@@ -18,7 +18,8 @@ android.applicationVariants.all { variant ->
     }
 }
 
-String variantName = android.testBuildType == 'debug' ? 'DevDebug' : 'AlphaRelease'
+//String variantName = android.testBuildType == 'debug' ? 'DevDebug' : 'AlphaRelease'
+String variantName = android.testBuildType == 'debug' ? 'DevDebug' : 'DevDebug'
 task("screenshotTests${variantName}", dependsOn: ['recordMode', 'screenshotTests']) {
     screenshots {
         testApkTarget = "package${variantName}AndroidTest"

@@ -324,6 +324,22 @@
     <string name="text_size_percent_default">%s (Default)</string>
     <!-- /Theme -->
 
+    <!-- TTS: Start of strings for Labels, summaries and descriptions of text to speech settings -->
+    <string name="preference_title_abbreviated_tts">TTS Settings</string>
+    <string name="preference_title_full_tts">Text to Speech Settings</string>
+    <string name="preference_summary_tts">Set the voice, speed, pitch and language of the text-to-speech functionality</string>
+    <string name="preference_voice_summary_tts">Select available text-to-speech voice</string>
+    <string name="preference_pitch_summary_tts">Sets the pitch selected voice</string>
+    <string name="preference_speed_summary_tts">Sets the speed of the selected voice</string>
+    <string name="preference_queue_summary_tts">Enable queue mode</string>
+    <string name="preference_language_summary_tts">Select available language for voice</string>
+    <string name="preference_voice_title_tts">Voice</string>
+    <string name="preference_pitch_title_tts">Pitch</string>
+    <string name="preference_speed_title_tts">Speed</string>
+    <string name="preference_language_title_tts">Language</string>
+    <string name="preference_queue_title_tts">Queue</string>
+    <!-- /TTS: End of strings for Labels, summaries and descriptions of text to speech settings -->
+
     <!-- Reading lists -->
     <string name="nav_item_reading_lists">My lists</string>
     <string name="reading_list_untitled">Untitled</string>
@@ -626,6 +642,10 @@
         <item quantity="one">Last year</item>
         <item quantity="other">%d years ago</item>
     </plurals>
+    <string name="title_activity_ttssettings">TTSSettingsActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
     <!-- /On This Day -->
 
 </resources>
