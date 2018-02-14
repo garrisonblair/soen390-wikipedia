@@ -34,10 +34,10 @@ import org.wikipedia.page.Namespace;
 import org.wikipedia.page.NoDimBottomSheetDialog;
 import org.wikipedia.page.Page;
 import org.wikipedia.page.PageActivity;
-import org.wikipedia.page.listeners.HideStopButtonOnDoneListener;
 import org.wikipedia.page.PageFragment;
 import org.wikipedia.page.PageProperties;
 import org.wikipedia.page.PageTitle;
+import org.wikipedia.page.listeners.HideStopButtonOnDoneListener;
 import org.wikipedia.settings.Prefs;
 import org.wikipedia.texttospeech.TTSWrapper;
 import org.wikipedia.util.FeedbackUtil;
@@ -92,7 +92,6 @@ public class ShareHandler {
         pageLanguage = app.getAppLanguageCanonicalName(app.getAppOrSystemLanguageCode());
         PageActivity pageActivity = (PageActivity) fragment.getActivity();
         textToSpeech = TTSWrapper.getInstance(pageActivity, new HideStopButtonOnDoneListener(pageActivity));
-
 
         bridge.addListener("onGetTextSelection", new CommunicationBridge.JSEventListener() {
             @Override
@@ -247,6 +246,9 @@ public class ShareHandler {
         onHighlightText();
     }
     private void setStopButtonVisibility(int visibility){
+    /**
+     * Sets the visibility of the stopButton
+     */
         FragmentActivity currentActivity = fragment.getActivity();
         if (currentActivity instanceof PageActivity) {
             ImageButton stopButton = ((PageActivity) currentActivity).getStopButton();
@@ -254,7 +256,6 @@ public class ShareHandler {
             stopButton.setVisibility(visibility);
         }
     }
-
     private void selectedTextToSpeech() {
     /**
      * Passes the selected text to the TTSWapper to make it speak

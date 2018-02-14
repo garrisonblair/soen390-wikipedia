@@ -129,7 +129,7 @@ public final class TTSWrapper {
     }
 
     public Voice getVoice(String voiceName) {
-        if (voiceName.equals("")) {
+        if (voiceName != "") {
             Set<Voice> voices = this.getVoices();
             for (Voice voice : voices) {
                 if (voice.getName().equals(voiceName)) {
@@ -156,8 +156,9 @@ public final class TTSWrapper {
         this.queueMode = queueMode;
     }
 
-    public boolean getQueueMode() { return this.queueMode; }
-
+    public boolean getQueueMode() {
+        return this.queueMode;
+    }
 
     // tts getter and setter only for testing purposes
     public TextToSpeech getTTS() {
@@ -244,7 +245,6 @@ public final class TTSWrapper {
         return false;
     }
 
-//    Decouples tests that are dependent on a singleton
     public static void reset() {
         INSTANCE = null;
     }
