@@ -327,6 +327,8 @@
     <!-- TTS: Start of strings for Labels, summaries and descriptions of text to speech settings -->
     <string name="preference_title_abbreviated_tts">TTS Settings</string>
     <string name="preference_title_full_tts">Text to Speech Settings</string>
+    <string name="preference_title_demo_tts">Demo</string>
+    <string name="preference_demo_summary_tts">Show text-to-speech user interface</string>
     <string name="preference_summary_tts">Set the voice, speed, pitch and language of the text-to-speech functionality</string>
     <string name="preference_voice_summary_tts">Select available text-to-speech voice</string>
     <string name="preference_pitch_summary_tts">Sets the pitch selected voice</string>
