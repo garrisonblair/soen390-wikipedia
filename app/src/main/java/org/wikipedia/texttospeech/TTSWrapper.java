@@ -8,11 +8,9 @@ import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.speech.tts.Voice;
 import android.support.v7.preference.PreferenceManager;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.Set;
 
 import static java.util.Collections.sort;
@@ -131,7 +129,7 @@ public final class TTSWrapper {
     }
 
     public Voice getVoice(String voiceName) {
-        if (voiceName != ""){
+        if (voiceName.equals("")) {
             Set<Voice> voices = this.getVoices();
             for (Voice voice : voices) {
                 if (voice.getName().equals(voiceName)) {
@@ -139,7 +137,7 @@ public final class TTSWrapper {
                 }
             }
         }
-        return null;
+        return tts.getDefaultVoice();
     }
 
     public void setLanguage(Locale locale) {
