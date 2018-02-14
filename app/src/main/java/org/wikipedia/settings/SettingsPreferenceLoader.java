@@ -93,6 +93,7 @@ class SettingsPreferenceLoader extends BasePreferenceLoader {
         });
 
         // Start of TTS preference settings logic to retrieve and load into local variable to be accessed during loading of preferences
+        Preference ttsDemoPref = findPreference(R.string.preference_key_settings_tts_demo);
         Preference ttsLanguagePref = findPreference(R.string.preference_key_language_tts);
         Preference ttsVoicePref = findPreference(R.string.preference_key_voice_tts);
         Preference ttsSpeedPref = findPreference(R.string.preference_key_speed_tts);
@@ -102,6 +103,16 @@ class SettingsPreferenceLoader extends BasePreferenceLoader {
 
         ttsPreviewPreference.setTTS(tts);
 
+        ttsDemoPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                new AlertDialog.Builder(getActivity())
+                        .setView(R.layout.view_tts_ui)
+                        .show();
+
+                return true;
+            }
+        });
 
         // End of of TTS preference settings logic to retrieve and load into local variable to be accessed during loading of preferences
 

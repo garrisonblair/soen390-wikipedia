@@ -12,6 +12,7 @@
     <string name="preference_key_text_size_multiplier">textSizeMultiplier</string>
     <string name="preference_key_color_theme">colorTheme</string>
     <!-- Start of text to speech keys for storing preferences -->
+    <string name="preference_key_settings_tts_demo">ttsSettingsDemo</string>
     <string name="preference_key_settings_tts">ttsSettings</string>
     <string name="preference_key_voice_tts">ttsVoice</string>
     <string name="preference_key_pitch_tts">ttsPitch</string>

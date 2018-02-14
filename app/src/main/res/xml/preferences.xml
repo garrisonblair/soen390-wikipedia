@@ -52,6 +52,11 @@
         android:key="@string/preference_key_settings_tts"
         android:title="@string/preference_title_full_tts"
         android:summary="@string/preference_summary_tts">
+        <Preference
+            android:key="@string/preference_key_settings_tts_demo"
+            android:title="@string/preference_title_demo_tts"
+            android:summary="@string/preference_demo_summary_tts"
+            android:icon="@drawable/round_info_button"/>
         <org.wikipedia.settings.PreferenceMultiLine
             android:key="@string/preference_key_voice_tts"
             android:title="@string/preference_voice_title_tts"

@@ -5,11 +5,14 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.ValueCallback;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import org.apache.commons.lang3.StringUtils;
@@ -27,6 +30,8 @@ import org.wikipedia.onboarding.PrefsOnboardingStateMachine;
 import org.wikipedia.page.Namespace;
 import org.wikipedia.page.NoDimBottomSheetDialog;
 import org.wikipedia.page.Page;
+import org.wikipedia.page.PageActivity;
+import org.wikipedia.page.listeners.HideStopButtonOnDoneListener;
 import org.wikipedia.page.PageFragment;
 import org.wikipedia.page.PageProperties;
 import org.wikipedia.page.PageTitle;
@@ -40,6 +45,8 @@ import org.wikipedia.wiktionary.WiktionaryDialog;
 
 import java.util.Arrays;
 import java.util.Locale;
+
+import org.wikipedia.texttospeech.TTSWrapper;
 
 import retrofit2.Call;
 
@@ -59,6 +66,7 @@ public class ShareHandler {
     @NonNull private final CommunicationBridge bridge;
     @Nullable private ActionMode webViewActionMode;
     @Nullable private ShareAFactFunnel funnel;
+    static private TTSWrapper textToSpeech;
 
     private void createFunnel() {
         WikipediaApp app = WikipediaApp.getInstance();
@@ -71,6 +79,8 @@ public class ShareHandler {
     public ShareHandler(@NonNull PageFragment fragment, @NonNull CommunicationBridge bridge) {
         this.fragment = fragment;
         this.bridge = bridge;
+        PageActivity pageActivity = (PageActivity) fragment.getActivity();
+        textToSpeech = TTSWrapper.getInstance(pageActivity, new HideStopButtonOnDoneListener(pageActivity));
 
         bridge.addListener("onGetTextSelection", new CommunicationBridge.JSEventListener() {
             @Override
@@ -186,6 +196,18 @@ public class ShareHandler {
                 return true;
             }
         });
+
+        //Provide a listener to the speech button
+        MenuItem toSpeechItem = menu.findItem(R.id.menu_text_to_speech);
+        toSpeechItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                setStopButtonVisibility(View.VISIBLE);
+                selectedTextToSpeech();
+                leaveActionMode();
+                return true;
+            }
+        });
         MenuItem defineItem = menu.findItem(R.id.menu_text_select_define);
         if (shouldEnableWiktionaryDialog()) {
             defineItem.setVisible(true);
@@ -200,6 +222,31 @@ public class ShareHandler {
         onHighlightText();
     }
 
+    /**
+     * Sets the visibility of the stopButton
+     */
+    private void setStopButtonVisibility(int visibility){
+        FragmentActivity currentActivity = fragment.getActivity();
+        if (currentActivity instanceof PageActivity) {
+            ImageButton stopButton = ((PageActivity) currentActivity).getStopButton();
+
+            stopButton.setVisibility(visibility);
+        }
+    }
+
+    /**
+     * Passes the selected text to the TTSWapper to make it speak
+     */
+    private void selectedTextToSpeech(){
+
+        fragment.getWebView().evaluateJavascript("(function(){return window.getSelection().toString()})()",
+                new ValueCallback<String>() {
+                    @Override
+                    public void onReceiveValue(String value) {
+                        textToSpeech.speak(value);
+                    }
+                });
+    }
     private boolean shouldEnableWiktionaryDialog() {
         return Prefs.useRestBase() && isWiktionaryDialogEnabledForArticleLanguage();
     }
