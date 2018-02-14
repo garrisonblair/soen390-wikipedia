@@ -55,13 +55,9 @@ public final class TTSWrapper {
         int speechRatePreference = preferences.getInt("ttsSpeed", base);
         boolean queueModePreference = preferences.getBoolean("ttsQueue", false);
 
-        if (voicePreference != "") {
-            Voice voice = this.getVoice(voicePreference);
-            if (!voice.equals(null)) {
-                tts.setVoice(voice);
-            }
-        }
+        Voice voice = this.getVoice(voicePreference);
 
+        tts.setVoice(voice);
         tts.setPitch((float) pitchPreference / base);
         tts.setSpeechRate((float) speechRatePreference / base);
         this.queueMode = queueModePreference;
@@ -133,10 +129,12 @@ public final class TTSWrapper {
     }
 
     public Voice getVoice(String voiceName) {
-        Set<Voice> voices = this.getVoices();
-        for (Voice voice : voices) {
-            if (voice.getName().equals(voiceName)) {
-                return voice;
+        if (voiceName != ""){
+            Set<Voice> voices = this.getVoices();
+            for (Voice voice : voices) {
+                if (voice.getName().equals(voiceName)) {
+                    return voice;
+                }
             }
         }
         return null;
