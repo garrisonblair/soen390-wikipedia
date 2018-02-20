@@ -13,6 +13,6 @@ public class DateUtilTest {
 
     @Test
     public void testGetHttpLastModifiedDate() throws Throwable {
-        assertThat(DateUtil.getShortDateString(DateUtil.getHttpLastModifiedDate(HTTP_DATE_HEADER)), is("May 25, 2017"));
+        assertThat(DateUtil.getShortDateString(DateUtil.getHttpLastModifiedDate(HTTP_DATE_HEADER)), is("25-May-2017"));
     }
 }
