@@ -1,7 +1,6 @@
 package org.wikipedia.feed.searchbar;
 
 import android.content.Context;
-
 import org.wikipedia.R;
 import org.wikipedia.feed.view.DefaultFeedCardView;
 import org.wikipedia.util.FeedbackUtil;
@@ -22,6 +21,7 @@ public class SearchCardView extends DefaultFeedCardView<SearchCard> {
         setCardBackgroundColor(ResourceUtil.getThemedColor(context, R.attr.searchItemBackground));
         ButterKnife.bind(this);
         FeedbackUtil.setToolbarButtonLongPressToast(findViewById(R.id.voice_search_button));
+        FeedbackUtil.setToolbarButtonLongPressToast(findViewById(R.id.image_search_button));
     }
 
     @OnClick(R.id.search_container) void onSearchClick() {
@@ -34,5 +34,9 @@ public class SearchCardView extends DefaultFeedCardView<SearchCard> {
         if (getCallback() != null) {
             getCallback().onVoiceSearchRequested();
         }
+    }
+
+    @OnClick(R.id.image_search_button) void onImageSearchClick() {
+        // TODO: Add logic to open camera app for image to text
     }
 }
