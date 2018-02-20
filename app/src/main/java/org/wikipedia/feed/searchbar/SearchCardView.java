@@ -21,7 +21,6 @@ public class SearchCardView extends DefaultFeedCardView<SearchCard> {
         setCardBackgroundColor(ResourceUtil.getThemedColor(context, R.attr.searchItemBackground));
         ButterKnife.bind(this);
         FeedbackUtil.setToolbarButtonLongPressToast(findViewById(R.id.voice_search_button));
-        FeedbackUtil.setToolbarButtonLongPressToast(findViewById(R.id.image_search_button));
     }
 
     @OnClick(R.id.search_container) void onSearchClick() {
