@@ -28,13 +28,10 @@ jobs:
     # lint stage
     - stage: lint
       script: ./gradlew lintDevDebug
-      before_install: skip
     # test stage
     # build stage
     - stage: build
       script: ./gradlew -q clean assembleDevDebug
-      before_install: skip
     # test stage
     - stage: test #testDevDebug
       script: ./gradlew testDevDebugUnitTest
-      before_install: skip
