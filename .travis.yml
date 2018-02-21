@@ -33,14 +33,16 @@ jobs:
     # pre-build stage
     - stage: pre-build
       script: ./gradlew preDevDebugBuild
-    #- stage: install
-    #  script: ./gradlew installDevDebug
     # checkstyle stage
-    #- stage: checkstyle
+   #- stage: checkstyle
     #  script: ./gradlew checkstyle
     # lint stage
     - stage: lint
       script: ./gradlew lintDevDebug
+    # test stage
+    # build stage
+    - stage: build
+      script: ./gradlew -q clean assembleDevDebug
     - stage: test #testDevDebug
       script: ./gradlew testDevDebugUnitTest
 
