@@ -20,10 +20,12 @@ before_install:
 #Testing of build stages for TravisCI
 jobs:
   include:
+    - stage: clean
+      script: ./gradle clean
+    - stage: build
+      script: ./gradle build
     - stage: deploy to staging
       install: skip
-      script: ./gradle
-    - &test-staging
       stage: test staging
       install: skip
       script: ./gradlew testDevDebug
