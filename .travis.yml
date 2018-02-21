@@ -21,9 +21,9 @@ before_install:
 jobs:
   include:
     - stage: clean
-      script: ./gradle clean
+      script: ./gradlew clean
     - stage: build
-      script: ./gradle build
+      script: ./gradlew build
     - stage: deploy to staging
       install: skip
       stage: test staging
