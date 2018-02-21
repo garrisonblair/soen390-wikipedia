@@ -12,20 +12,71 @@ android:
     # The SDK version used to compile your project
     - android-26
 
-script: ./gradlew testDevDebug
+#script: ./gradlew testDevDebug
 
 before_install:
   - yes | sdkmanager "platforms;android-27"
 
 #Testing of build stages for TravisCI
+# clean
+# generateAlphaDebugSources
+# generateAlphaDebugAndroidTestSources
+# mockableAndroidJar
+
+# assembleAlphaDebug
+
+jobs:
+  include:
+    #- stage: clean
+    #  script: ./gradle clean
+    - stage: pre-build
+      script: ./gradlew preDevDebugBuild
+    - stage: install
+      script: ./gradlew installDevDebug
+    - stage: check
+      script: ./gradlew check
+    - stage: lint
+      script: ./gradlew lintDevDebug
+    - stage: test #testDevDebugUnitTest
+      script: ./gradlew testDevDebug
+
+#travis build log
+# preBuild
+# preDevDebugBuild
+#compileDevDebugAidl
+#compileDevDebugRenderscript
+#checkDevDebugManifest
+#generateDevDebugBuildConfig
+#prepareLintJar
+#generateDevDebugResValues
+#generateDevDebugResources
+#mergeDevDebugResources
+#createDevDebugCompatibleScreenManifests
+#processDevDebugManifest
+#splitsDiscoveryTaskDevDebug
+#processDevDebugResources
+#generateDevDebugSources
+#javaPreCompileDevDebug
+#compileDevDebugJavaWithJavacNote
+#preDevDebugUnitTestBuild
+#javaPreCompileDevDebugUnitTest
+#compileDevDebugUnitTestJavaWithJavacNote
+#mockableAndroidJar
+#processDevDebugJavaRes
+#processDevDebugUnitTestJavaRes
+#testDevDebugUnitTest
+#clean checkstyle assembleAlphaRelease lintAlphaRelease testAlphaRelease compileAlphaReleaseAndroidTestSources
+
+
 jobs:
   include:
     - stage: clean
-      script: ./gradlew clean
-    - stage: build
-      script: ./gradlew build
-    - stage: deploy to staging
-      install: skip
-      stage: test staging
-      install: skip
-      script: ./gradlew testDevDebug
+      script: ./gradle clean
+    - stage: assemble
+      script: ./gradlew assembleAlphaRelease
+    - stage: lint
+      script: ./gradlew lintAlphaRelease
+    - stage: test
+      script: ./gradlew testAlphaRelease
+      stage: compile
+      script: compileAlphaReleaseAndroidTestSources
