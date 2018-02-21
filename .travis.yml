@@ -16,3 +16,14 @@ script: ./gradlew testDevDebug
 
 before_install:
   - yes | sdkmanager "platforms;android-27"
+
+#Testing of build stages for TravisCI
+jobs:
+  include:
+    - stage: deploy to staging
+      install: skip
+      script: ./gradle
+    - &test-staging
+      stage: test staging
+      install: skip
+      script: ./gradlew testDevDebug
