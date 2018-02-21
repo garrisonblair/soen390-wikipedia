@@ -32,8 +32,8 @@ jobs:
   include:
     - stage: pre-build
       script: ./gradlew preDevDebugBuild
-    - stage: install
-      script: ./gradlew installDevDebug
+    #- stage: install
+    #  script: ./gradlew installDevDebug
     - stage: check
       script: ./gradlew check
     - stage: lint
