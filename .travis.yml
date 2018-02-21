@@ -17,17 +17,6 @@ android:
 before_install:
   - yes | sdkmanager "platforms;android-27"
 
-#Testing of build stages for TravisCI
-# clean
-# generateAlphaDebugSources
-# generateAlphaDebugAndroidTestSources
-# mockableAndroidJar
-
-# assembleAlphaDebug
-    #- stage: clean
-    #  script: ./gradle clean
-
-
 jobs:
   include:
     # pre-build stage
@@ -39,36 +28,13 @@ jobs:
     # lint stage
     - stage: lint
       script: ./gradlew lintDevDebug
+      install: skip
     # test stage
     # build stage
     - stage: build
       script: ./gradlew -q clean assembleDevDebug
+      install: skip
+    # test stage
     - stage: test #testDevDebug
       script: ./gradlew testDevDebugUnitTest
-
-#travis build log
-# preBuild
-# preDevDebugBuild
-#compileDevDebugAidl
-#compileDevDebugRenderscript
-#checkDevDebugManifest
-#generateDevDebugBuildConfig
-#prepareLintJar
-#generateDevDebugResValues
-#generateDevDebugResources
-#mergeDevDebugResources
-#createDevDebugCompatibleScreenManifests
-#processDevDebugManifest
-#splitsDiscoveryTaskDevDebug
-#processDevDebugResources
-#generateDevDebugSources
-#javaPreCompileDevDebug
-#compileDevDebugJavaWithJavacNote
-#preDevDebugUnitTestBuild
-#javaPreCompileDevDebugUnitTest
-#compileDevDebugUnitTestJavaWithJavacNote
-#mockableAndroidJar
-#processDevDebugJavaRes
-#processDevDebugUnitTestJavaRes
-#testDevDebugUnitTest
-#clean checkstyle assembleAlphaRelease lintAlphaRelease testAlphaRelease compileAlphaReleaseAndroidTestSources
+      install: skip
