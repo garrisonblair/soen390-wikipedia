@@ -30,16 +30,19 @@ before_install:
 
 jobs:
   include:
+    # pre-build stage
     - stage: pre-build
       script: ./gradlew preDevDebugBuild
     #- stage: install
     #  script: ./gradlew installDevDebug
-    - stage: check
-      script: ./gradlew check
+    # checkstyle stage
+    #- stage: checkstyle
+    #  script: ./gradlew checkstyle
+    # lint stage
     - stage: lint
       script: ./gradlew lintDevDebug
-    - stage: test #testDevDebugUnitTest
-      script: ./gradlew testDevDebug
+    - stage: test #testDevDebug
+      script: ./gradlew testDevDebugUnitTest
 
 #travis build log
 # preBuild
