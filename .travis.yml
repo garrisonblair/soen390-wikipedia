@@ -24,11 +24,12 @@ before_install:
 # mockableAndroidJar
 
 # assembleAlphaDebug
+    #- stage: clean
+    #  script: ./gradle clean
+
 
 jobs:
   include:
-    #- stage: clean
-    #  script: ./gradle clean
     - stage: pre-build
       script: ./gradlew preDevDebugBuild
     - stage: install
@@ -66,17 +67,3 @@ jobs:
 #processDevDebugUnitTestJavaRes
 #testDevDebugUnitTest
 #clean checkstyle assembleAlphaRelease lintAlphaRelease testAlphaRelease compileAlphaReleaseAndroidTestSources
-
-
-jobs:
-  include:
-    - stage: clean
-      script: ./gradle clean
-    - stage: assemble
-      script: ./gradlew assembleAlphaRelease
-    - stage: lint
-      script: ./gradlew lintAlphaRelease
-    - stage: test
-      script: ./gradlew testAlphaRelease
-      stage: compile
-      script: compileAlphaReleaseAndroidTestSources
