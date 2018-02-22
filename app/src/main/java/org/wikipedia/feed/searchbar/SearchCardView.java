@@ -5,6 +5,7 @@ import android.content.Intent;
 
 import org.wikipedia.R;
 import org.wikipedia.feed.view.DefaultFeedCardView;
+import org.wikipedia.imagesearch.KeywordSelectActivity;
 import org.wikipedia.util.FeedbackUtil;
 import org.wikipedia.util.ResourceUtil;
 
