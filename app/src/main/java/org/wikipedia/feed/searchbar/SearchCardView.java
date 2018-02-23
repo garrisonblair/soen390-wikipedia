@@ -1,7 +1,6 @@
 package org.wikipedia.feed.searchbar;
 
 import android.content.Context;
-
 import org.wikipedia.R;
 import org.wikipedia.feed.view.DefaultFeedCardView;
 import org.wikipedia.util.FeedbackUtil;
@@ -34,5 +33,9 @@ public class SearchCardView extends DefaultFeedCardView<SearchCard> {
         if (getCallback() != null) {
             getCallback().onVoiceSearchRequested();
         }
+    }
+
+    @OnClick(R.id.image_search_button) void onImageSearchClick() {
+        // TODO: Add logic to open camera app for image to text
     }
 }
