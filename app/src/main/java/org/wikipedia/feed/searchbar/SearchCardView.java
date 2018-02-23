@@ -1,5 +1,6 @@
 package org.wikipedia.feed.searchbar;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
@@ -12,7 +13,11 @@ import org.wikipedia.util.ResourceUtil;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static org.wikipedia.Constants.ACTIVITY_REQUEST_IMAGE_KEYWORD;
+
+
 public class SearchCardView extends DefaultFeedCardView<SearchCard> {
+
     public interface Callback {
         void onSearchRequested();
         void onVoiceSearchRequested();
@@ -42,8 +47,13 @@ public class SearchCardView extends DefaultFeedCardView<SearchCard> {
     @OnClick(R.id.image_search_button) void onImageSearchClick() {
         // TODO: Add logic to open camera app for image to text
 
-        //Start KeywordSelectActivity with test data for development
+        //Start KeywordSelectActivity with test data for development, move to MainActivity when camera/gallery implemented
         Intent keywordSelectIntent = new Intent(getContext(), KeywordSelectActivity.class);
-        getContext().startActivity(keywordSelectIntent);
+        String[] keywords = {"Cat", "Animal", "Tabby Cat"};
+        keywordSelectIntent.putExtra(KeywordSelectActivity.KEYWORD_LIST, keywords);
+
+        ((Activity) getContext()).startActivityForResult(keywordSelectIntent, ACTIVITY_REQUEST_IMAGE_KEYWORD);
     }
+
+
 }
