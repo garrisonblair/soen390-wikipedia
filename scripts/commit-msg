@@ -11,4 +11,4 @@ fi
 exit 1
 
 commit_msg=$(cat $1)
-python .git/hooks/commit-msg.py "$commit_msg"
+python scripts/commit-msg.py "$commit_msg"
