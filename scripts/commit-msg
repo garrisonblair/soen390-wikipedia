@@ -1,14 +1,4 @@
 #!/bin/sh
 
-commit_regex='#[0-9]+'
-
-if /usr/bin/grep -iE "$commit_regex" "$1"; then
-	exit 0
-else
-	echo "Commit message does not link to an issue"
-	exit 1
-fi
-exit 1
-
 commit_msg=$(cat $1)
 python scripts/commit-msg.py "$commit_msg"
