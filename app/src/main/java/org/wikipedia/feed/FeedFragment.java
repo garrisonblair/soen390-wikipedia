@@ -1,6 +1,5 @@
 package org.wikipedia.feed;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -50,8 +49,6 @@ import org.wikipedia.util.ResourceUtil;
 import org.wikipedia.util.ThrowableUtil;
 import org.wikipedia.util.UriUtil;
 import org.wikipedia.views.ExploreOverflowView;
-
-import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
