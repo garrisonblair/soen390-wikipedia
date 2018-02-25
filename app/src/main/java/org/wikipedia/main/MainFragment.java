@@ -9,20 +9,26 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import org.apache.commons.lang3.StringUtils;
 import org.wikipedia.BackPressedHandler;
+import org.wikipedia.BuildConfig;
 import org.wikipedia.Constants;
 import org.wikipedia.R;
 import org.wikipedia.WikipediaApp;
@@ -63,6 +69,9 @@ import org.wikipedia.util.ShareUtil;
 import org.wikipedia.util.log.L;
 
 import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -79,7 +88,8 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
     private ExclusiveBottomSheetPresenter bottomSheetPresenter = new ExclusiveBottomSheetPresenter();
     private MediaDownloadReceiver downloadReceiver = new MediaDownloadReceiver();
     private MediaDownloadReceiverCallback downloadReceiverCallback = new MediaDownloadReceiverCallback();
-
+    private String currentPhotoPath;
+    static final int REQUEST_TAKE_PHOTO = 13;
     // The permissions request API doesn't take a callback, so in the event we have to
     // ask for permission to download a featured image from the feed, we'll have to hold
     // the image we're waiting for permission to download as a bit of state here. :(
@@ -161,6 +171,18 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
             FeedbackUtil.showMessage(this, R.string.login_success_toast);
         } else {
             super.onActivityResult(requestCode, resultCode, data);
+             if (resultCode == Activity.RESULT_OK) {
+                if (requestCode == REQUEST_TAKE_PHOTO) {
+                    File photoFile = new File(currentPhotoPath);
+                    Uri contentUri = Uri.fromFile(photoFile);
+                    //TODO do something with the photo file or the uri. Example: imageView.setImageURI(contentUri);
+                    Toast.makeText(getContext(), "have photo:" + contentUri.getPath(), Toast.LENGTH_SHORT).show();
+
+                    //TODO Destory the file after using it. Please relocate it to the end of the process.
+                    photoFile.delete();
+                    currentPhotoPath = "";
+                }
+            }
         }
     }
 
@@ -235,6 +257,9 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
         } catch (ActivityNotFoundException a) {
             FeedbackUtil.showMessage(this, R.string.error_voice_search_not_available);
         }
+    }
+    @Override public void onFeedImageCameraSearchRequested() {
+        takePhotoIntent();
     }
 
     @Override public void onFeedSelectPage(HistoryEntry entry) {
@@ -537,5 +562,35 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
 
     @Nullable private Callback callback() {
         return FragmentUtil.getCallback(this, Callback.class);
+    }
+
+
+    private void takePhotoIntent() {
+
+        Intent currentTakePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (currentTakePhotoIntent.resolveActivity(getContext().getPackageManager()) != null) {
+            File photoFile = null;
+            try {
+                photoFile = createPhotoFile();
+            } catch (IOException ex) {
+                Toast.makeText(getContext(), "Error while creating file.", Toast.LENGTH_SHORT).show();
+            }
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(getContext(),
+                        BuildConfig.APPLICATION_ID + ".fileprovider",
+                        photoFile);
+                currentTakePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(currentTakePhotoIntent, REQUEST_TAKE_PHOTO);
+            }
+        }
+    }
+
+    private File createPhotoFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String fileName = "JPEG_" + timeStamp + "_";
+        File storageDirectory = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File file = File.createTempFile(fileName, ".jpg", storageDirectory);
+        currentPhotoPath = file.getAbsolutePath();
+        return file;
     }
 }
