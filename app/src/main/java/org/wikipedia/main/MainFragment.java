@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,6 +21,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import org.apache.commons.lang3.StringUtils;
 import org.wikipedia.BackPressedHandler;
@@ -63,6 +65,7 @@ import org.wikipedia.util.ShareUtil;
 import org.wikipedia.util.log.L;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -156,14 +159,37 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
         } else if (requestCode == Constants.ACTIVITY_REQUEST_GALLERY
                 && resultCode == GalleryActivity.ACTIVITY_RESULT_PAGE_SELECTED) {
             startActivity(data);
-        } else if (requestCode == Constants.ACTIVITY_REQUEST_LOGIN
+        }else if(requestCode == Constants.ACTIVITY_REQUEST_GALLERY_SELECTION){
+            super.onActivityResult(requestCode, resultCode, data);
+            Bitmap bitmap = getSelectedPicture(resultCode, data);
+            if(bitmap != null){
+
+            }
+        }
+        else if (requestCode == Constants.ACTIVITY_REQUEST_LOGIN
                 && resultCode == LoginActivity.RESULT_LOGIN_SUCCESS) {
             FeedbackUtil.showMessage(this, R.string.login_success_toast);
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
-
+    private Bitmap getSelectedPicture(int resultCode, Intent data){
+        Bitmap bitmap = null;
+        if(resultCode == Activity.RESULT_OK){
+            if(data != null){
+                try{
+                    bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(),data.getData());
+                }
+                catch(IOException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        else if(resultCode == Activity.RESULT_CANCELED){
+            Toast.makeText(getActivity(), "Cancelled", Toast.LENGTH_LONG ).show();
+        }
+        return bitmap;
+    }
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -235,6 +261,11 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
         } catch (ActivityNotFoundException a) {
             FeedbackUtil.showMessage(this, R.string.error_voice_search_not_available);
         }
+    }
+    @Override public void onFeedGallerySearchRequested(){
+        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+        photoPickerIntent.setType("image/*");
+        startActivityForResult(photoPickerIntent,Constants.ACTIVITY_REQUEST_GALLERY_SELECTION);
     }
 
     @Override public void onFeedSelectPage(HistoryEntry entry) {
