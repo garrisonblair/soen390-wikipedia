@@ -182,7 +182,11 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
                     photoFile.delete();
                     currentPhotoPath = "";
                 }
-            }
+            } else {
+                 File photoFile = new File(currentPhotoPath);
+                 photoFile.delete();
+                 currentPhotoPath = "";
+             }
         }
     }
 
