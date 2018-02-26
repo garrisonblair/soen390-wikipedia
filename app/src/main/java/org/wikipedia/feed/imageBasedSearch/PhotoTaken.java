@@ -17,7 +17,7 @@ import java.util.Date;
 
 public class PhotoTaken {
     private String path;
-    public String getPath(){
+    public String getPath() {
         return this.path;
     }
     public Intent takePhoto(Context context) {
