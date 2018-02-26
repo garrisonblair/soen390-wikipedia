@@ -12,14 +12,11 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +25,6 @@ import android.widget.Toast;
 
 import org.apache.commons.lang3.StringUtils;
 import org.wikipedia.BackPressedHandler;
-import org.wikipedia.BuildConfig;
 import org.wikipedia.Constants;
 import org.wikipedia.R;
 import org.wikipedia.WikipediaApp;
@@ -40,6 +36,7 @@ import org.wikipedia.feed.FeedFragment;
 import org.wikipedia.feed.featured.FeaturedArticleCardView;
 import org.wikipedia.feed.image.FeaturedImage;
 import org.wikipedia.feed.image.FeaturedImageCard;
+import org.wikipedia.feed.imageBasedSearch.PhotoTaken;
 import org.wikipedia.feed.news.NewsActivity;
 import org.wikipedia.feed.news.NewsItemCard;
 import org.wikipedia.feed.view.HorizontalScrollingListCardItemView;
@@ -69,9 +66,6 @@ import org.wikipedia.util.ShareUtil;
 import org.wikipedia.util.log.L;
 
 import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -176,9 +170,10 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
                     File photoFile = new File(currentPhotoPath);
                     Uri contentUri = Uri.fromFile(photoFile);
                     //TODO do something with the photo file or the uri. Example: imageView.setImageURI(contentUri);
-                    Toast.makeText(getContext(), "have photo:" + contentUri.getPath(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "have photo:" + photoFile.getName(), Toast.LENGTH_SHORT).show();
 
                     //TODO Destory the file after using it. Please relocate it to the end of the process.
+
                     photoFile.delete();
                     currentPhotoPath = "";
                 }
@@ -568,33 +563,9 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
         return FragmentUtil.getCallback(this, Callback.class);
     }
 
-
     private void takePhotoIntent() {
-
-        Intent currentTakePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (currentTakePhotoIntent.resolveActivity(getContext().getPackageManager()) != null) {
-            File photoFile = null;
-            try {
-                photoFile = createPhotoFile();
-            } catch (IOException ex) {
-                Toast.makeText(getContext(), "Error while creating file.", Toast.LENGTH_SHORT).show();
-            }
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(getContext(),
-                        BuildConfig.APPLICATION_ID + ".fileprovider",
-                        photoFile);
-                currentTakePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(currentTakePhotoIntent, REQUEST_TAKE_PHOTO);
-            }
-        }
-    }
-
-    private File createPhotoFile() throws IOException {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String fileName = "JPEG_" + timeStamp + "_";
-        File storageDirectory = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File file = File.createTempFile(fileName, ".jpg", storageDirectory);
-        currentPhotoPath = file.getAbsolutePath();
-        return file;
+        PhotoTaken photoTaken = new PhotoTaken();
+        startActivityForResult(photoTaken.takePhoto(getContext()), REQUEST_TAKE_PHOTO);
+        currentPhotoPath = photoTaken.getPath();
     }
 }
