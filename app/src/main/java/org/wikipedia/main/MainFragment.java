@@ -83,7 +83,6 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
     private MediaDownloadReceiver downloadReceiver = new MediaDownloadReceiver();
     private MediaDownloadReceiverCallback downloadReceiverCallback = new MediaDownloadReceiverCallback();
     private String currentPhotoPath;
-    static final int REQUEST_TAKE_PHOTO = 13;
     // The permissions request API doesn't take a callback, so in the event we have to
     // ask for permission to download a featured image from the feed, we'll have to hold
     // the image we're waiting for permission to download as a bit of state here. :(
@@ -163,25 +162,24 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
         } else if (requestCode == Constants.ACTIVITY_REQUEST_LOGIN
                 && resultCode == LoginActivity.RESULT_LOGIN_SUCCESS) {
             FeedbackUtil.showMessage(this, R.string.login_success_toast);
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
-             if (resultCode == Activity.RESULT_OK) {
-                if (requestCode == REQUEST_TAKE_PHOTO) {
+        } else if (requestCode == Constants.ACTIVITY_REQUEST_TAKE_PHOTO) {
+            if (resultCode == Activity.RESULT_OK) {
                     File photoFile = new File(currentPhotoPath);
                     Uri contentUri = Uri.fromFile(photoFile);
-                    //TODO do something with the photo file or the uri. Example: imageView.setImageURI(contentUri);
-                    Toast.makeText(getContext(), "have photo:" + photoFile.getName(), Toast.LENGTH_SHORT).show();
+                    //TODO do something with the photo file or the uri
+                    Toast.makeText(getContext(), "Photo taken:" + photoFile.getName(), Toast.LENGTH_SHORT).show();
 
                     //TODO Destory the file after using it. Please relocate it to the end of the process.
 
                     photoFile.delete();
                     currentPhotoPath = "";
-                }
             } else {
-                 File photoFile = new File(currentPhotoPath);
-                 photoFile.delete();
-                 currentPhotoPath = "";
-             }
+                File photoFile = new File(currentPhotoPath);
+                photoFile.delete();
+                currentPhotoPath = "";
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
@@ -565,7 +563,7 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
 
     private void takePhotoIntent() {
         PhotoTaken photoTaken = new PhotoTaken();
-        startActivityForResult(photoTaken.takePhoto(getContext()), REQUEST_TAKE_PHOTO);
+        startActivityForResult(photoTaken.takePhoto(getContext()), Constants.ACTIVITY_REQUEST_TAKE_PHOTO);
         currentPhotoPath = photoTaken.getPath();
     }
 }
