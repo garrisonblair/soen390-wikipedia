@@ -1,4 +1,4 @@
-package org.wikipedia.feed.imageBasedSearch;
+package org.wikipedia.util;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class PhotoTaken {
+public class CameraUtil {
     private String path;
     public String getPath() {
         return this.path;

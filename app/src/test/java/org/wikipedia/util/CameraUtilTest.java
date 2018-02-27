@@ -1,19 +1,14 @@
-package org.wikipedia.feed.imageBasedSearch;
+package org.wikipedia.util;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.content.FileProvider;
 
-import org.junit.Assert;
 import org.junit.Test;
-import org.mockito.Mockito;
-import org.wikipedia.R;
+import org.wikipedia.util.CameraUtil;
 
 import java.io.File;
 import java.io.IOException;
 
-import static org.hamcrest.core.IsInstanceOf.any;
-import static org.hamcrest.text.IsEmptyString.isEmptyString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
@@ -22,23 +17,23 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class PhotoTakenTest {
+public class CameraUtilTest {
 
     @Test
     public void testTakePhoto() throws IOException{
-        PhotoTaken photoTaken = new PhotoTaken();
+        CameraUtil cameraUtil = new CameraUtil();
         Context mockContext = mock(Context.class);
         File mockFile = mock(File.class);
 
-        assertEquals(null,photoTaken.getPath());
+        assertEquals(null, cameraUtil.getPath());
 
-        when(photoTaken.createPhotoFile(mockContext)).thenReturn(mockFile);
-        Intent intent = photoTaken.takePhoto(mockContext);
+        when(cameraUtil.createPhotoFile(mockContext)).thenReturn(mockFile);
+        Intent intent = cameraUtil.takePhoto(mockContext);
 
         //Test if there is an activity of creating file, file name and path
-        assertFalse(photoTaken.getPath().isEmpty());
+        assertFalse(cameraUtil.getPath().isEmpty());
 
-        File file = new File(photoTaken.getPath());
+        File file = new File(cameraUtil.getPath());
         file.delete();
     }
 }

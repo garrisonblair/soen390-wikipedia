@@ -36,7 +36,7 @@ import org.wikipedia.feed.FeedFragment;
 import org.wikipedia.feed.featured.FeaturedArticleCardView;
 import org.wikipedia.feed.image.FeaturedImage;
 import org.wikipedia.feed.image.FeaturedImageCard;
-import org.wikipedia.feed.imageBasedSearch.PhotoTaken;
+import org.wikipedia.util.CameraUtil;
 import org.wikipedia.feed.news.NewsActivity;
 import org.wikipedia.feed.news.NewsItemCard;
 import org.wikipedia.feed.view.HorizontalScrollingListCardItemView;
@@ -563,8 +563,8 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
     }
 
     private void takePhotoIntent() {
-        PhotoTaken photoTaken = new PhotoTaken();
-        startActivityForResult(photoTaken.takePhoto(getContext()), Constants.ACTIVITY_REQUEST_TAKE_PHOTO);
-        currentPhotoPath = photoTaken.getPath();
+        CameraUtil cameraUtil = new CameraUtil();
+        startActivityForResult(cameraUtil.takePhoto(getContext()), Constants.ACTIVITY_REQUEST_TAKE_PHOTO);
+        currentPhotoPath = cameraUtil.getPath();
     }
 }
