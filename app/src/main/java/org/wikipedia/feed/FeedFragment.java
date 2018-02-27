@@ -72,10 +72,12 @@ public class FeedFragment extends Fragment implements BackPressedHandler {
     private OverflowCallback overflowCallback = new OverflowCallback();
     private boolean searchIconVisible;
 
+
     public interface Callback {
         void onFeedTabListRequested();
         void onFeedSearchRequested();
         void onFeedVoiceSearchRequested();
+        void onFeedImageCameraSearchRequested();
         void onFeedSelectPage(HistoryEntry entry);
         void onFeedSelectPageFromExistingTab(HistoryEntry entry);
         void onFeedAddPageToList(HistoryEntry entry);
@@ -380,6 +382,13 @@ public class FeedFragment extends Fragment implements BackPressedHandler {
         }
 
         @Override
+        public void onImageCameraSearchRequested() {
+            if (getCallback() != null) {
+                getCallback().onFeedImageCameraSearchRequested();
+            }
+        }
+
+        @Override
         public boolean onRequestDismissCard(@NonNull Card card) {
             int position = coordinator.dismissCard(card);
             funnel.dismissCard(card.type(), position);
@@ -572,4 +581,5 @@ public class FeedFragment extends Fragment implements BackPressedHandler {
             feedCallback.onViewCompilations();
         }
     }
+
 }
