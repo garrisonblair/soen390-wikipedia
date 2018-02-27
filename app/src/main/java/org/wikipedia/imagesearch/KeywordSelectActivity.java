@@ -15,7 +15,6 @@ import android.widget.TextView;
 import org.wikipedia.R;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * This Activity takes in a VisionAPI Result object and returns a keyword selected by the user as a string.
@@ -25,8 +24,20 @@ public class KeywordSelectActivity extends AppCompatActivity {
 
     public static final String KEYWORD_LIST = "keyword_list";
     public static final String RESULT_KEY = "result";
+    public static final int[] PERCENTAGE_COLORS = {
+            0xffff0000,
+            0xffff3300,
+            0xffff6600,
+            0xffff9900,
+            0xffffCC00,
+            0xffffff00,
+            0xffccff00,
+            0xff77ff00,
+            0xff33ff00,
+            0xff00ff00
+    };
 
-    private ArrayList<String> keywords;
+    private ArrayList<ImageRecognitionLabel> keywords;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,16 +47,15 @@ public class KeywordSelectActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        String[] list = getIntent().getStringArrayExtra(KEYWORD_LIST);
-        keywords = new ArrayList<String>(Arrays.asList(list));
+        keywords = (ArrayList<ImageRecognitionLabel>) getIntent().getSerializableExtra(KEYWORD_LIST);
 
         ListView keywordList = findViewById(R.id.keyword_list_view);
         keywordList.setAdapter(new KeywordAdapter(this, keywords));
     }
 
-    private class KeywordAdapter extends ArrayAdapter<String> {
+    private class KeywordAdapter extends ArrayAdapter<ImageRecognitionLabel> {
 
-        KeywordAdapter(Context context, ArrayList<String> keywords) {
+        KeywordAdapter(Context context, ArrayList<ImageRecognitionLabel> keywords) {
             super(context, -1, keywords);
         }
 
@@ -55,7 +65,16 @@ public class KeywordSelectActivity extends AppCompatActivity {
             View rowView = inflater.inflate(R.layout.item_image_keyword, parent, false);
 
             TextView keywordView = rowView.findViewById(R.id.keyword_view);
-            keywordView.setText(keywords.get(position));
+            TextView scoreView = rowView.findViewById(R.id.score_view);
+            ImageRecognitionLabel label = keywords.get(position);
+            keywordView.setText(label.getDescription());
+
+            int percentage = (int) (label.getScore() * 100);
+            int colorIndex = percentage / 10;
+            scoreView.setText(percentage + "");
+            int color = PERCENTAGE_COLORS[colorIndex];
+            scoreView.setTextColor(PERCENTAGE_COLORS[colorIndex]);
+
 
             rowView.setOnClickListener(new View.OnClickListener() {
                 @Override

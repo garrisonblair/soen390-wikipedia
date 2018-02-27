@@ -6,9 +6,13 @@ import android.content.Intent;
 
 import org.wikipedia.R;
 import org.wikipedia.feed.view.DefaultFeedCardView;
+import org.wikipedia.imagesearch.ImageRecognitionLabel;
+import org.wikipedia.imagesearch.ImageRecognitionLabelTestImpl;
 import org.wikipedia.imagesearch.KeywordSelectActivity;
 import org.wikipedia.util.FeedbackUtil;
 import org.wikipedia.util.ResourceUtil;
+
+import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -48,7 +52,11 @@ public class SearchCardView extends DefaultFeedCardView<SearchCard> {
 
         //Start KeywordSelectActivity with test data for development, move to MainActivity when camera/gallery implemented
         Intent keywordSelectIntent = new Intent(getContext(), KeywordSelectActivity.class);
-        String[] keywords = {"Cat", "Animal", "Tabby Cat"};
+        ArrayList<ImageRecognitionLabel> keywords = new ArrayList<ImageRecognitionLabel>();
+        ImageRecognitionLabel label1 = new ImageRecognitionLabelTestImpl("Cat", 0.9);
+        ImageRecognitionLabel label2 = new ImageRecognitionLabelTestImpl("Dog", 0.2);
+        keywords.add(label1);
+        keywords.add(label2);
         keywordSelectIntent.putExtra(KeywordSelectActivity.KEYWORD_LIST, keywords);
 
         ((Activity) getContext()).startActivityForResult(keywordSelectIntent, ACTIVITY_REQUEST_IMAGE_KEYWORD);
