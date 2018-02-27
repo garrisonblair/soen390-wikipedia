@@ -39,12 +39,40 @@
                     android:imeOptions="actionGo|flagNoExtractUi"
                     app:cabEnabled="false" />
 
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/fragment_image_search_open_camera_button"
+                    android:layout_width="37dp"
+                    android:layout_height="match_parent"
+                    android:adjustViewBounds="true"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:contentDescription="@string/search_hint"
+                    android:cropToPadding="false"
+                    android:scaleType="centerCrop"
+                    app:srcCompat="@drawable/icon_potd_photo_camera"
+                    app:tint="?attr/material_theme_secondary_color"
+                    app:tintMode="src_in" />
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/fragment_gallery_search_button"
+                    android:layout_width="37dp"
+                    android:layout_height="match_parent"
+                    android:adjustViewBounds="true"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:contentDescription="@string/search_hint"
+                    android:cropToPadding="true"
+                    android:scaleType="centerCrop"
+                    app:srcCompat="@drawable/icon_photo_gallery"
+                    app:tint="?attr/material_theme_secondary_color"
+                    app:tintMode="src_in" />
+
                 <FrameLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="2dp"
                     android:paddingBottom="2dp"
-                    android:paddingLeft="9dp"
+                    android:paddingLeft="3dp"
                     android:paddingRight="9dp"
                     android:layout_marginRight="8dp"
                     android:layout_marginEnd="8dp"
