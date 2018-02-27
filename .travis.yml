@@ -23,8 +23,8 @@ jobs:
     - stage: pre-build
       script: ./gradlew preDevDebugBuild
     # checkstyle stage
-   #- stage: checkstyle
-    #  script: ./gradlew checkstyle
+    - stage: checkstyle
+      script: ./gradlew checkstyle
     # lint stage
     - stage: lint
       script: ./gradlew lintDevDebug

@@ -45,6 +45,10 @@ android {
         abortOnError false
     }
 
+    checkstyleOptions {
+        abortOnError false
+    }
+
     compileOptions {
         sourceCompatibility = JAVA_VERSION
         targetCompatibility = JAVA_VERSION
