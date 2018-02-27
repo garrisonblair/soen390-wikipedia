@@ -35,7 +35,7 @@ public class SearchCardView extends DefaultFeedCardView<SearchCard> {
         }
     }
 
-    @OnClick(R.id.image_search_button) void onImageSearchClick() {
+    @OnClick(R.id.image_search_open_camera_button) void onCameraImageSearchClick() {
         // TODO: Add logic to open camera app for image to text
     }
 
