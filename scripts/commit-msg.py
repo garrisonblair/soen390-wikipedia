@@ -1,7 +1,8 @@
 import re
 import sys
 
-COMMIT_REGEX = "#[0-9]+"
+LINK_REGEX = "#[0-9]+"
+MERGE_REGEX = "Merge"
 
 
 def validate_commit_message():
@@ -10,15 +11,16 @@ def validate_commit_message():
     try:
         script, commit_msg = sys.argv
 
-        match = re.search(COMMIT_REGEX, commit_msg)
+        link_match = re.search(LINK_REGEX, commit_msg)
+        merge_match = re.search(MERGE_REGEX, commit_msg)
 
-        if match is not None:
+        if link_match is not None or merge_match is not None:
             return 0
     except Exception as e:
         print("ERROR")
         print(e)
 
-    print("Commit message does not link to an issue")
+    print("Commit message does not link to an issue and isn't a merge commit")
     return 1
 
 
