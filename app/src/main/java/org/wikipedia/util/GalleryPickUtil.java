@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.provider.MediaStore;
-import android.widget.Toast;
 
 import java.io.IOException;
 
@@ -31,9 +30,6 @@ public class GalleryPickUtil{
                     e.printStackTrace();
                 }
             }
-        }
-        else if(resultCode == Activity.RESULT_CANCELED){
-
         }
         return bitmap;
     }
