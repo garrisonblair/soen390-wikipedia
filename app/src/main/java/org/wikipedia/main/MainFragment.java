@@ -8,8 +8,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
@@ -164,18 +164,19 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
             FeedbackUtil.showMessage(this, R.string.login_success_toast);
         } else if (requestCode == Constants.ACTIVITY_REQUEST_TAKE_PHOTO) {
             if (resultCode == Activity.RESULT_OK) {
-                    File photoFile = new File(currentPhotoPath);
-                    Uri contentUri = Uri.fromFile(photoFile);
-                    //TODO do something with the photo file or the uri
-                    Toast.makeText(getContext(), "Photo taken:" + photoFile.getName(), Toast.LENGTH_SHORT).show();
+                Bitmap photo = BitmapFactory.decodeFile(currentPhotoPath);
 
-                    //TODO Destory the file after using it. Please relocate it to the end of the process.
+                //TODO do something with the bitmap file
 
-                    photoFile.delete();
-                    currentPhotoPath = "";
+
+                //TODO Destory the temporary image file after using it. Please relocate it to the end of the process.
+                File tempFile = new File(currentPhotoPath);
+                Toast.makeText(getContext(), "Photo taken:" + tempFile.getName(), Toast.LENGTH_SHORT).show();
+                tempFile.delete();
+                currentPhotoPath = "";
             } else {
-                File photoFile = new File(currentPhotoPath);
-                photoFile.delete();
+                File tempFile = new File(currentPhotoPath);
+                tempFile.delete();
                 currentPhotoPath = "";
             }
         } else {
