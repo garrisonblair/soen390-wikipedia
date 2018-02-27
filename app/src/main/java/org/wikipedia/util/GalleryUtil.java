@@ -11,7 +11,7 @@ import java.io.IOException;
  * Created by Andres on 2018-02-26.
  */
 
-public class GalleryPickUtil{
+public class GalleryUtil{
 
     public static Intent newGalleryPickIntent(){
         Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);

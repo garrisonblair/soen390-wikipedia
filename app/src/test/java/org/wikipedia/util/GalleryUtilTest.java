@@ -19,11 +19,11 @@ import static org.mockito.Mockito.when;
  */
 
 @RunWith(TestRunner.class)
-public class GalleryPickUtilTest {
+public class GalleryUtilTest {
 
     @Test
     public void newGalleryPickIntentTest(){
-        Intent intent = GalleryPickUtil.newGalleryPickIntent();
+        Intent intent = GalleryUtil.newGalleryPickIntent();
         assertEquals("image/*",intent.getType());
     }
 
@@ -43,13 +43,13 @@ public class GalleryPickUtilTest {
         when(intentMock.getData()).thenReturn(uri);
         Activity activityMock = mock(Activity.class);
 
-        Bitmap bitmap = GalleryPickUtil.getSelectedPicture(OK, null,activityMock);
+        Bitmap bitmap = GalleryUtil.getSelectedPicture(OK, null,activityMock);
         assertEquals(bitmap,null);
 
-        bitmap = GalleryPickUtil.getSelectedPicture(CANCEL, intentMock,activityMock);
+        bitmap = GalleryUtil.getSelectedPicture(CANCEL, intentMock,activityMock);
         assertEquals(bitmap,null);
 
-        bitmap = GalleryPickUtil.getSelectedPicture(OK, intentMock, activityMock);
+        bitmap = GalleryUtil.getSelectedPicture(OK, intentMock, activityMock);
         assertTrue(bitmap != null);
     }
 }

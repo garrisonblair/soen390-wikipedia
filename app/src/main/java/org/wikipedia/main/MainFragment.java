@@ -59,7 +59,7 @@ import org.wikipedia.search.SearchInvokeSource;
 import org.wikipedia.settings.Prefs;
 import org.wikipedia.util.ClipboardUtil;
 import org.wikipedia.util.FeedbackUtil;
-import org.wikipedia.util.GalleryPickUtil;
+import org.wikipedia.util.GalleryUtil;
 import org.wikipedia.util.PermissionUtil;
 import org.wikipedia.util.ShareUtil;
 import org.wikipedia.util.log.L;
@@ -160,7 +160,7 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
             startActivity(data);
         }else if(requestCode == Constants.ACTIVITY_REQUEST_GALLERY_SELECTION){
             //super.onActivityResult(requestCode, resultCode, data);
-            Bitmap bitmap = GalleryPickUtil.getSelectedPicture(resultCode,data,getActivity());
+            Bitmap bitmap = GalleryUtil.getSelectedPicture(resultCode,data,getActivity());
             if(bitmap != null){
                 //section to start new activity
             }
@@ -245,7 +245,7 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
         }
     }
     @Override public void onFeedGallerySearchRequested(){
-        Intent photoPickerIntent = GalleryPickUtil.newGalleryPickIntent();
+        Intent photoPickerIntent = GalleryUtil.newGalleryPickIntent();
         startActivityForResult(photoPickerIntent,Constants.ACTIVITY_REQUEST_GALLERY_SELECTION);
     }
 
