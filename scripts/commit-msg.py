@@ -12,7 +12,7 @@ def validate_commit_message():
         script, commit_msg = sys.argv
 
         link_match = re.search(LINK_REGEX, commit_msg)
-        merge_match = re.search(MERGE_REGEX, commit_msg)
+        merge_match = re.search(MERGE_REGEX, commit_msg, re.IGNORECASE)
 
         if link_match is not None or merge_match is not None:
             return 0
