@@ -77,6 +77,7 @@ public class FeedFragment extends Fragment implements BackPressedHandler {
         void onFeedTabListRequested();
         void onFeedSearchRequested();
         void onFeedVoiceSearchRequested();
+        void onFeedGallerySearchRequested();
         void onFeedImageCameraSearchRequested();
         void onFeedSelectPage(HistoryEntry entry);
         void onFeedSelectPageFromExistingTab(HistoryEntry entry);
@@ -382,6 +383,12 @@ public class FeedFragment extends Fragment implements BackPressedHandler {
         }
 
         @Override
+        public void onGalleryPictureSearchRequested(){
+            if(getCallback() != null) {
+                getCallback().onFeedGallerySearchRequested();
+            }
+        }
+
         public void onImageCameraSearchRequested() {
             if (getCallback() != null) {
                 getCallback().onFeedImageCameraSearchRequested();
