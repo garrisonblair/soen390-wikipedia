@@ -41,6 +41,10 @@ android {
     compileSdkVersion 27
     buildToolsVersion '27.0.1'
 
+    lintOptions {
+        abortOnError false
+    }
+
     compileOptions {
         sourceCompatibility = JAVA_VERSION
         targetCompatibility = JAVA_VERSION
@@ -223,7 +227,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:27.0.2'
     compile 'com.android.support:design:27.0.2'
-    compile 'com.google.api-client:google-api-client-android:1.20.0' exclude module: 'httpclient'
+    compile 'com.google.api-client:google-api-client-android:1.22.0' exclude module: 'httpclient'
     compile 'com.google.http-client:google-http-client-gson:1.20.0' exclude module: 'httpclient'
     compile 'com.google.apis:google-api-services-vision:v1-rev2-1.21.0'
     // End of what may be needed for google vision based on examples in good app
