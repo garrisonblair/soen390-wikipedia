@@ -37,7 +37,7 @@
         android:contentDescription="@string/search_hint" />
 
     <android.support.v7.widget.AppCompatImageView
-        android:id="@+id/image_search_button"
+        android:id="@+id/image_search_open_camera_button"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:scaleType="center"
