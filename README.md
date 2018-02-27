@@ -8,6 +8,15 @@ This repository contains the source code for the official Wikipedia Android app.
 
 All documentation is kept on [our wiki](https://www.mediawiki.org/wiki/Wikimedia_Apps/Team/Wikipedia_Android_app_hacking). Check it out!
 
+## Dev Setup
+
+#### Enforcing Issue linking
+To make sure every commit links to an issue, there is a commit-msg hook that will check for the presence of a link.  The script needs to be setup by running 
+
+`sh scripts/setup_hooks.sh`
+
+Afterwards every commit message that doesn't contain the regex '#[0-9]+' will be rejected.
+
 ## Conventions
 
 #### Branch naming:
