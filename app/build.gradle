@@ -45,8 +45,8 @@ android {
         abortOnError false
     }
 
-    checkstyleOptions {
-        abortOnError false
+    checkstyle {
+        ignoreFailures true
     }
 
     compileOptions {
