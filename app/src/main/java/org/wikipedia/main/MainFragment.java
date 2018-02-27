@@ -161,7 +161,7 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
                 && resultCode == GalleryActivity.ACTIVITY_RESULT_PAGE_SELECTED) {
             startActivity(data);
         }else if(requestCode == Constants.ACTIVITY_REQUEST_GALLERY_SELECTION){
-            //super.onActivityResult(requestCode, resultCode, data);
+            
             Bitmap bitmap = GalleryUtil.getSelectedPicture(resultCode,data,getActivity());
             if(bitmap != null){
                 //section to start new activity
