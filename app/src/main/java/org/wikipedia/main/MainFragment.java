@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,6 +36,7 @@ import org.wikipedia.feed.FeedFragment;
 import org.wikipedia.feed.featured.FeaturedArticleCardView;
 import org.wikipedia.feed.image.FeaturedImage;
 import org.wikipedia.feed.image.FeaturedImageCard;
+import org.wikipedia.util.CameraUtil;
 import org.wikipedia.feed.news.NewsActivity;
 import org.wikipedia.feed.news.NewsItemCard;
 import org.wikipedia.feed.view.HorizontalScrollingListCardItemView;
@@ -81,7 +83,7 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
     private ExclusiveBottomSheetPresenter bottomSheetPresenter = new ExclusiveBottomSheetPresenter();
     private MediaDownloadReceiver downloadReceiver = new MediaDownloadReceiver();
     private MediaDownloadReceiverCallback downloadReceiverCallback = new MediaDownloadReceiverCallback();
-
+    private String currentPhotoPath;
     // The permissions request API doesn't take a callback, so in the event we have to
     // ask for permission to download a featured image from the feed, we'll have to hold
     // the image we're waiting for permission to download as a bit of state here. :(
@@ -168,6 +170,23 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
         else if (requestCode == Constants.ACTIVITY_REQUEST_LOGIN
                 && resultCode == LoginActivity.RESULT_LOGIN_SUCCESS) {
             FeedbackUtil.showMessage(this, R.string.login_success_toast);
+        } else if (requestCode == Constants.ACTIVITY_REQUEST_TAKE_PHOTO) {
+            if (resultCode == Activity.RESULT_OK) {
+                Bitmap photo = BitmapFactory.decodeFile(currentPhotoPath);
+
+                //TODO do something with the bitmap file
+
+
+                //TODO Destory the temporary image file after using it. Please relocate it to the end of the process.
+                File tempFile = new File(currentPhotoPath);
+                Toast.makeText(getContext(), "Photo taken:" + tempFile.getName(), Toast.LENGTH_SHORT).show();
+                tempFile.delete();
+                currentPhotoPath = "";
+            } else {
+                File tempFile = new File(currentPhotoPath);
+                tempFile.delete();
+                currentPhotoPath = "";
+            }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
@@ -244,9 +263,15 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
             FeedbackUtil.showMessage(this, R.string.error_voice_search_not_available);
         }
     }
-    @Override public void onFeedGallerySearchRequested(){
+
+    @Override public void onFeedGallerySearchRequested() {
         Intent photoPickerIntent = GalleryUtil.newGalleryPickIntent();
-        startActivityForResult(photoPickerIntent,Constants.ACTIVITY_REQUEST_GALLERY_SELECTION);
+        startActivityForResult(photoPickerIntent, Constants.ACTIVITY_REQUEST_GALLERY_SELECTION);
+    }
+
+    @Override public void onFeedImageCameraSearchRequested() {
+        takePhotoIntent();
+
     }
 
     @Override public void onFeedSelectPage(HistoryEntry entry) {
@@ -549,5 +574,11 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
 
     @Nullable private Callback callback() {
         return FragmentUtil.getCallback(this, Callback.class);
+    }
+
+    private void takePhotoIntent() {
+        CameraUtil cameraUtil = new CameraUtil();
+        startActivityForResult(cameraUtil.takePhoto(getContext()), Constants.ACTIVITY_REQUEST_TAKE_PHOTO);
+        currentPhotoPath = cameraUtil.getPath();
     }
 }
