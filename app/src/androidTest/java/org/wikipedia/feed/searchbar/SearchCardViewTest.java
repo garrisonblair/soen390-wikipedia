@@ -24,4 +24,10 @@ public class SearchCardViewTest {
         activityRule.getActivity();
         onView(withId(R.id.image_search_button)).perform(click());
     }
+
+    @Test
+    public void onGallerySearchClick() {
+        activityRule.getActivity();
+        onView(withId(R.id.gallery_search_button)).perform(click());
+    }
 }

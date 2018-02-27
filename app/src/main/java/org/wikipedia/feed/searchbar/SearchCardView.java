@@ -54,5 +54,7 @@ public class SearchCardView extends DefaultFeedCardView<SearchCard> {
         ((Activity) getContext()).startActivityForResult(keywordSelectIntent, ACTIVITY_REQUEST_IMAGE_KEYWORD);
     }
 
-
+    @OnClick(R.id.gallery_search_button) void onGallerySearchClick() {
+        // TODO: Add logic to open camera app for image to text
+    }
 }
