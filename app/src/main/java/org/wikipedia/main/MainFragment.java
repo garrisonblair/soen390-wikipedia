@@ -18,7 +18,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,8 +38,6 @@ import org.wikipedia.feed.FeedFragment;
 import org.wikipedia.feed.featured.FeaturedArticleCardView;
 import org.wikipedia.feed.image.FeaturedImage;
 import org.wikipedia.feed.image.FeaturedImageCard;
-import org.wikipedia.imagesearch.ImageRecognitionService;
-import org.wikipedia.util.CameraUtil;
 import org.wikipedia.feed.news.NewsActivity;
 import org.wikipedia.feed.news.NewsItemCard;
 import org.wikipedia.feed.view.HorizontalScrollingListCardItemView;
@@ -49,6 +46,9 @@ import org.wikipedia.gallery.ImagePipelineBitmapGetter;
 import org.wikipedia.gallery.MediaDownloadReceiver;
 import org.wikipedia.history.HistoryEntry;
 import org.wikipedia.history.HistoryFragment;
+import org.wikipedia.imagesearch.ImageRecognitionLabel;
+import org.wikipedia.imagesearch.ImageRecognitionLabelTestImpl;
+import org.wikipedia.imagesearch.ImageRecognitionService;
 import org.wikipedia.login.LoginActivity;
 import org.wikipedia.navtab.NavTab;
 import org.wikipedia.navtab.NavTabFragmentPagerAdapter;
@@ -63,6 +63,7 @@ import org.wikipedia.readinglist.AddToReadingListDialog;
 import org.wikipedia.search.SearchFragment;
 import org.wikipedia.search.SearchInvokeSource;
 import org.wikipedia.settings.Prefs;
+import org.wikipedia.util.CameraUtil;
 import org.wikipedia.util.ClipboardUtil;
 import org.wikipedia.util.FeedbackUtil;
 import org.wikipedia.util.GalleryUtil;
@@ -71,6 +72,7 @@ import org.wikipedia.util.ShareUtil;
 import org.wikipedia.util.log.L;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -165,33 +167,21 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
         } else if (requestCode == Constants.ACTIVITY_REQUEST_GALLERY
                 && resultCode == GalleryActivity.ACTIVITY_RESULT_PAGE_SELECTED) {
             startActivity(data);
-        }else if(requestCode == Constants.ACTIVITY_REQUEST_GALLERY_SELECTION){
-            
-            Bitmap bitmap = GalleryUtil.getSelectedPicture(resultCode,data,getActivity());
-            if(bitmap != null){
-                //section to start new activity
+        } else if (requestCode == Constants.ACTIVITY_REQUEST_GALLERY_SELECTION) {
+            Bitmap photo = GalleryUtil.getSelectedPicture(resultCode, data, getActivity());
+            if (photo != null) {
+                getKeywordsFromPhoto(photo);
             }
-        }
-        else if (requestCode == Constants.ACTIVITY_REQUEST_LOGIN
+        } else if (requestCode == Constants.ACTIVITY_REQUEST_LOGIN
                 && resultCode == LoginActivity.RESULT_LOGIN_SUCCESS) {
             FeedbackUtil.showMessage(this, R.string.login_success_toast);
         } else if (requestCode == Constants.ACTIVITY_REQUEST_TAKE_PHOTO) {
             if (resultCode == Activity.RESULT_OK) {
                 Bitmap photo = BitmapFactory.decodeFile(currentPhotoPath);
 
-                //TODO do something with the bitmap file
-                ImageRecognitionService imageRecognitionService = new ImageRecognitionService();
-                imageRecognitionService.executeImageRecognition(photo, new ImageRecognitionService.Callback(){
+                getKeywordsFromPhoto(photo);
 
-                    @Override
-                    public void onVisionAPIResult(List<EntityAnnotation> list) {
-                           Log.d("BLAH!!", "Blah blah");
-                    }
-                });
-
-
-
-                //TODO Destory the temporary image file after using it. Please relocate it to the end of the process.
+                //Destroy the temporary image file after using it. Please relocate it to the end of the process.
                 File tempFile = new File(currentPhotoPath);
                 Toast.makeText(getContext(), "Photo taken:" + tempFile.getName(), Toast.LENGTH_SHORT).show();
                 tempFile.delete();
@@ -594,5 +584,23 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
         CameraUtil cameraUtil = new CameraUtil();
         startActivityForResult(cameraUtil.takePhoto(getContext()), Constants.ACTIVITY_REQUEST_TAKE_PHOTO);
         currentPhotoPath = cameraUtil.getPath();
+    }
+
+    private void getKeywordsFromPhoto(Bitmap photo) {
+        ImageRecognitionService imageRecognitionService = new ImageRecognitionService();
+        imageRecognitionService.executeImageRecognition(photo, new ImageRecognitionService.Callback() {
+
+            @Override
+            public void onVisionAPIResult(List<EntityAnnotation> results) {
+//                Intent keywordSelectIntent = new Intent(getContext(), KeywordSelectActivity.class);
+                ArrayList<ImageRecognitionLabel> keywords = new ArrayList<ImageRecognitionLabel>();
+                for (EntityAnnotation result: results) {
+                    keywords.add(new ImageRecognitionLabelTestImpl(result.getDescription(), result.getScore()));
+                }
+//                keywordSelectIntent.putExtra(KeywordSelectActivity.KEYWORD_LIST, keywords);
+//
+//                ((Activity) getContext()).startActivityForResult(keywordSelectIntent, ACTIVITY_REQUEST_IMAGE_KEYWORD);
+            }
+        });
     }
 }
