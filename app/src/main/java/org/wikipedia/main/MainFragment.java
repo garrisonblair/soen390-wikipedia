@@ -160,10 +160,10 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
         } else if (requestCode == Constants.ACTIVITY_REQUEST_GALLERY
                 && resultCode == GalleryActivity.ACTIVITY_RESULT_PAGE_SELECTED) {
             startActivity(data);
-        }else if(requestCode == Constants.ACTIVITY_REQUEST_GALLERY_SELECTION){
+        } else if (requestCode == Constants.ACTIVITY_REQUEST_GALLERY_SELECTION){
             
-            Bitmap bitmap = GalleryUtil.getSelectedPicture(resultCode,data,getActivity());
-            if(bitmap != null){
+            Bitmap bitmap = GalleryUtil.getSelectedPicture(resultCode, data, getActivity());
+            if (bitmap != null) {
                 //section to start new activity
             }
         }
@@ -180,7 +180,12 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
                 //TODO Destory the temporary image file after using it. Please relocate it to the end of the process.
                 File tempFile = new File(currentPhotoPath);
                 Toast.makeText(getContext(), "Photo taken:" + tempFile.getName(), Toast.LENGTH_SHORT).show();
-                tempFile.delete();
+                if (Prefs.getSavePhoto()){
+                    CameraUtil cameraUtil = new CameraUtil();
+                    cameraUtil.addPhotoToGallery(getContext(), currentPhotoPath);
+                } else {
+                    tempFile.delete();
+                }
                 currentPhotoPath = "";
             } else {
                 File tempFile = new File(currentPhotoPath);

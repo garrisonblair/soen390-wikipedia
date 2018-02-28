@@ -1,13 +1,17 @@
 package org.wikipedia.settings;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.preference.SwitchPreferenceCompat;
+import android.widget.Toast;
 
 import org.wikipedia.BuildConfig;
 import org.wikipedia.R;
@@ -130,6 +134,13 @@ class SettingsPreferenceLoader extends BasePreferenceLoader {
             }
         });
 
+        if ((ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) && Prefs.getSavePhoto()) {
+            ((SwitchPreferenceCompat)findPreference("savePhoto")).setChecked(false);
+        }
+        findPreference(R.string.preference_key_save_photo)
+                .setOnPreferenceChangeListener(new SavePhotoListener());
+
         if (!BuildConfig.APPLICATION_ID.equals("org.wikipedia")) {
             overridePackageName();
         }
@@ -224,6 +235,31 @@ class SettingsPreferenceLoader extends BasePreferenceLoader {
             ((SwitchPreferenceCompat) preference).setChecked(true);
             Prefs.setReadingListSyncEnabled(true);
             Prefs.setReadingListsRemoteDeletePending(false);
+        }
+    }
+
+    private final class SavePhotoListener implements Preference.OnPreferenceChangeListener {
+        @Override public boolean onPreferenceChange(final Preference preference, Object newValue) {
+
+            if (newValue == Boolean.TRUE) {
+                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(getActivity(), "Please turn on the storage permission.", Toast.LENGTH_SHORT).show();
+
+                    ((SwitchPreferenceCompat) preference).setChecked(false);
+                    Prefs.setSavePhoto(false);
+                } else {
+                    Toast.makeText(getActivity(), "Taken Photo will be saved.", Toast.LENGTH_SHORT).show();
+                    ((SwitchPreferenceCompat) preference).setChecked(true);
+                    Prefs.setSavePhoto(true);
+                }
+
+            } else {
+                Toast.makeText(getActivity(), "Taken Photo will not be saved.", Toast.LENGTH_SHORT).show();
+                ((SwitchPreferenceCompat) preference).setChecked(false);
+                Prefs.setSavePhoto(false);
+            }
+            return false;
         }
     }
 }
