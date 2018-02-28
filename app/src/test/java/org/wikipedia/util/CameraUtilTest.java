@@ -1,18 +1,28 @@
 package org.wikipedia.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
+import android.preference.PreferenceManager;
 
 import org.junit.Test;
+import org.wikipedia.settings.Prefs;
+import org.wikipedia.settings.PrefsIoUtil;
 import org.wikipedia.util.CameraUtil;
 
 import java.io.File;
 import java.io.IOException;
 
+import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.mockito.AdditionalMatchers.not;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -20,20 +30,21 @@ import static org.mockito.Mockito.when;
 public class CameraUtilTest {
 
     @Test
-    public void testTakePhoto() throws IOException{
-        CameraUtil cameraUtil = new CameraUtil();
+    public void testGetPublicStorageDirectory (){
         Context mockContext = mock(Context.class);
-        File mockFile = mock(File.class);
+        CameraUtil cameraUtil = new CameraUtil();
 
-        assertEquals(null, cameraUtil.getPath());
-
-        when(cameraUtil.createPhotoFile(mockContext)).thenReturn(mockFile);
-        Intent intent = cameraUtil.takePhoto(mockContext);
-
-        //Test if there is an activity of creating file, file name and path
-        assertFalse(cameraUtil.getPath().isEmpty());
-
-        File file = new File(cameraUtil.getPath());
-        file.delete();
+        assertTrue(cameraUtil.getPublicStorageDirectory(mockContext).isDirectory());
     }
+
+    @Test
+    public void testGetPath (){
+        CameraUtil cameraUtil = new CameraUtil();
+        assertEquals(cameraUtil.getPath(), null);
+
+        Context mockContext = mock(Context.class);
+        File file = cameraUtil.getPublicStorageDirectory(mockContext);
+        assertEquals(file.getPath(), "Wikipedia");
+    }
+
 }

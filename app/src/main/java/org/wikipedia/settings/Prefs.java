@@ -1,19 +1,15 @@
 package org.wikipedia.settings;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 
 import com.google.gson.reflect.TypeToken;
 
 import org.wikipedia.Constants;
 import org.wikipedia.R;
-import org.wikipedia.activity.BaseActivity;
 import org.wikipedia.analytics.SessionData;
 import org.wikipedia.analytics.SessionFunnel;
 import org.wikipedia.dataclient.SharedPreferenceCookieManager;

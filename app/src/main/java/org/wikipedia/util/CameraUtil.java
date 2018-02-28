@@ -43,11 +43,9 @@ public class CameraUtil {
     public File createPhotoFile(Context context) throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String fileName = "JPEG_" + timeStamp + "_";
-        File storageDirectory = null;
+        File storageDirectory = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         if (Prefs.getSavePhoto()) {
             storageDirectory = getPublicStorageDirectory(context);
-        } else {
-            storageDirectory = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         }
         File file = File.createTempFile(fileName, ".jpg", storageDirectory);
         this.path = file.getAbsolutePath();

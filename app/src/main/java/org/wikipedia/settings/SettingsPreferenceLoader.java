@@ -243,17 +243,15 @@ class SettingsPreferenceLoader extends BasePreferenceLoader {
 
             if (newValue == Boolean.TRUE) {
                 if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(getActivity(), "Please turn on the storage permission.", Toast.LENGTH_SHORT).show();
-
-                    ((SwitchPreferenceCompat) preference).setChecked(false);
-                    Prefs.setSavePhoto(false);
-                } else {
+                        == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(getActivity(), "Taken Photo will be saved.", Toast.LENGTH_SHORT).show();
                     ((SwitchPreferenceCompat) preference).setChecked(true);
                     Prefs.setSavePhoto(true);
+                } else {
+                    Toast.makeText(getActivity(), "Please turn on the storage permission.", Toast.LENGTH_SHORT).show();
+                    ((SwitchPreferenceCompat) preference).setChecked(false);
+                    Prefs.setSavePhoto(false);
                 }
-
             } else {
                 Toast.makeText(getActivity(), "Taken Photo will not be saved.", Toast.LENGTH_SHORT).show();
                 ((SwitchPreferenceCompat) preference).setChecked(false);
