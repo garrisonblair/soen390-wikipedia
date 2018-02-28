@@ -12,7 +12,26 @@ android:
     # The SDK version used to compile your project
     - android-26
 
-script: ./gradlew testDevDebug
+#script: ./gradlew testDevDebug
 
 before_install:
   - yes | sdkmanager "platforms;android-27"
+
+jobs:
+  include:
+    # pre-build stage
+    - stage: pre-build
+      script: ./gradlew preDevDebugBuild
+    # checkstyle stage
+    - stage: checkstyle
+      script: ./gradlew checkstyle
+    # lint stage
+    - stage: lint
+      script: ./gradlew lintDevDebug
+    # test stage
+    # build stage
+    - stage: build
+      script: ./gradlew -q clean assembleDevDebug
+    # test stage
+    - stage: test #testDevDebug
+      script: ./gradlew testDevDebugUnitTest
