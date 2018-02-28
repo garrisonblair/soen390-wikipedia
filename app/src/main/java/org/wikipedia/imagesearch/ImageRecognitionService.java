@@ -31,6 +31,12 @@ import java.util.Locale;
 // ImageRecognitionService class which implements ImageRecognitionLabel interface
 public class ImageRecognitionService /*implements ImageRecognitionLabel*/{
 
+    public interface Callback{
+        public void onVisionAPIResult(List<EntityAnnotation> list);
+    };
+
+    public static Callback callback;
+
     // Attributes of ImageRecognitionService in case manipulation is necessary by outside classes
     private static List<EntityAnnotation> entityAnnotationLabels;
     private static BatchAnnotateImagesResponse batchAnnotateImagesResponse;
@@ -92,7 +98,7 @@ public class ImageRecognitionService /*implements ImageRecognitionLabel*/{
 
     // mutator method for entityAnnotationLabels
     public static void seteEntityAnnotationLabels(List<EntityAnnotation> entityAnnotationLabels){
-        entityAnnotationLabels = entityAnnotationLabels;
+        ImageRecognitionService.entityAnnotationLabels = entityAnnotationLabels;
     }
 
     // accessor method for batchAnnotateImagesResponse
@@ -102,14 +108,15 @@ public class ImageRecognitionService /*implements ImageRecognitionLabel*/{
 
     // mutator method for batchAnnotateImagesResponse
     public static void setBatchAnnotateImagesResponse(BatchAnnotateImagesResponse batchAnnotateImagesResponse){
-        batchAnnotateImagesResponse = batchAnnotateImagesResponse;
+        ImageRecognitionService.batchAnnotateImagesResponse = batchAnnotateImagesResponse;
     }
 
     // upload the image to the google vision api
-    public void uploadImageToCloudVisionAPI(Bitmap bitmap) {
+    public void uploadImageToCloudVisionAPI(Bitmap bitmap, Callback callback) {
         // Make sure URI is not full
         if (bitmap != null) {
             try {
+                ImageRecognitionService.callback = callback;
                 // scale the bitmap to save on bandwidth
                 Bitmap bitmapForAPI = scaleDown(bitmap,MAX_DIMENSION);
                 // call the google cloud vision API for scaled down bitmap
@@ -126,7 +133,7 @@ public class ImageRecognitionService /*implements ImageRecognitionLabel*/{
 
     // call the cloud vision API
     @SuppressLint("StaticFieldLeak")
-    private static List<EntityAnnotation> callCloudVisionAPI(final Bitmap bitmap) throws IOException {
+    private static void callCloudVisionAPI(final Bitmap bitmap) throws IOException {
 
         // cleans current state of ImageRecognition singleton's previous data
         ImageRecognitionService.seteEntityAnnotationLabels(null);
@@ -200,6 +207,8 @@ public class ImageRecognitionService /*implements ImageRecognitionLabel*/{
                     // obtains BatchAnnotateImagesResponse after sending request to google cloud vision and obtaining results
                     BatchAnnotateImagesResponse response = annotateRequest.execute();
 
+
+
                     // sets ImageRecognitionService attributes of batchAnnotateImagesResponse and entityAnnotationLabels created from response
                     ImageRecognitionService.setBatchAnnotateImagesResponse(batchAnnotateImagesResponse);
                     ImageRecognitionService.seteEntityAnnotationLabels(response.getResponses().get(0).getLabelAnnotations());
@@ -218,11 +227,9 @@ public class ImageRecognitionService /*implements ImageRecognitionLabel*/{
             }
 
             protected void onPostExecute(List<EntityAnnotation> result) {
-                return;
+                ImageRecognitionService.callback.onVisionAPIResult(ImageRecognitionService.getEntityAnnotationLabels());
             }
         }.execute();
-
-        return null;
     }
 
 
