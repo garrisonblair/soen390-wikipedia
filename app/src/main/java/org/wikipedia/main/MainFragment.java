@@ -172,8 +172,8 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
                 Bitmap photo = BitmapFactory.decodeFile(currentPhotoPath);
 
                 //TODO do something with the bitmap file
-                ImageRecognitionService imageRecognitionService = ImageRecognitionService.getImageRecognitionService();
-                imageRecognitionService.uploadImageToCloudVisionAPI(photo, new ImageRecognitionService.Callback(){
+                ImageRecognitionService imageRecognitionService = new ImageRecognitionService();
+                imageRecognitionService.executeImageRecognition(photo, new ImageRecognitionService.Callback(){
 
                     @Override
                     public void onVisionAPIResult(List<EntityAnnotation> list) {

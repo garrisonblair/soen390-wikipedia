@@ -26,7 +26,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 
 public class ImageRecognitionService{
@@ -35,87 +34,79 @@ public class ImageRecognitionService{
         void onVisionAPIResult(List<EntityAnnotation> list);
     }
 
-    private static Callback CALLBACK;
-
-    // Attributes of ImageRecognitionService in case manipulation is necessary by outside classes
-    private static List<EntityAnnotation> ENTITYANNOTATIONLABELS;
-    private static BatchAnnotateImagesResponse BATCHANNOTATEIMAGESRESPONSE;
-
     // maximum dimesion for images passed to google cloud API
     private static final int MAX_DIMENSION = 1200;
-
     private static final int QUALITY_NUMBER = 90;
-
     // maximum dimesion for images passed to google cloud API
-    private static final int MAX_TYPE_RESULTS = 15;
-
+    private static final int MAX_RESULTS = 15;
     // API Key (do not abuse usage as we have limited calls
     private static final String API_KEY = "AIzaSyCPT4PRQAyO3iqTpWxJ6XHmchCSkxri9QA";
 
-    // Static instance of the ImageRecognitionService object implemented as singleton instance
-    private static ImageRecognitionService IMAGERECOGNITIONSERVICE;
+    // Attributes of ImageRecognitionService in case manipulation is necessary by outside classes
+    private List<EntityAnnotation> entityAnnotationLabels;
+    private BatchAnnotateImagesResponse batchAnnotateImagesResponse;
 
-    // Static method to implement singleton instance of class
-    public static ImageRecognitionService getImageRecognitionService() {
-        if (IMAGERECOGNITIONSERVICE == null) {
-            IMAGERECOGNITIONSERVICE = new ImageRecognitionService();
-            return IMAGERECOGNITIONSERVICE;
-        } else {
-            return IMAGERECOGNITIONSERVICE;
-        }
-    }
+    private Vision vision;
 
-    // Method implemented as per interface. returns label description as string based on passed in EntityAnnotation returned by google vision API call
-    public static String getDescription(EntityAnnotation label) {
-        String description = "";
-        if (label != null) {
-            // formats EntityAnnotation to String format
-            description = String.format(Locale.US, label.getDescription());
-            return description;
-        } else {
-            description = "No Description for EntityAnnotation";
-        }
-        return description;
-    }
+    private Callback callback;
 
-    // Method implemented as per interface. returns label score as double based on passed in EntityAnnotation returned by google vision API call
-    public static double getScore(EntityAnnotation label) {
-        double score;
-        if (label != null) {
-            // formats score to double to satisfy interface by casting as double
-            score = (double)label.getScore();
-        } else {
-            score = 0.0;
-        }
-        return score;
-    }
+
+   public ImageRecognitionService() {
+       // sets up HttpTransport and JsonFactory object instances for handling call to google cloud vision
+       HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
+       JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
+
+       // initialize VisionRequestInitializer with personal API_KEY for google vision API
+       VisionRequestInitializer requestInitializer = new VisionRequestInitializer(API_KEY);
+
+       // intantiates Vision.Builer instance with HttpTransport and JsonFactory objects
+       Vision.Builder builder = new Vision.Builder(httpTransport, jsonFactory, null);
+
+       // sets the visionReqestInitializer of the build to the VisionRequestInitializer instance containing the API_KEY
+       builder.setVisionRequestInitializer(requestInitializer);
+
+       // "builds" an instance of Vision using the builder object
+       this.vision = builder.build();
+   }
+
+   public ImageRecognitionService(Vision vision) {
+       this.vision = vision;
+   }
+
+   public void setCallback(Callback callback) {
+       this.callback = callback;
+   }
+
+   public Callback getCallback() {
+       return callback;
+   }
 
     // accessor method for entityAnnotationLabels
-    private static List<EntityAnnotation> getEntityAnnotationLabels() {
-        return ENTITYANNOTATIONLABELS;
+    private List<EntityAnnotation> getEntityAnnotationLabels() {
+        return entityAnnotationLabels;
     }
 
     // mutator method for entityAnnotationLabels
-    private static void setEntityAnnotationLabels(List<EntityAnnotation> entityAnnotationLabels) {
-        ImageRecognitionService.ENTITYANNOTATIONLABELS = entityAnnotationLabels;
+    private void setEntityAnnotationLabels(List<EntityAnnotation> entityAnnotationLabels) {
+        this.entityAnnotationLabels = entityAnnotationLabels;
     }
 
     // accessor method for batchAnnotateImagesResponse
-    private static BatchAnnotateImagesResponse getBatchAnnotateImagesResponse() {
-        return BATCHANNOTATEIMAGESRESPONSE;
+    private BatchAnnotateImagesResponse getBatchAnnotateImagesResponse() {
+        return batchAnnotateImagesResponse;
     }
 
     // mutator method for batchAnnotateImagesResponse
-    private static void setBatchAnnotateImagesResponse(BatchAnnotateImagesResponse batchAnnotateImagesResponse) {
-        ImageRecognitionService.BATCHANNOTATEIMAGESRESPONSE = batchAnnotateImagesResponse;
+    private void setBatchAnnotateImagesResponse(BatchAnnotateImagesResponse batchAnnotateImagesResponse) {
+        batchAnnotateImagesResponse = batchAnnotateImagesResponse;
     }
 
     // upload the image to the google vision api
-    public void uploadImageToCloudVisionAPI(Bitmap bitmap, Callback callback) {
+    public void executeImageRecognition(Bitmap bitmap, Callback callback) {
         // Make sure URI is not full
         if (bitmap != null) {
             try {
-                ImageRecognitionService.CALLBACK = callback;
+                setCallback(callback);
                 // scale the bitmap to save on bandwidth
                 Bitmap bitmapForAPI = scaleDown(bitmap, MAX_DIMENSION);
                 // call the google cloud vision API for scaled down bitmap
@@ -131,32 +122,17 @@ public class ImageRecognitionService{
 
     // call the cloud vision API
     @SuppressLint("StaticFieldLeak")
-    private static void callCloudVisionAPI(final Bitmap bitmap) throws IOException {
+    private void callCloudVisionAPI(final Bitmap bitmap) throws IOException {
 
         // cleans current state of ImageRecognition singleton's previous data
-        ImageRecognitionService.setEntityAnnotationLabels(null);
-        ImageRecognitionService.setBatchAnnotateImagesResponse(null);
+        setEntityAnnotationLabels(null);
+        setBatchAnnotateImagesResponse(null);
 
         new AsyncTask<Object, Void, List<EntityAnnotation>>() {
             @Override
             protected List<EntityAnnotation> doInBackground(Object... params) {
-                // sets up HttpTransport and JsonFactory object instances for handling call to google cloud vision
-                HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
-                JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
 
                 try {
-                    // initialize VisionRequestInitializer with personal API_KEY for google vision API
-                    VisionRequestInitializer requestInitializer = new VisionRequestInitializer(API_KEY);
-
-                    // intantiates Vision.Builer instance with HttpTransport and JsonFactory objects
-                    Vision.Builder builder = new Vision.Builder(httpTransport, jsonFactory, null);
-
-                    // sets the visionReqestInitializer of the build to the VisionRequestInitializer instance containing the API_KEY
-                    builder.setVisionRequestInitializer(requestInitializer);
-
-                    // "builds" an instance of Vision using the builder object
-                    Vision vision = builder.build();
-
                     // instantiates new BatchAnnotateImagesRequest
                     BatchAnnotateImagesRequest batchAnnotateImagesRequest = new BatchAnnotateImagesRequest();
 
@@ -175,19 +151,19 @@ public class ImageRecognitionService{
                         image.encodeContent(imageBytes);
                         // setting encoded image to AnnotateImageRequest instance
                         annotateImageRequest.setImage(image);
-                        // add features for the cloud vision api request such as label detection and max number of results (set to static final int MAX_TYPE_RESULTS)
+
+                        // add features for the cloud vision api request such as label detection and max number of results (set to static final int MAX_RESULTS)
                         annotateImageRequest.setFeatures(new ArrayList<Feature>() {{
                             Feature labelDetection = new Feature();
                             labelDetection.setType("LABEL_DETECTION");
-                            labelDetection.setMaxResults(MAX_TYPE_RESULTS);
+                            labelDetection.setMaxResults(MAX_RESULTS);
                             add(labelDetection);
-                            // Currently commenting out until we have at least label detection working. will like use later
-                    /*
-                    Feature webDetection = new Feature();
-                    webDetection.setType("WEB_DETECTION");
-                    webDetection.setMaxResults(MAX_TYPE_RESULTS);
-                    add(webDetection);
-                    */
+
+                            Feature webDetection = new Feature();
+                            webDetection.setType("WEB_DETECTION");
+                            webDetection.setMaxResults(MAX_RESULTS);
+                            add(webDetection);
+
                         }});
                         // Add the list of features to the request which in this case is only label detect for now. will add web detection later
                         add(annotateImageRequest);
@@ -206,13 +182,12 @@ public class ImageRecognitionService{
                     BatchAnnotateImagesResponse response = annotateRequest.execute();
 
 
-
                     // sets ImageRecognitionService attributes of batchAnnotateImagesResponse and entityAnnotationLabels created from response
-                    ImageRecognitionService.setBatchAnnotateImagesResponse(BATCHANNOTATEIMAGESRESPONSE);
-                    ImageRecognitionService.setEntityAnnotationLabels(response.getResponses().get(0).getLabelAnnotations());
+                    setBatchAnnotateImagesResponse(batchAnnotateImagesResponse);
+                    setEntityAnnotationLabels(response.getResponses().get(0).getLabelAnnotations());
 
                     // returns the response transformed into entityAnnotationLabels which allow access to description and score attributes
-                    return ImageRecognitionService.getEntityAnnotationLabels();
+                    return getEntityAnnotationLabels();
 
                 } catch (GoogleJsonResponseException e) {
                     System.out.println("Request to API failed due to: " + e.getContent());
@@ -223,7 +198,7 @@ public class ImageRecognitionService{
             }
 
             protected void onPostExecute(List<EntityAnnotation> result) {
-                ImageRecognitionService.CALLBACK.onVisionAPIResult(ImageRecognitionService.getEntityAnnotationLabels());
+                callback.onVisionAPIResult(result);
             }
         }.execute();
     }
