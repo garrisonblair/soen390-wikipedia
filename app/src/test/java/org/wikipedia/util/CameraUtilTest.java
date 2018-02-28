@@ -29,21 +29,12 @@ import static org.mockito.Mockito.when;
 
 public class CameraUtilTest {
 
-    public void testGetPublicStorageDirectory (){
-        Context mockContext = mock(Context.class);
-        CameraUtil cameraUtil = new CameraUtil();
-
-        assertTrue(cameraUtil.getPublicStorageDirectory(mockContext).isDirectory());
-    }
-
     @Test
-    public void testGetPath (){
+    public void getPathTest() {
         CameraUtil cameraUtil = new CameraUtil();
-        assertEquals(cameraUtil.getPath(), null);
-
-        Context mockContext = mock(Context.class);
-        File file = cameraUtil.getPublicStorageDirectory(mockContext);
-        assertEquals(file.getPath(), "Wikipedia");
+        assertEquals(null, cameraUtil.getPath());
+        cameraUtil.setPath("wikipedia");
+        assertEquals("wikipedia",cameraUtil.getPath());
     }
 
 }

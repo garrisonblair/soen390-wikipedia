@@ -18,8 +18,13 @@ import java.util.Date;
 
 public class CameraUtil {
     private String path;
+
     public String getPath() {
         return this.path;
+    }
+
+    public void setPath(String currPath) {
+        this.path = currPath;
     }
 
     public Intent takePhoto(Context context) {
@@ -48,7 +53,7 @@ public class CameraUtil {
             storageDirectory = getPublicStorageDirectory(context);
         }
         File file = File.createTempFile(fileName, ".jpg", storageDirectory);
-        this.path = file.getAbsolutePath();
+        setPath(file.getAbsolutePath());
         return file;
     }
 
