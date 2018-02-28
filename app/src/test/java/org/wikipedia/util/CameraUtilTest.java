@@ -29,7 +29,6 @@ import static org.mockito.Mockito.when;
 
 public class CameraUtilTest {
 
-    @Test
     public void testGetPublicStorageDirectory (){
         Context mockContext = mock(Context.class);
         CameraUtil cameraUtil = new CameraUtil();
