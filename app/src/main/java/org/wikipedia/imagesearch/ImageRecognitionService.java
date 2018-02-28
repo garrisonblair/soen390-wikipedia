@@ -28,21 +28,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-// ImageRecognitionService class which implements ImageRecognitionLabel interface
-public class ImageRecognitionService /*implements ImageRecognitionLabel*/{
+
+public class ImageRecognitionService{
 
     public interface Callback{
-        public void onVisionAPIResult(List<EntityAnnotation> list);
-    };
+        void onVisionAPIResult(List<EntityAnnotation> list);
+    }
 
-    public static Callback callback;
+    private static Callback CALLBACK;
 
     // Attributes of ImageRecognitionService in case manipulation is necessary by outside classes
-    private static List<EntityAnnotation> entityAnnotationLabels;
-    private static BatchAnnotateImagesResponse batchAnnotateImagesResponse;
+    private static List<EntityAnnotation> ENTITYANNOTATIONLABELS;
+    private static BatchAnnotateImagesResponse BATCHANNOTATEIMAGESRESPONSE;
 
     // maximum dimesion for images passed to google cloud API
     private static final int MAX_DIMENSION = 1200;
+
+    private static final int QUALITY_NUMBER = 90;
 
     // maximum dimesion for images passed to google cloud API
     private static final int MAX_TYPE_RESULTS = 15;
@@ -51,64 +53,61 @@ public class ImageRecognitionService /*implements ImageRecognitionLabel*/{
     private static final String API_KEY = "AIzaSyCPT4PRQAyO3iqTpWxJ6XHmchCSkxri9QA";
 
     // Static instance of the ImageRecognitionService object implemented as singleton instance
-    private static ImageRecognitionService imageRecognitionService;
+    private static ImageRecognitionService IMAGERECOGNITIONSERVICE;
 
     // Static method to implement singleton instance of class
-    public static ImageRecognitionService getImageRecognitionService(){
-        if (imageRecognitionService == null){
-            imageRecognitionService = new ImageRecognitionService();
-            return imageRecognitionService;
-        }
-        else{
-            return imageRecognitionService;
+    public static ImageRecognitionService getImageRecognitionService() {
+        if (IMAGERECOGNITIONSERVICE == null) {
+            IMAGERECOGNITIONSERVICE = new ImageRecognitionService();
+            return IMAGERECOGNITIONSERVICE;
+        } else {
+            return IMAGERECOGNITIONSERVICE;
         }
     }
 
     // Method implemented as per interface. returns label description as string based on passed in EntityAnnotation returned by google vision API call
-    public static String getDescription(EntityAnnotation label){
+    public static String getDescription(EntityAnnotation label) {
         String description = "";
-        if (label != null){
+        if (label != null) {
             // formats EntityAnnotation to String format
             description = String.format(Locale.US, label.getDescription());
             return description;
-        }
-        else {
+        } else {
             description = "No Description for EntityAnnotation";
         }
         return description;
     }
 
     // Method implemented as per interface. returns label score as double based on passed in EntityAnnotation returned by google vision API call
-    public static double getScore(EntityAnnotation label){
+    public static double getScore(EntityAnnotation label) {
         double score;
-        if (label != null){
+        if (label != null) {
             // formats score to double to satisfy interface by casting as double
             score = (double)label.getScore();
-        }
-        else {
+        } else {
             score = 0.0;
         }
         return score;
     }
 
     // accessor method for entityAnnotationLabels
-    public static List<EntityAnnotation> getEntityAnnotationLabels(){
-        return entityAnnotationLabels;
+    private static List<EntityAnnotation> getEntityAnnotationLabels() {
+        return ENTITYANNOTATIONLABELS;
     }
 
     // mutator method for entityAnnotationLabels
-    public static void seteEntityAnnotationLabels(List<EntityAnnotation> entityAnnotationLabels){
-        ImageRecognitionService.entityAnnotationLabels = entityAnnotationLabels;
+    private static void setEntityAnnotationLabels(List<EntityAnnotation> entityAnnotationLabels) {
+        ImageRecognitionService.ENTITYANNOTATIONLABELS = entityAnnotationLabels;
     }
 
     // accessor method for batchAnnotateImagesResponse
-    public static BatchAnnotateImagesResponse getBatchAnnotateImagesResponse(){
-        return batchAnnotateImagesResponse;
+    private static BatchAnnotateImagesResponse getBatchAnnotateImagesResponse() {
+        return BATCHANNOTATEIMAGESRESPONSE;
     }
 
     // mutator method for batchAnnotateImagesResponse
-    public static void setBatchAnnotateImagesResponse(BatchAnnotateImagesResponse batchAnnotateImagesResponse){
-        ImageRecognitionService.batchAnnotateImagesResponse = batchAnnotateImagesResponse;
+    private static void setBatchAnnotateImagesResponse(BatchAnnotateImagesResponse batchAnnotateImagesResponse) {
+        ImageRecognitionService.BATCHANNOTATEIMAGESRESPONSE = batchAnnotateImagesResponse;
     }
 
     // upload the image to the google vision api
@@ -116,13 +115,12 @@ public class ImageRecognitionService /*implements ImageRecognitionLabel*/{
         // Make sure URI is not full
         if (bitmap != null) {
             try {
-                ImageRecognitionService.callback = callback;
+                ImageRecognitionService.CALLBACK = callback;
                 // scale the bitmap to save on bandwidth
-                Bitmap bitmapForAPI = scaleDown(bitmap,MAX_DIMENSION);
+                Bitmap bitmapForAPI = scaleDown(bitmap, MAX_DIMENSION);
                 // call the google cloud vision API for scaled down bitmap
                 callCloudVisionAPI(bitmapForAPI);
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 System.out.println("Image upload failed because " + e.getMessage());
             }
         } else {
@@ -136,7 +134,7 @@ public class ImageRecognitionService /*implements ImageRecognitionLabel*/{
     private static void callCloudVisionAPI(final Bitmap bitmap) throws IOException {
 
         // cleans current state of ImageRecognition singleton's previous data
-        ImageRecognitionService.seteEntityAnnotationLabels(null);
+        ImageRecognitionService.setEntityAnnotationLabels(null);
         ImageRecognitionService.setBatchAnnotateImagesResponse(null);
 
         new AsyncTask<Object, Void, List<EntityAnnotation>>() {
@@ -163,7 +161,7 @@ public class ImageRecognitionService /*implements ImageRecognitionLabel*/{
                     BatchAnnotateImagesRequest batchAnnotateImagesRequest = new BatchAnnotateImagesRequest();
 
                     // creates arraylist of type AnnotateImageRequest and handles
-                    ArrayList<AnnotateImageRequest> annotateImageRequests = new ArrayList<AnnotateImageRequest>(){{
+                    ArrayList<AnnotateImageRequest> annotateImageRequests = new ArrayList<AnnotateImageRequest>() { {
                         // instantiates new AnnotateImageRequest object instance
                         AnnotateImageRequest annotateImageRequest = new AnnotateImageRequest();
                         // creates image object instance
@@ -171,7 +169,7 @@ public class ImageRecognitionService /*implements ImageRecognitionLabel*/{
                         // converts image to JPEG as per suggestion of API
                         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                         // compresses using values suggested by API
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, byteArrayOutputStream);
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, QUALITY_NUMBER, byteArrayOutputStream);
                         byte[] imageBytes = byteArrayOutputStream.toByteArray();
                         // encoding image as per API instructions
                         image.encodeContent(imageBytes);
@@ -210,24 +208,22 @@ public class ImageRecognitionService /*implements ImageRecognitionLabel*/{
 
 
                     // sets ImageRecognitionService attributes of batchAnnotateImagesResponse and entityAnnotationLabels created from response
-                    ImageRecognitionService.setBatchAnnotateImagesResponse(batchAnnotateImagesResponse);
-                    ImageRecognitionService.seteEntityAnnotationLabels(response.getResponses().get(0).getLabelAnnotations());
+                    ImageRecognitionService.setBatchAnnotateImagesResponse(BATCHANNOTATEIMAGESRESPONSE);
+                    ImageRecognitionService.setEntityAnnotationLabels(response.getResponses().get(0).getLabelAnnotations());
 
                     // returns the response transformed into entityAnnotationLabels which allow access to description and score attributes
                     return ImageRecognitionService.getEntityAnnotationLabels();
 
-                }
-                catch (GoogleJsonResponseException e) {
+                } catch (GoogleJsonResponseException e) {
                     System.out.println("Request to API failed due to: " + e.getContent());
-                }
-                catch (IOException e) {
+                } catch (IOException e) {
                     System.out.println("Request to API failed due to: " + e.getMessage());
                 }
                 return null;
             }
 
             protected void onPostExecute(List<EntityAnnotation> result) {
-                ImageRecognitionService.callback.onVisionAPIResult(ImageRecognitionService.getEntityAnnotationLabels());
+                ImageRecognitionService.CALLBACK.onVisionAPIResult(ImageRecognitionService.getEntityAnnotationLabels());
             }
         }.execute();
     }
@@ -251,18 +247,16 @@ public class ImageRecognitionService /*implements ImageRecognitionLabel*/{
             scaledHeight = maxDimension;
             // scaledWidth casted as integer after being scaled proportionally based on scaled height multiplied originalWidth/originalHeight (cross multiplication)
             scaledWidth = (int) (scaledHeight * (double) originalWidth / (double) originalHeight);
-        }
-        // check to see if which is longer between height and width before scaling
-        // if width is larger then set width to max and scale height accordingly
-        else if (originalWidth > originalHeight) {
+        } else if (originalWidth > originalHeight) {
+            // check to see if which is longer between height and width before scaling
+            // if width is larger then set width to max and scale height accordingly
             // scaledWidth set to max dimension
             scaledWidth = maxDimension;
             // scaledHeight casted as integer after being scaled proportionally based on scaled height multiplied originalHeight/originalWidth (cross multiplication)
             scaledHeight = (int) (scaledWidth * (float) originalHeight / (float) originalWidth);
-        }
-        // check to see if which is longer between height and width before scaling
-        // if width is equal to height then scale both width and height proportionally by setting each to MAX_DIMENSION
-        else if (originalHeight == originalWidth) {
+        } else if (originalHeight == originalWidth) {
+            // check to see if which is longer between height and width before scaling
+            // if width is equal to height then scale both width and height proportionally by setting each to MAX_DIMENSION
             // since both originalHeight and originalWidth are equal, scale both to the MAX_DIMENSION
             scaledHeight = maxDimension;
             scaledWidth = maxDimension;
