@@ -4,7 +4,9 @@ package org.wikipedia.imagesearch;
  * Created by steve on 20/02/18.
  */
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
@@ -123,91 +125,103 @@ public class ImageRecognitionService /*implements ImageRecognitionLabel*/{
 
 
     // call the cloud vision API
+    @SuppressLint("StaticFieldLeak")
     private static List<EntityAnnotation> callCloudVisionAPI(final Bitmap bitmap) throws IOException {
 
         // cleans current state of ImageRecognition singleton's previous data
         ImageRecognitionService.seteEntityAnnotationLabels(null);
         ImageRecognitionService.setBatchAnnotateImagesResponse(null);
 
-        // sets up HttpTransport and JsonFactory object instances for handling call to google cloud vision
-        HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
-        JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
+        new AsyncTask<Object, Void, List<EntityAnnotation>>() {
+            @Override
+            protected List<EntityAnnotation> doInBackground(Object... params) {
+                // sets up HttpTransport and JsonFactory object instances for handling call to google cloud vision
+                HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
+                JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
 
-        try {
-            // initialize VisionRequestInitializer with personal API_KEY for google vision API
-            VisionRequestInitializer requestInitializer = new VisionRequestInitializer(API_KEY);
+                try {
+                    // initialize VisionRequestInitializer with personal API_KEY for google vision API
+                    VisionRequestInitializer requestInitializer = new VisionRequestInitializer(API_KEY);
 
-            // intantiates Vision.Builer instance with HttpTransport and JsonFactory objects
-            Vision.Builder builder = new Vision.Builder(httpTransport, jsonFactory, null);
+                    // intantiates Vision.Builer instance with HttpTransport and JsonFactory objects
+                    Vision.Builder builder = new Vision.Builder(httpTransport, jsonFactory, null);
 
-            // sets the visionReqestInitializer of the build to the VisionRequestInitializer instance containing the API_KEY
-            builder.setVisionRequestInitializer(requestInitializer);
+                    // sets the visionReqestInitializer of the build to the VisionRequestInitializer instance containing the API_KEY
+                    builder.setVisionRequestInitializer(requestInitializer);
 
-            // "builds" an instance of Vision using the builder object
-            Vision vision = builder.build();
+                    // "builds" an instance of Vision using the builder object
+                    Vision vision = builder.build();
 
-            // instantiates new BatchAnnotateImagesRequest
-            BatchAnnotateImagesRequest batchAnnotateImagesRequest = new BatchAnnotateImagesRequest();
+                    // instantiates new BatchAnnotateImagesRequest
+                    BatchAnnotateImagesRequest batchAnnotateImagesRequest = new BatchAnnotateImagesRequest();
 
-            // creates arraylist of type AnnotateImageRequest and handles
-            ArrayList<AnnotateImageRequest> annotateImageRequests = new ArrayList<AnnotateImageRequest>(){{
-                // instantiates new AnnotateImageRequest object instance
-                AnnotateImageRequest annotateImageRequest = new AnnotateImageRequest();
-                // creates image object instance
-                Image image = new Image();
-                // converts image to JPEG as per suggestion of API
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                // compresses using values suggested by API
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 90, byteArrayOutputStream);
-                byte[] imageBytes = byteArrayOutputStream.toByteArray();
-                // encoding image as per API instructions
-                image.encodeContent(imageBytes);
-                // setting encoded image to AnnotateImageRequest instance
-                annotateImageRequest.setImage(image);
-                // add features for the cloud vision api request such as label detection and max number of results (set to static final int MAX_TYPE_RESULTS)
-                annotateImageRequest.setFeatures(new ArrayList<Feature>() {{
-                    Feature labelDetection = new Feature();
-                    labelDetection.setType("LABEL_DETECTION");
-                    labelDetection.setMaxResults(MAX_TYPE_RESULTS);
-                    add(labelDetection);
-                    // Currently commenting out until we have at least label detection working. will like use later
+                    // creates arraylist of type AnnotateImageRequest and handles
+                    ArrayList<AnnotateImageRequest> annotateImageRequests = new ArrayList<AnnotateImageRequest>(){{
+                        // instantiates new AnnotateImageRequest object instance
+                        AnnotateImageRequest annotateImageRequest = new AnnotateImageRequest();
+                        // creates image object instance
+                        Image image = new Image();
+                        // converts image to JPEG as per suggestion of API
+                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                        // compresses using values suggested by API
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, byteArrayOutputStream);
+                        byte[] imageBytes = byteArrayOutputStream.toByteArray();
+                        // encoding image as per API instructions
+                        image.encodeContent(imageBytes);
+                        // setting encoded image to AnnotateImageRequest instance
+                        annotateImageRequest.setImage(image);
+                        // add features for the cloud vision api request such as label detection and max number of results (set to static final int MAX_TYPE_RESULTS)
+                        annotateImageRequest.setFeatures(new ArrayList<Feature>() {{
+                            Feature labelDetection = new Feature();
+                            labelDetection.setType("LABEL_DETECTION");
+                            labelDetection.setMaxResults(MAX_TYPE_RESULTS);
+                            add(labelDetection);
+                            // Currently commenting out until we have at least label detection working. will like use later
                     /*
                     Feature webDetection = new Feature();
                     webDetection.setType("WEB_DETECTION");
                     webDetection.setMaxResults(MAX_TYPE_RESULTS);
                     add(webDetection);
                     */
-                }});
-                // Add the list of features to the request which in this case is only label detect for now. will add web detection later
-                add(annotateImageRequest);
-            }};
+                        }});
+                        // Add the list of features to the request which in this case is only label detect for now. will add web detection later
+                        add(annotateImageRequest);
+                    }};
 
-            // sets requests for BatchAnnotateImagesRequest instance (which is this case is only one request in the list)
-            batchAnnotateImagesRequest.setRequests(annotateImageRequests);
+                    // sets requests for BatchAnnotateImagesRequest instance (which is this case is only one request in the list)
+                    batchAnnotateImagesRequest.setRequests(annotateImageRequests);
 
-            // creation of annotateRequest based on batchAnnotateImagesRequest created above
-            Vision.Images.Annotate annotateRequest = vision.images().annotate(batchAnnotateImagesRequest);
+                    // creation of annotateRequest based on batchAnnotateImagesRequest created above
+                    Vision.Images.Annotate annotateRequest = vision.images().annotate(batchAnnotateImagesRequest);
 
-            // As per Google Cloud Vision API "Due to a bug: requests to Vision API containing large images fail when GZipped." therefore GZip disabled
-            annotateRequest.setDisableGZipContent(true);
+                    // As per Google Cloud Vision API "Due to a bug: requests to Vision API containing large images fail when GZipped." therefore GZip disabled
+                    annotateRequest.setDisableGZipContent(true);
 
-            // obtains BatchAnnotateImagesResponse after sending request to google cloud vision and obtaining results
-            BatchAnnotateImagesResponse response = annotateRequest.execute();
+                    // obtains BatchAnnotateImagesResponse after sending request to google cloud vision and obtaining results
+                    BatchAnnotateImagesResponse response = annotateRequest.execute();
 
-            // sets ImageRecognitionService attributes of batchAnnotateImagesResponse and entityAnnotationLabels created from response
-            ImageRecognitionService.setBatchAnnotateImagesResponse(batchAnnotateImagesResponse);
-            ImageRecognitionService.seteEntityAnnotationLabels(response.getResponses().get(0).getLabelAnnotations());
+                    // sets ImageRecognitionService attributes of batchAnnotateImagesResponse and entityAnnotationLabels created from response
+                    ImageRecognitionService.setBatchAnnotateImagesResponse(batchAnnotateImagesResponse);
+                    ImageRecognitionService.seteEntityAnnotationLabels(response.getResponses().get(0).getLabelAnnotations());
 
-            // returns the response transformed into entityAnnotationLabels which allow access to description and score attributes
-            return ImageRecognitionService.getEntityAnnotationLabels();
+                    // returns the response transformed into entityAnnotationLabels which allow access to description and score attributes
+                    return ImageRecognitionService.getEntityAnnotationLabels();
 
-        }
-        catch (GoogleJsonResponseException e) {
-            System.out.println("Request to API failed due to: " + e.getContent());
-        }
-        catch (IOException e) {
-            System.out.println("Request to API failed due to: " + e.getMessage());
-        }
+                }
+                catch (GoogleJsonResponseException e) {
+                    System.out.println("Request to API failed due to: " + e.getContent());
+                }
+                catch (IOException e) {
+                    System.out.println("Request to API failed due to: " + e.getMessage());
+                }
+                return null;
+            }
+
+            protected void onPostExecute(List<EntityAnnotation> result) {
+                return;
+            }
+        }.execute();
+
         return null;
     }
 
