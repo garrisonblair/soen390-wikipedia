@@ -37,6 +37,8 @@ public class KeywordSelectActivity extends AppCompatActivity {
             0xff00ff00
     };
 
+    public static final int PERCENT = 100;
+
     private ArrayList<ImageRecognitionLabel> keywords;
 
     @Override
@@ -69,7 +71,7 @@ public class KeywordSelectActivity extends AppCompatActivity {
             ImageRecognitionLabel label = keywords.get(position);
             keywordView.setText(label.getDescription());
 
-            int percentage = (int) (label.getScore() * 100);
+            int percentage = (int) (label.getScore() * PERCENT);
             int colorIndex = percentage / 10;
             scoreView.setText(percentage + "");
             int color = PERCENTAGE_COLORS[colorIndex];
@@ -81,7 +83,6 @@ public class KeywordSelectActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     TextView keywordView = view.findViewById(R.id.keyword_view);
                     String keyword = keywordView.getText().toString();
-
                     Intent intent = new Intent();
                     intent.putExtra(RESULT_KEY, keyword);
                     setResult(RESULT_OK, intent);

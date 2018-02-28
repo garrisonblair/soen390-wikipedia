@@ -366,6 +366,10 @@
         <activity
             android:name=".imagesearch.KeywordSelectActivity"
             android:label="@string/title_activity_keyword_select"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".main.TestKeywordSelectActivity"
+            android:label="@string/title_activity_test_keyword_select"
             android:theme="@style/AppTheme"></activity>
     </application>
 
