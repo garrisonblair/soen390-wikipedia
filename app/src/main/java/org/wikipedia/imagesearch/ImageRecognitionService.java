@@ -35,10 +35,10 @@ public class ImageRecognitionService{
     }
 
     // maximum dimesion for images passed to google cloud API
-    private static final int MAX_DIMENSION = 1200;
-    private static final int QUALITY_NUMBER = 90;
+    public static final int MAX_DIMENSION = 1200;
+    public static final int QUALITY_NUMBER = 90;
     // maximum dimesion for images passed to google cloud API
-    private static final int MAX_RESULTS = 15;
+    public static final int MAX_RESULTS = 15;
     // API Key (do not abuse usage as we have limited calls
     private static final String API_KEY = "AIzaSyCPT4PRQAyO3iqTpWxJ6XHmchCSkxri9QA";
 
@@ -205,7 +205,7 @@ public class ImageRecognitionService{
 
 
     // Scales down image based on supplied max dimension
-    private static Bitmap scaleDown(Bitmap bitmapToScale, int maxDimension) {
+    protected Bitmap scaleDown(Bitmap bitmapToScale, int maxDimension) {
 
         // obtain original height and width
         int originalWidth = bitmapToScale.getWidth();
