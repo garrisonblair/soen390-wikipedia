@@ -4,6 +4,7 @@ package org.wikipedia.imagesearch;
  * Created by steve on 20/02/18.
  */
 
+
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -183,8 +184,9 @@ public class ImageRecognitionService{
 
 
                     // sets ImageRecognitionService attributes of batchAnnotateImagesResponse and entityAnnotationLabels created from response
-                    setBatchAnnotateImagesResponse(batchAnnotateImagesResponse);
-                    setEntityAnnotationLabels(response.getResponses().get(0).getLabelAnnotations());
+                    setBatchAnnotateImagesResponse(response);
+
+                    setEntityAnnotationLabels(response.getResponses() != null ? response.getResponses().get(0).getLabelAnnotations() : new ArrayList<EntityAnnotation>());
 
                     // returns the response transformed into entityAnnotationLabels which allow access to description and score attributes
                     return getEntityAnnotationLabels();
