@@ -1,11 +1,8 @@
 package org.wikipedia.settings;
 
-import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
@@ -20,6 +17,7 @@ import org.wikipedia.activity.BaseActivity;
 import org.wikipedia.texttospeech.TTSPreviewPreference;
 import org.wikipedia.texttospeech.TTSWrapper;
 import org.wikipedia.theme.ThemeFittingRoomActivity;
+import org.wikipedia.util.PermissionUtil;
 import org.wikipedia.util.ReleaseUtil;
 import org.wikipedia.util.StringUtil;
 
@@ -134,8 +132,7 @@ class SettingsPreferenceLoader extends BasePreferenceLoader {
             }
         });
 
-        if ((ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) && Prefs.getSavePhoto()) {
+        if (!PermissionUtil.hasWriteExternalStoragePermission(getActivity()) && Prefs.getSavePhoto()) {
             ((SwitchPreferenceCompat)findPreference("savePhoto")).setChecked(false);
         }
         findPreference(R.string.preference_key_save_photo)
@@ -242,13 +239,12 @@ class SettingsPreferenceLoader extends BasePreferenceLoader {
         @Override public boolean onPreferenceChange(final Preference preference, Object newValue) {
 
             if (newValue == Boolean.TRUE) {
-                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        == PackageManager.PERMISSION_GRANTED) {
+                if (PermissionUtil.hasWriteExternalStoragePermission(getActivity())) {
                     Toast.makeText(getActivity(), "Taken Photo will be saved.", Toast.LENGTH_SHORT).show();
                     ((SwitchPreferenceCompat) preference).setChecked(true);
                     Prefs.setSavePhoto(true);
                 } else {
-                    Toast.makeText(getActivity(), "Please turn on the storage permission.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Please turn on the storage permission. Settings-> Apps-> Wikipedia-> Permissions-> Storage", Toast.LENGTH_LONG).show();
                     ((SwitchPreferenceCompat) preference).setChecked(false);
                     Prefs.setSavePhoto(false);
                 }
