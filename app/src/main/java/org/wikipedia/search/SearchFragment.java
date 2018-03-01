@@ -1,12 +1,17 @@
 package org.wikipedia.search;
 
+import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -20,8 +25,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.wikipedia.BackPressedHandler;
+import org.wikipedia.Constants;
 import org.wikipedia.R;
 import org.wikipedia.WikipediaApp;
 import org.wikipedia.activity.FragmentUtil;
@@ -33,10 +40,13 @@ import org.wikipedia.offline.OfflineManager;
 import org.wikipedia.page.PageTitle;
 import org.wikipedia.readinglist.AddToReadingListDialog;
 import org.wikipedia.settings.LanguagePreferenceDialog;
+import org.wikipedia.util.CameraUtil;
 import org.wikipedia.util.DeviceUtil;
 import org.wikipedia.util.FeedbackUtil;
+import org.wikipedia.util.GalleryUtil;
 import org.wikipedia.views.ViewUtil;
 
+import java.io.File;
 import java.util.Locale;
 
 import butterknife.BindView;
@@ -72,6 +82,8 @@ public class SearchFragment extends Fragment implements BackPressedHandler,
     @BindView(R.id.search_lang_button_container) View langButtonContainer;
     @BindView(R.id.search_lang_button) TextView langButton;
     @BindView(R.id.search_offline_library_state) View offlineLibraryStateView;
+    @BindView(R.id.search_open_camera_button) AppCompatImageView openCameraButton;
+    @BindView(R.id.search_gallery_button) AppCompatImageView galleryButton;
     private Unbinder unbinder;
 
     private WikipediaApp app;
@@ -89,6 +101,8 @@ public class SearchFragment extends Fragment implements BackPressedHandler,
      * the TitleSearch and FullSearch sub-fragments.
      */
     @Nullable private String query;
+
+    private String currentPhotoPath;
 
     private RecentSearchesFragment recentSearchesFragment;
     private SearchResultsFragment searchResultsFragment;
@@ -193,6 +207,36 @@ public class SearchFragment extends Fragment implements BackPressedHandler,
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, final Intent data) {
+        if (requestCode == Constants.ACTIVITY_REQUEST_GALLERY_SELECTION) {
+
+            Bitmap bitmap = GalleryUtil.getSelectedPicture(resultCode, data, getActivity());
+            if (bitmap != null) {
+                //section to start new activity
+            }
+        } else if (requestCode == Constants.ACTIVITY_REQUEST_TAKE_PHOTO) {
+            if (resultCode == Activity.RESULT_OK && currentPhotoPath != null) {
+                Bitmap photo = BitmapFactory.decodeFile(currentPhotoPath);
+
+                //TODO do something with the bitmap file
+
+
+                //TODO Destory the temporary image file after using it. Please relocate it to the end of the process.
+                File tempFile = new File(currentPhotoPath);
+                Toast.makeText(getContext(), "Photo taken:" + tempFile.getName(), Toast.LENGTH_SHORT).show();
+                tempFile.delete();
+                currentPhotoPath = "";
+            } else {
+                File tempFile = new File(currentPhotoPath);
+                tempFile.delete();
+                currentPhotoPath = "";
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
     @NonNull
     public SearchFunnel getFunnel() {
         return funnel;
@@ -288,6 +332,17 @@ public class SearchFragment extends Fragment implements BackPressedHandler,
 
     @OnClick(R.id.search_lang_button_container) void onLangButtonClick() {
         showLangPreferenceDialog();
+    }
+
+    @OnClick(R.id.search_open_camera_button) void onOpenCameraButtonClick() {
+        CameraUtil cameraUtil = new CameraUtil();
+        startActivityForResult(cameraUtil.takePhoto(getContext()), Constants.ACTIVITY_REQUEST_TAKE_PHOTO);
+        currentPhotoPath = cameraUtil.getPath();
+    }
+
+    @OnClick(R.id.search_gallery_button) void onGalleryButtonClick() {
+        Intent photoPickerIntent = GalleryUtil.newGalleryPickIntent();
+        startActivityForResult(photoPickerIntent, Constants.ACTIVITY_REQUEST_GALLERY_SELECTION);
     }
 
     /**

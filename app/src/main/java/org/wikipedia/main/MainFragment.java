@@ -160,10 +160,10 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
         } else if (requestCode == Constants.ACTIVITY_REQUEST_GALLERY
                 && resultCode == GalleryActivity.ACTIVITY_RESULT_PAGE_SELECTED) {
             startActivity(data);
-        }else if(requestCode == Constants.ACTIVITY_REQUEST_GALLERY_SELECTION){
+        } else if (requestCode == Constants.ACTIVITY_REQUEST_GALLERY_SELECTION){
             
-            Bitmap bitmap = GalleryUtil.getSelectedPicture(resultCode,data,getActivity());
-            if(bitmap != null){
+            Bitmap bitmap = GalleryUtil.getSelectedPicture(resultCode, data, getActivity());
+            if (bitmap != null){
                 //section to start new activity
             }
         }
