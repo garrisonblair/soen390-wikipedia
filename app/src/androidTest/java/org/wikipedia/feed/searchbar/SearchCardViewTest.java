@@ -5,30 +5,27 @@ import android.app.Instrumentation;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Build;
+import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
-import android.support.test.rule.ActivityTestRule;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.wikipedia.R;
 import org.wikipedia.main.MainActivity;
 
+import static android.content.Intent.ACTION_PICK;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.Intents.intending;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasAction;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.toPackage;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 
 public class SearchCardViewTest {
-
-//    @Rule
-//    public ActivityTestRule<MainActivity> activityRule = new ActivityTestRule(MainActivity.class);
+    private static final String TEST_URI = "foobar";
 
     @Rule
     public IntentsTestRule<MainActivity> intentsRule = new IntentsTestRule<>(MainActivity.class);
@@ -56,9 +53,21 @@ public class SearchCardViewTest {
         intended(hasAction(MediaStore.ACTION_IMAGE_CAPTURE));
     }
 
-//    @Test
-//    public void onGallerySearchClick() {
-//        activityRule.getActivity();
-//        onView(withId(R.id.gallery_search_button)).perform(click());
-//    }
+    @Test
+    public void onGallerySearchClick() {
+        Bitmap icon = BitmapFactory.decodeResource(
+                InstrumentationRegistry.getTargetContext().getResources(),
+                R.mipmap.launcher);
+
+        Intent resultData = new Intent();
+        resultData.setData(Uri.parse(TEST_URI));
+
+        Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(Activity.RESULT_OK, resultData);
+
+        intending(hasAction(ACTION_PICK)).respondWith(result);
+
+        onView(withId(R.id.gallery_search_button)).perform(click());
+
+        intended(hasAction(ACTION_PICK));
+    }
 }
