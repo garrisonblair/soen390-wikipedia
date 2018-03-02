@@ -20,9 +20,9 @@ public class SearchCardViewTest {
     public ActivityTestRule<MainActivity> activityRule = new ActivityTestRule(MainActivity.class);
 
     @Test
-    public void onImageSearchClick() {
+    public void onCameraImageSearchClick() {
         activityRule.getActivity();
-        onView(withId(R.id.image_search_button)).perform(click());
+        onView(withId(R.id.image_search_open_camera_button)).perform(click());
     }
 
     @Test
