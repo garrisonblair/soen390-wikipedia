@@ -355,7 +355,7 @@ public class SearchFragment extends Fragment implements BackPressedHandler,
         if (!Prefs.getAskSavePhoto() || Prefs.getSavePhoto()) {
             takePhotoIntent();
         } else {
-            showAlternateLanguageDialog();
+            showAskSavePhotoDialog();
         }
     }
 
@@ -597,7 +597,7 @@ public class SearchFragment extends Fragment implements BackPressedHandler,
     }
 
 
-    private void showAlternateLanguageDialog() {
+    private void showAskSavePhotoDialog() {
         CheckBox dontShowAgain;
 
         AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());

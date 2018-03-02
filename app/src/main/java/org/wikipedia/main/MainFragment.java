@@ -295,7 +295,7 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
         if (!Prefs.getAskSavePhoto() || Prefs.getSavePhoto()) {
             takePhotoIntent();
         } else {
-            showAlternateLanguageDialog();
+            showAskSavePhotoDialog();
         }
 
     }
@@ -634,7 +634,7 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
             }
         });
     }
-    private void showAlternateLanguageDialog() {
+    private void showAskSavePhotoDialog() {
         CheckBox dontShowAgain;
 
         AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
