@@ -21,7 +21,7 @@
     <dimen name="textSize">16sp</dimen>
     <integer name="minTextSizeMultiplier">-5</integer>
     <integer name="maxTextSizeMultiplier">8</integer>
-    <item type="dimen" format="float" name="textSizeMultiplierFactor">0.1</item>
+    <item name="textSizeMultiplierFactor" format="float" type="dimen">0.1</item>
 
     <!-- Default height of list items -->
     <dimen name="defaultListItemSize">56dp</dimen>
@@ -35,14 +35,14 @@
 
     <!-- Default width of the lead image to be downloaded -->
     <dimen name="leadImageWidth">640dp</dimen>
-    <item type="dimen" format="float" name="articleHeaderViewScreenHeightRatio">0.4</item>
+    <item name="articleHeaderViewScreenHeightRatio" format="float" type="dimen">0.4</item>
     <!-- Default font size of the page title -->
     <dimen name="titleTextSize">28sp</dimen>
     <!-- Default font size of the Wikidata description for the page -->
     <dimen name="descriptionTextSize">14sp</dimen>
 
     <!-- Default screen height ratio for news feature image -->
-    <item type="dimen" format="float" name="newsFeatureImageScreenHeightRatio">0.3</item>
+    <item name="newsFeatureImageScreenHeightRatio" format="float" type="dimen">0.3</item>
 
     <dimen name="content_margin">@dimen/activity_horizontal_margin</dimen>
 
@@ -59,8 +59,8 @@
     <!-- Default size of images in Link Preview thumbnail gallery -->
     <dimen name="linkPreviewImageSize">112dp</dimen>
 
-    <item type="dimen" format="float" name="linkPreviewThumbPressScale">1.03</item>
-    <item type="dimen" format="float" name="linkPreviewThumbPressOverScale">1.05</item>
+    <item name="linkPreviewThumbPressScale" format="float" type="dimen">1.03</item>
+    <item name="linkPreviewThumbPressOverScale" format="float" type="dimen">1.05</item>
 
     <!-- Share-a-fact image preview -->
     <dimen name="share_image_width">320dp</dimen>
@@ -124,5 +124,6 @@
     <!-- App shortcuts -->
     <dimen name="app_shortcut_icon_size">24dp</dimen>
     <dimen name="app_shortcut_icon_margin">14dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 
 </resources>

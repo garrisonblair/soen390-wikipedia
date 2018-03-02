@@ -164,14 +164,13 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
         } else if (requestCode == Constants.ACTIVITY_REQUEST_GALLERY
                 && resultCode == GalleryActivity.ACTIVITY_RESULT_PAGE_SELECTED) {
             startActivity(data);
-        } else if (requestCode == Constants.ACTIVITY_REQUEST_GALLERY_SELECTION){
-            
+        } else if (requestCode == Constants.ACTIVITY_REQUEST_GALLERY_SELECTION) {
+
             Bitmap bitmap = GalleryUtil.getSelectedPicture(resultCode, data, getActivity());
-            if (bitmap != null){
+            if (bitmap != null) {
                 //section to start new activity
             }
-        }
-        else if (requestCode == Constants.ACTIVITY_REQUEST_LOGIN
+        } else if (requestCode == Constants.ACTIVITY_REQUEST_LOGIN
                 && resultCode == LoginActivity.RESULT_LOGIN_SUCCESS) {
             FeedbackUtil.showMessage(this, R.string.login_success_toast);
         } else if (requestCode == Constants.ACTIVITY_REQUEST_TAKE_PHOTO) {

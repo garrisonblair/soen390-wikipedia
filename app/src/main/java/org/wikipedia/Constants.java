@@ -27,6 +27,8 @@ public final class Constants {
     public static final int ACTIVITY_REQUEST_FEED_CONFIGURE = 58;
     public static final int ACTIVITY_REQUEST_GALLERY_SELECTION = 59;
     public static final int ACTIVITY_REQUEST_TAKE_PHOTO = 60;
+    public static final int ACTIVITY_REQUEST_IMAGE_KEYWORD = 61;
+
 
     public static final String INTENT_RETURN_TO_MAIN = "returnToMain";
     public static final String INTENT_SEARCH_FROM_WIDGET = "searchFromWidget";
