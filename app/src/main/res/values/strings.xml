@@ -671,4 +671,7 @@
     <string name="title_activity_test">TestActivity</string>
     <string name="title_activity_test_keyword_select">TestKeywordSelectActivity</string>
 
+    <!-- Image Recognition -->
+    <string name="image_recognition_busy_indicator">Retrieving suggestions.</string>
+
 </resources>

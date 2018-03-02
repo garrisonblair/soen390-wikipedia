@@ -77,6 +77,8 @@ public class ImageSearchButtonTest {
                 InstrumentationRegistry.getTargetContext().getResources(),
                 R.mipmap.launcher);
 
+        onView(withId(R.id.feed_search_field)).perform(click());
+
         // Build a result to return from the Camera app
         Intent resultData = new Intent();
         resultData.putExtra("data", icon);
@@ -98,6 +100,9 @@ public class ImageSearchButtonTest {
         Bitmap icon = BitmapFactory.decodeResource(
                 InstrumentationRegistry.getTargetContext().getResources(),
                 R.mipmap.launcher);
+
+        onView(withId(R.id.feed_search_field)).perform(click());
+
 
         Intent resultData = new Intent();
         resultData.setData(Uri.parse(TEST_URI));

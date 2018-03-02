@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.DownloadManager;
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -180,7 +181,7 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
                 && resultCode == LoginActivity.RESULT_LOGIN_SUCCESS) {
             FeedbackUtil.showMessage(this, R.string.login_success_toast);
         } else if (requestCode == Constants.ACTIVITY_REQUEST_TAKE_PHOTO) {
-            if (resultCode == Activity.RESULT_OK) {
+            if (resultCode == Activity.RESULT_OK && currentPhotoPath != null) {
                 Bitmap photo = BitmapFactory.decodeFile(currentPhotoPath);
 
                 getKeywordsFromPhoto(photo);
@@ -614,10 +615,17 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
 
     private void getKeywordsFromPhoto(Bitmap photo) {
         ImageRecognitionService imageRecognitionService = new ImageRecognitionService();
+
+        ProgressDialog busy = new ProgressDialog(getContext());
+        busy.setMessage(getResources().getString(R.string.image_recognition_busy_indicator));
+
+        busy.show();
+
         imageRecognitionService.executeImageRecognition(photo, new ImageRecognitionService.Callback() {
 
             @Override
             public void onVisionAPIResult(List<ImageRecognitionLabel> results) {
+                busy.dismiss();
                 Intent keywordSelectIntent = new Intent(getContext(), KeywordSelectActivity.class);
 
                 keywordSelectIntent.putExtra(KeywordSelectActivity.KEYWORD_LIST, (ArrayList<ImageRecognitionLabel>) results);

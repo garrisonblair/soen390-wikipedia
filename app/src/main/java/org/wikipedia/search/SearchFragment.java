@@ -1,6 +1,7 @@
 package org.wikipedia.search;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -577,10 +578,15 @@ public class SearchFragment extends Fragment implements BackPressedHandler,
 
     private void getKeywordsFromPhoto(Bitmap photo) {
         ImageRecognitionService imageRecognitionService = new ImageRecognitionService();
+        ProgressDialog busy = new ProgressDialog(getContext());
+        busy.setMessage(getResources().getString(R.string.image_recognition_busy_indicator));
+        busy.show();
+
         imageRecognitionService.executeImageRecognition(photo, new ImageRecognitionService.Callback() {
 
             @Override
             public void onVisionAPIResult(List<ImageRecognitionLabel> results) {
+                busy.dismiss();
                 Intent keywordSelectIntent = new Intent(getContext(), KeywordSelectActivity.class);
 
                 keywordSelectIntent.putExtra(KeywordSelectActivity.KEYWORD_LIST, (ArrayList<ImageRecognitionLabel>) results);
