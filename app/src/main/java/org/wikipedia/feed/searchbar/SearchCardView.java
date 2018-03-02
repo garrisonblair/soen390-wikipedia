@@ -14,6 +14,7 @@ public class SearchCardView extends DefaultFeedCardView<SearchCard> {
     public interface Callback {
         void onSearchRequested();
         void onVoiceSearchRequested();
+        void onGalleryPictureSearchRequested();
         void onImageCameraSearchRequested();
     }
 
@@ -38,13 +39,14 @@ public class SearchCardView extends DefaultFeedCardView<SearchCard> {
     }
 
     @OnClick(R.id.image_search_open_camera_button) void onCameraImageSearchClick() {
-
             if (getCallback() != null) {
                 getCallback().onImageCameraSearchRequested();
             }
     }
 
     @OnClick(R.id.gallery_search_button) void onGallerySearchClick() {
-        // TODO: Add logic to open camera app for image to text
+        if(getCallback() != null){
+            getCallback().onGalleryPictureSearchRequested();
+        }
     }
 }

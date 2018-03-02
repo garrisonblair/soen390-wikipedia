@@ -10,7 +10,6 @@ public class LabelAnnotationAdapter implements ImageRecognitionLabel {
 
     private EntityAnnotation entityAnnotation;
 
-
     public LabelAnnotationAdapter(EntityAnnotation entityAnnotation){
 
         this.entityAnnotation = entityAnnotation;

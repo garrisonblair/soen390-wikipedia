@@ -24,8 +24,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.google.api.services.vision.v1.model.EntityAnnotation;
-
 import org.apache.commons.lang3.StringUtils;
 import org.wikipedia.BackPressedHandler;
 import org.wikipedia.Constants;
@@ -39,6 +37,7 @@ import org.wikipedia.feed.FeedFragment;
 import org.wikipedia.feed.featured.FeaturedArticleCardView;
 import org.wikipedia.feed.image.FeaturedImage;
 import org.wikipedia.feed.image.FeaturedImageCard;
+import org.wikipedia.imagesearch.ImageRecognitionLabel;
 import org.wikipedia.imagesearch.ImageRecognitionService;
 import org.wikipedia.util.CameraUtil;
 import org.wikipedia.feed.news.NewsActivity;
@@ -65,6 +64,7 @@ import org.wikipedia.search.SearchInvokeSource;
 import org.wikipedia.settings.Prefs;
 import org.wikipedia.util.ClipboardUtil;
 import org.wikipedia.util.FeedbackUtil;
+import org.wikipedia.util.GalleryUtil;
 import org.wikipedia.util.PermissionUtil;
 import org.wikipedia.util.ShareUtil;
 import org.wikipedia.util.log.L;
@@ -164,7 +164,14 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
         } else if (requestCode == Constants.ACTIVITY_REQUEST_GALLERY
                 && resultCode == GalleryActivity.ACTIVITY_RESULT_PAGE_SELECTED) {
             startActivity(data);
-        } else if (requestCode == Constants.ACTIVITY_REQUEST_LOGIN
+        } else if (requestCode == Constants.ACTIVITY_REQUEST_GALLERY_SELECTION){
+            
+            Bitmap bitmap = GalleryUtil.getSelectedPicture(resultCode, data, getActivity());
+            if (bitmap != null){
+                //section to start new activity
+            }
+        }
+        else if (requestCode == Constants.ACTIVITY_REQUEST_LOGIN
                 && resultCode == LoginActivity.RESULT_LOGIN_SUCCESS) {
             FeedbackUtil.showMessage(this, R.string.login_success_toast);
         } else if (requestCode == Constants.ACTIVITY_REQUEST_TAKE_PHOTO) {
@@ -176,7 +183,7 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
                 imageRecognitionService.executeImageRecognition(photo, new ImageRecognitionService.Callback(){
 
                     @Override
-                    public void onVisionAPIResult(List<EntityAnnotation> list) {
+                    public void onVisionAPIResult(List<ImageRecognitionLabel> list) {
                            Log.d("BLAH!!", "Blah blah");
                     }
                 });
@@ -197,7 +204,6 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -270,8 +276,15 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
             FeedbackUtil.showMessage(this, R.string.error_voice_search_not_available);
         }
     }
+
+    @Override public void onFeedGallerySearchRequested() {
+        Intent photoPickerIntent = GalleryUtil.newGalleryPickIntent();
+        startActivityForResult(photoPickerIntent, Constants.ACTIVITY_REQUEST_GALLERY_SELECTION);
+    }
+
     @Override public void onFeedImageCameraSearchRequested() {
         takePhotoIntent();
+
     }
 
     @Override public void onFeedSelectPage(HistoryEntry entry) {
