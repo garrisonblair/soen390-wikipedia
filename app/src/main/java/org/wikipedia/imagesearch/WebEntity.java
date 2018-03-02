@@ -19,11 +19,11 @@ public class WebEntity implements ImageRecognitionLabel, Serializable {
 
     @Override
     public String getDescription() {
-        return null;
+        return description;
     }
 
     @Override
     public double getScore() {
-        return 0;
+        return score;
     }
 }
