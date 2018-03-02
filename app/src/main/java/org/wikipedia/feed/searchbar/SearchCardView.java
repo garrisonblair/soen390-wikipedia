@@ -45,7 +45,7 @@ public class SearchCardView extends DefaultFeedCardView<SearchCard> {
     }
 
     @OnClick(R.id.gallery_search_button) void onGallerySearchClick() {
-        if(getCallback() != null){
+        if (getCallback() != null){
             getCallback().onGalleryPictureSearchRequested();
         }
     }

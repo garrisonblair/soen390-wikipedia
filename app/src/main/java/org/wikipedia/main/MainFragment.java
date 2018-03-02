@@ -81,10 +81,6 @@ import butterknife.ButterKnife;
 import butterknife.OnPageChange;
 import butterknife.Unbinder;
 
-<<<<<<<HEAD
-        =======
-        >>>>>>>2d600b941aa287e77a55626754f292e7f0c61e80
-
 public class MainFragment extends Fragment implements BackPressedHandler, FeedFragment.Callback,
         NearbyFragment.Callback, HistoryFragment.Callback, SearchFragment.Callback,
         LinkPreviewDialog.Callback {
@@ -172,6 +168,7 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
                 && resultCode == GalleryActivity.ACTIVITY_RESULT_PAGE_SELECTED) {
             startActivity(data);
         } else if (requestCode == Constants.ACTIVITY_REQUEST_GALLERY_SELECTION) {
+
             Bitmap photo = GalleryUtil.getSelectedPicture(resultCode, data, getActivity());
             if (photo != null) {
                 getKeywordsFromPhoto(photo);

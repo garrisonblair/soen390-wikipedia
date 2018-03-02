@@ -19,6 +19,9 @@
     <string name="history_items_deleted">%d articles removed from history</string>
     <string name="history_item_delete_undo">Undo</string>
 
+    <!-- Image Search -->
+    <string name="image_search_keywords_title">Select Keyword</string>
+
     <!-- Saved pages -->
     <string name="dialog_title_clear_history">Clear browsing history</string>
     <string name="dialog_message_clear_history">This will delete all of your browsing history, and close any currently open tabs. Are you sure?</string>
@@ -656,5 +659,9 @@
     <!-- TTS Voice Settings -->
     <string name="preference_title_TTS_voice">Text to Speech Voice</string>
     <string name="preference_summary_TTS_voice">Different voices for Text to Speech</string>
+    <string name="title_activity_keyword_select">KeywordSelectActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_test">TestActivity</string>
+    <string name="title_activity_test_keyword_select">TestKeywordSelectActivity</string>
 
 </resources>
