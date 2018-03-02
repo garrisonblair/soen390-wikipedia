@@ -24,8 +24,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.google.api.services.vision.v1.model.EntityAnnotation;
-
 import org.apache.commons.lang3.StringUtils;
 import org.wikipedia.BackPressedHandler;
 import org.wikipedia.Constants;
@@ -39,6 +37,7 @@ import org.wikipedia.feed.FeedFragment;
 import org.wikipedia.feed.featured.FeaturedArticleCardView;
 import org.wikipedia.feed.image.FeaturedImage;
 import org.wikipedia.feed.image.FeaturedImageCard;
+import org.wikipedia.imagesearch.ImageRecognitionLabel;
 import org.wikipedia.imagesearch.ImageRecognitionService;
 import org.wikipedia.util.CameraUtil;
 import org.wikipedia.feed.news.NewsActivity;
@@ -165,10 +164,10 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
         } else if (requestCode == Constants.ACTIVITY_REQUEST_GALLERY
                 && resultCode == GalleryActivity.ACTIVITY_RESULT_PAGE_SELECTED) {
             startActivity(data);
-        }else if(requestCode == Constants.ACTIVITY_REQUEST_GALLERY_SELECTION){
+        } else if (requestCode == Constants.ACTIVITY_REQUEST_GALLERY_SELECTION){
             
-            Bitmap bitmap = GalleryUtil.getSelectedPicture(resultCode,data,getActivity());
-            if(bitmap != null){
+            Bitmap bitmap = GalleryUtil.getSelectedPicture(resultCode, data, getActivity());
+            if (bitmap != null){
                 //section to start new activity
             }
         }
@@ -184,7 +183,7 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
                 imageRecognitionService.executeImageRecognition(photo, new ImageRecognitionService.Callback(){
 
                     @Override
-                    public void onVisionAPIResult(List<EntityAnnotation> list) {
+                    public void onVisionAPIResult(List<ImageRecognitionLabel> list) {
                            Log.d("BLAH!!", "Blah blah");
                     }
                 });
