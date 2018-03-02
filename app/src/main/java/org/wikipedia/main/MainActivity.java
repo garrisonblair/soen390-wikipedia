@@ -11,14 +11,11 @@ import android.view.View;
 import org.wikipedia.R;
 import org.wikipedia.activity.SingleFragmentToolbarActivity;
 import org.wikipedia.appshortcuts.AppShortcuts;
-import org.wikipedia.imagesearch.KeywordSelectActivity;
 import org.wikipedia.navtab.NavTab;
 import org.wikipedia.onboarding.FeaturesOnboardingActivity;
 import org.wikipedia.onboarding.InitialOnboardingActivity;
 import org.wikipedia.settings.Prefs;
 import org.wikipedia.util.ResourceUtil;
-
-import static org.wikipedia.Constants.ACTIVITY_REQUEST_IMAGE_KEYWORD;
 
 public class MainActivity extends SingleFragmentToolbarActivity<MainFragment>
         implements MainFragment.Callback {
@@ -62,18 +59,6 @@ public class MainActivity extends SingleFragmentToolbarActivity<MainFragment>
     public void onSearchOpen() {
         getToolbar().setVisibility(View.GONE);
         setStatusBarColor(ResourceUtil.getThemedAttributeId(this, R.attr.page_status_bar_color));
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //TODO: This is where the result of camera and gallery activities will be handled
-
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ACTIVITY_REQUEST_IMAGE_KEYWORD && resultCode == RESULT_OK) {
-            String keyword = data.getStringExtra(KeywordSelectActivity.RESULT_KEY);
-
-            //TODO: trigger search with keyword
-        }
     }
 
     @Override

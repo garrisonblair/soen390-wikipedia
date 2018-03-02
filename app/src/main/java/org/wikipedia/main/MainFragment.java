@@ -23,8 +23,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.google.api.services.vision.v1.model.EntityAnnotation;
-
 import org.apache.commons.lang3.StringUtils;
 import org.wikipedia.BackPressedHandler;
 import org.wikipedia.Constants;
@@ -47,8 +45,8 @@ import org.wikipedia.gallery.MediaDownloadReceiver;
 import org.wikipedia.history.HistoryEntry;
 import org.wikipedia.history.HistoryFragment;
 import org.wikipedia.imagesearch.ImageRecognitionLabel;
-import org.wikipedia.imagesearch.ImageRecognitionLabelTestImpl;
 import org.wikipedia.imagesearch.ImageRecognitionService;
+import org.wikipedia.imagesearch.KeywordSelectActivity;
 import org.wikipedia.login.LoginActivity;
 import org.wikipedia.navtab.NavTab;
 import org.wikipedia.navtab.NavTabFragmentPagerAdapter;
@@ -80,6 +78,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnPageChange;
 import butterknife.Unbinder;
+
+import static org.wikipedia.Constants.ACTIVITY_REQUEST_IMAGE_KEYWORD;
 
 public class MainFragment extends Fragment implements BackPressedHandler, FeedFragment.Callback,
         NearbyFragment.Callback, HistoryFragment.Callback, SearchFragment.Callback,
@@ -192,6 +192,9 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
                 tempFile.delete();
                 currentPhotoPath = "";
             }
+        } else if (requestCode == ACTIVITY_REQUEST_IMAGE_KEYWORD && resultCode == Activity.RESULT_OK) {
+            String searchTerm = data.getStringExtra(KeywordSelectActivity.RESULT_KEY);
+            openSearchFragment(SearchInvokeSource.IMAGE, searchTerm);
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
@@ -592,15 +595,12 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
         imageRecognitionService.executeImageRecognition(photo, new ImageRecognitionService.Callback() {
 
             @Override
-            public void onVisionAPIResult(List<EntityAnnotation> results) {
-//                Intent keywordSelectIntent = new Intent(getContext(), KeywordSelectActivity.class);
-                ArrayList<ImageRecognitionLabel> keywords = new ArrayList<ImageRecognitionLabel>();
-                for (EntityAnnotation result: results) {
-                    keywords.add(new ImageRecognitionLabelTestImpl(result.getDescription(), result.getScore()));
-                }
-//                keywordSelectIntent.putExtra(KeywordSelectActivity.KEYWORD_LIST, keywords);
-//
-//                ((Activity) getContext()).startActivityForResult(keywordSelectIntent, ACTIVITY_REQUEST_IMAGE_KEYWORD);
+            public void onVisionAPIResult(List<ImageRecognitionLabel> results) {
+                Intent keywordSelectIntent = new Intent(getContext(), KeywordSelectActivity.class);
+
+                keywordSelectIntent.putExtra(KeywordSelectActivity.KEYWORD_LIST, (ArrayList<ImageRecognitionLabel>) results);
+
+                startActivityForResult(keywordSelectIntent, ACTIVITY_REQUEST_IMAGE_KEYWORD);
             }
         });
     }
