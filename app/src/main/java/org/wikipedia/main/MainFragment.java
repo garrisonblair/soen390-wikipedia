@@ -1,6 +1,7 @@
 package org.wikipedia.main;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.ActivityNotFoundException;
@@ -17,18 +18,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.preference.PreferenceFragmentCompat;
-import android.support.v7.preference.SwitchPreferenceCompat;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.Toast;
 
 import org.apache.commons.lang3.StringUtils;
 import org.wikipedia.BackPressedHandler;
@@ -79,8 +75,6 @@ import org.wikipedia.util.log.L;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -295,6 +289,7 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
         startActivityForResult(photoPickerIntent, Constants.ACTIVITY_REQUEST_GALLERY_SELECTION);
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
     @Override public void onFeedImageCameraSearchRequested() {
         if (!Prefs.getAskSavePhoto() || Prefs.getSavePhoto()) {
             takePhotoIntent();
@@ -646,7 +641,7 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
                 if (dontShowAgain.isChecked()) {
                     Prefs.setAskSavePhoto(false);
                 }
-                if (PermissionUtil.hasWriteExternalStoragePermission(getActivity())){
+                if (PermissionUtil.hasWriteExternalStoragePermission(getActivity())) {
                     Prefs.setSavePhoto(true);
                     takePhotoIntent();
                 } else {
@@ -666,6 +661,5 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
             }
         });
         adb.show();
-
     }
 }
