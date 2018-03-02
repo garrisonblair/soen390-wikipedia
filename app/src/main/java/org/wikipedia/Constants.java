@@ -14,6 +14,7 @@ public final class Constants {
             + "profile=\"https://www.mediawiki.org/wiki/Specs/";
     public static final String ACCEPT_HEADER_SUMMARY = ACCEPT_HEADER_PREFIX + "Summary/1.2.0\"";
 
+    public static final int ACTIVITY_REQUEST_TAKE_PHOTO_WRITE_EXTERNAL_STORAGE_PERMISSION = 43;
     public static final int ACTIVITY_REQUEST_WRITE_EXTERNAL_STORAGE_PERMISSION = 44;
     public static final int ACTIVITY_REQUEST_VOICE_SEARCH = 45;
     public static final int ACTIVITY_REQUEST_LANGLINKS = 50;
