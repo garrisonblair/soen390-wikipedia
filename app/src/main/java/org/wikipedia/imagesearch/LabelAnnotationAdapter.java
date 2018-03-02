@@ -2,28 +2,32 @@ package org.wikipedia.imagesearch;
 
 import com.google.api.services.vision.v1.model.EntityAnnotation;
 
+import java.io.Serializable;
+
 /**
  * Created by steve on 01/03/18.
  */
 
-public class LabelAnnotationAdapter implements ImageRecognitionLabel {
+public class LabelAnnotationAdapter implements ImageRecognitionLabel, Serializable {
 
-    private EntityAnnotation entityAnnotation;
+    private String description;
 
-    public LabelAnnotationAdapter(EntityAnnotation entityAnnotation){
+    private double score;
 
-        this.entityAnnotation = entityAnnotation;
+    public LabelAnnotationAdapter(EntityAnnotation entityAnnotation) {
+        this.description = entityAnnotation.getDescription();
+        this.score = entityAnnotation.getScore();
     }
 
     @Override
     public String getDescription() {
 
-        return entityAnnotation.getDescription();
+        return description;
     }
 
     @Override
     public double getScore() {
 
-        return entityAnnotation.getScore();
+        return score;
     }
 }

@@ -15,6 +15,8 @@ import android.widget.TextView;
 import org.wikipedia.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * This Activity takes in a VisionAPI Result object and returns a keyword selected by the user as a string.
@@ -24,20 +26,6 @@ public class KeywordSelectActivity extends AppCompatActivity {
 
     public static final String KEYWORD_LIST = "keyword_list";
     public static final String RESULT_KEY = "result";
-    public static final int[] PERCENTAGE_COLORS = {
-            0xffff0000,
-            0xffff3300,
-            0xffff6600,
-            0xffff9900,
-            0xffffCC00,
-            0xffffff00,
-            0xffccff00,
-            0xff77ff00,
-            0xff33ff00,
-            0xff00ff00
-    };
-
-    public static final int PERCENT = 100;
 
     private ArrayList<ImageRecognitionLabel> keywords;
 
@@ -50,6 +38,9 @@ public class KeywordSelectActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         keywords = (ArrayList<ImageRecognitionLabel>) getIntent().getSerializableExtra(KEYWORD_LIST);
+        removeDuplicates(keywords);
+        sortKeywords(keywords);
+
 
         ListView keywordList = findViewById(R.id.keyword_list_view);
         keywordList.setAdapter(new KeywordAdapter(this, keywords));
@@ -67,16 +58,8 @@ public class KeywordSelectActivity extends AppCompatActivity {
             View rowView = inflater.inflate(R.layout.item_image_keyword, parent, false);
 
             TextView keywordView = rowView.findViewById(R.id.keyword_view);
-            TextView scoreView = rowView.findViewById(R.id.score_view);
             ImageRecognitionLabel label = keywords.get(position);
             keywordView.setText(label.getDescription());
-
-            int percentage = (int) (label.getScore() * PERCENT);
-            int colorIndex = percentage / 10;
-            scoreView.setText(percentage + "");
-            int color = PERCENTAGE_COLORS[colorIndex];
-            scoreView.setTextColor(PERCENTAGE_COLORS[colorIndex]);
-
 
             rowView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -91,6 +74,36 @@ public class KeywordSelectActivity extends AppCompatActivity {
             });
 
             return rowView;
+        }
+    }
+
+    private void sortKeywords(ArrayList<ImageRecognitionLabel> keywords) {
+        Collections.sort(keywords, new Comparator<ImageRecognitionLabel>() {
+            @Override
+            public int compare(ImageRecognitionLabel imageRecognitionLabel, ImageRecognitionLabel t1) {
+                if (imageRecognitionLabel.getScore() > t1.getScore()) {
+                    return -1;
+                } else if (imageRecognitionLabel.getScore() < t1.getScore()) {
+                    return 1;
+                }
+                return 0;
+            }
+        });
+    }
+
+    private void removeDuplicates(ArrayList<ImageRecognitionLabel> keywords) {
+        ArrayList<ImageRecognitionLabel> removes = new ArrayList<>();
+        for (ImageRecognitionLabel label : keywords) {
+            for (ImageRecognitionLabel label2 : keywords) {
+
+                if (label != label2 && label.getDescription().toLowerCase().equals(label2.getDescription().toLowerCase())) {
+                    removes.add(label);
+                }
+            }
+        }
+
+        for (ImageRecognitionLabel label : removes) {
+            keywords.remove(label);
         }
     }
 }

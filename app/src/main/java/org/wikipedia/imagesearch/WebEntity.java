@@ -1,10 +1,12 @@
 package org.wikipedia.imagesearch;
 
+import java.io.Serializable;
+
 /**
  * Created by steve on 01/03/18.
  */
 
-public class WebEntity implements ImageRecognitionLabel {
+public class WebEntity implements ImageRecognitionLabel, Serializable {
 
 
     private String description;
@@ -17,11 +19,11 @@ public class WebEntity implements ImageRecognitionLabel {
 
     @Override
     public String getDescription() {
-        return null;
+        return description;
     }
 
     @Override
     public double getScore() {
-        return 0;
+        return score;
     }
 }

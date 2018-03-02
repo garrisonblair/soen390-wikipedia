@@ -345,6 +345,13 @@
     <string name="preference_queue_title_tts">Queue</string>
     <!-- /TTS: End of strings for Labels, summaries and descriptions of text to speech settings -->
 
+    <!-- Image-based search -->
+    <string name="preference_image_search_setting_title">Image-based Search Setting</string>
+    <string name="preference_image_search_setting_summary">Image-based Search Setting</string>
+    <string name="preference_save_photo_title">Save photo</string>
+    <string name="preference_save_photo_summary">Save photo after taken by the camera</string>
+    <!-- /Image-based search -->
+
     <!-- Reading lists -->
     <string name="nav_item_reading_lists">My lists</string>
     <string name="reading_list_untitled">Untitled</string>
@@ -663,5 +670,8 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_test">TestActivity</string>
     <string name="title_activity_test_keyword_select">TestKeywordSelectActivity</string>
+
+    <!-- Image Recognition -->
+    <string name="image_recognition_busy_indicator">Retrieving suggestions.</string>
 
 </resources>

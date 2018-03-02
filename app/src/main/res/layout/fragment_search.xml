@@ -40,7 +40,7 @@
                     app:cabEnabled="false" />
 
                 <android.support.v7.widget.AppCompatImageView
-                    android:id="@+id/fragment_image_search_open_camera_button"
+                    android:id="@+id/search_open_camera_button"
                     android:layout_width="37dp"
                     android:layout_height="match_parent"
                     android:adjustViewBounds="true"
@@ -54,7 +54,7 @@
                     app:tintMode="src_in" />
 
                 <android.support.v7.widget.AppCompatImageView
-                    android:id="@+id/fragment_gallery_search_button"
+                    android:id="@+id/search_gallery_button"
                     android:layout_width="37dp"
                     android:layout_height="match_parent"
                     android:adjustViewBounds="true"
