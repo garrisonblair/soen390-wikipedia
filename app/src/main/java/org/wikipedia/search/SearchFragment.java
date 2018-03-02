@@ -35,6 +35,9 @@ import org.wikipedia.analytics.SearchFunnel;
 import org.wikipedia.concurrency.SaneAsyncTask;
 import org.wikipedia.database.contract.SearchHistoryContract;
 import org.wikipedia.history.HistoryEntry;
+import org.wikipedia.imagesearch.ImageRecognitionLabel;
+import org.wikipedia.imagesearch.ImageRecognitionService;
+import org.wikipedia.imagesearch.KeywordSelectActivity;
 import org.wikipedia.offline.OfflineManager;
 import org.wikipedia.page.PageTitle;
 import org.wikipedia.readinglist.AddToReadingListDialog;
@@ -47,6 +50,8 @@ import org.wikipedia.util.GalleryUtil;
 import org.wikipedia.views.ViewUtil;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
@@ -55,6 +60,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.wikipedia.Constants.ACTIVITY_REQUEST_IMAGE_KEYWORD;
 
 public class SearchFragment extends Fragment implements BackPressedHandler,
         SearchResultsFragment.Callback, RecentSearchesFragment.Parent {
@@ -210,16 +216,15 @@ public class SearchFragment extends Fragment implements BackPressedHandler,
     public void onActivityResult(int requestCode, int resultCode, final Intent data) {
         if (requestCode == Constants.ACTIVITY_REQUEST_GALLERY_SELECTION) {
 
-            Bitmap bitmap = GalleryUtil.getSelectedPicture(resultCode, data, getActivity());
-            if (bitmap != null) {
-                //section to start new activity
+            Bitmap photo = GalleryUtil.getSelectedPicture(resultCode, data, getActivity());
+            if (photo != null) {
+                getKeywordsFromPhoto(photo);
             }
         } else if (requestCode == Constants.ACTIVITY_REQUEST_TAKE_PHOTO) {
             if (resultCode == Activity.RESULT_OK && currentPhotoPath != null) {
                 Bitmap photo = BitmapFactory.decodeFile(currentPhotoPath);
 
-                //TODO do something with the bitmap file
-
+                getKeywordsFromPhoto(photo);
 
                 //Save or Destroy the temporary image file after using it.
                 File tempFile = new File(currentPhotoPath);
@@ -235,6 +240,9 @@ public class SearchFragment extends Fragment implements BackPressedHandler,
                 tempFile.delete();
                 currentPhotoPath = "";
             }
+        } else if (requestCode == ACTIVITY_REQUEST_IMAGE_KEYWORD) {
+            String searchTerm = data.getStringExtra(KeywordSelectActivity.RESULT_KEY);
+            switchToSearch(searchTerm);
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
@@ -559,5 +567,20 @@ public class SearchFragment extends Fragment implements BackPressedHandler,
             }
         });
         langPrefDialog.show();
+    }
+
+    private void getKeywordsFromPhoto(Bitmap photo) {
+        ImageRecognitionService imageRecognitionService = new ImageRecognitionService();
+        imageRecognitionService.executeImageRecognition(photo, new ImageRecognitionService.Callback() {
+
+            @Override
+            public void onVisionAPIResult(List<ImageRecognitionLabel> results) {
+                Intent keywordSelectIntent = new Intent(getContext(), KeywordSelectActivity.class);
+
+                keywordSelectIntent.putExtra(KeywordSelectActivity.KEYWORD_LIST, (ArrayList<ImageRecognitionLabel>) results);
+
+                startActivityForResult(keywordSelectIntent, ACTIVITY_REQUEST_IMAGE_KEYWORD);
+            }
+        });
     }
 }
