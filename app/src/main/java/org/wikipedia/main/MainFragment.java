@@ -18,6 +18,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,8 @@ import org.wikipedia.feed.FeedFragment;
 import org.wikipedia.feed.featured.FeaturedArticleCardView;
 import org.wikipedia.feed.image.FeaturedImage;
 import org.wikipedia.feed.image.FeaturedImageCard;
+import org.wikipedia.imagesearch.ImageRecognitionLabel;
+import org.wikipedia.imagesearch.ImageRecognitionService;
 import org.wikipedia.util.CameraUtil;
 import org.wikipedia.feed.news.NewsActivity;
 import org.wikipedia.feed.news.NewsItemCard;
@@ -67,6 +70,7 @@ import org.wikipedia.util.ShareUtil;
 import org.wikipedia.util.log.L;
 
 import java.io.File;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -160,10 +164,10 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
         } else if (requestCode == Constants.ACTIVITY_REQUEST_GALLERY
                 && resultCode == GalleryActivity.ACTIVITY_RESULT_PAGE_SELECTED) {
             startActivity(data);
-        }else if(requestCode == Constants.ACTIVITY_REQUEST_GALLERY_SELECTION){
+        } else if (requestCode == Constants.ACTIVITY_REQUEST_GALLERY_SELECTION){
             
-            Bitmap bitmap = GalleryUtil.getSelectedPicture(resultCode,data,getActivity());
-            if(bitmap != null){
+            Bitmap bitmap = GalleryUtil.getSelectedPicture(resultCode, data, getActivity());
+            if (bitmap != null){
                 //section to start new activity
             }
         }
@@ -175,6 +179,15 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
                 Bitmap photo = BitmapFactory.decodeFile(currentPhotoPath);
 
                 //TODO do something with the bitmap file
+                ImageRecognitionService imageRecognitionService = new ImageRecognitionService();
+                imageRecognitionService.executeImageRecognition(photo, new ImageRecognitionService.Callback(){
+
+                    @Override
+                    public void onVisionAPIResult(List<ImageRecognitionLabel> list) {
+                           Log.d("BLAH!!", "Blah blah");
+                    }
+                });
+
 
 
                 //TODO Destory the temporary image file after using it. Please relocate it to the end of the process.
