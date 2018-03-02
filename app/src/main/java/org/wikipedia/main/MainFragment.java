@@ -598,7 +598,7 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
         ImageRecognitionService imageRecognitionService = new ImageRecognitionService();
 
         ProgressDialog busy = new ProgressDialog(getContext());
-        busy.setMessage("Retrieving Suggestions");
+        busy.setMessage(getResources().getString(R.string.image_recognition_busy_indicator));
 
         busy.show();
 
