@@ -81,6 +81,10 @@ import butterknife.ButterKnife;
 import butterknife.OnPageChange;
 import butterknife.Unbinder;
 
+<<<<<<<HEAD
+        =======
+        >>>>>>>2d600b941aa287e77a55626754f292e7f0c61e80
+
 public class MainFragment extends Fragment implements BackPressedHandler, FeedFragment.Callback,
         NearbyFragment.Callback, HistoryFragment.Callback, SearchFragment.Callback,
         LinkPreviewDialog.Callback {

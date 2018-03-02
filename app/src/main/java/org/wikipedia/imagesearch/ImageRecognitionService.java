@@ -4,6 +4,7 @@ package org.wikipedia.imagesearch;
  * Created by steve on 20/02/18.
  */
 
+
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -13,6 +14,7 @@ import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.client.util.ArrayMap;
 import com.google.api.services.vision.v1.Vision;
 import com.google.api.services.vision.v1.VisionRequestInitializer;
 import com.google.api.services.vision.v1.model.AnnotateImageRequest;
@@ -24,6 +26,7 @@ import com.google.api.services.vision.v1.model.Image;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,19 +34,20 @@ import java.util.List;
 public class ImageRecognitionService{
 
     public interface Callback{
-        void onVisionAPIResult(List<EntityAnnotation> list);
+        void onVisionAPIResult(List<ImageRecognitionLabel> list);
     }
 
     // maximum dimesion for images passed to google cloud API
-    private static final int MAX_DIMENSION = 1200;
-    private static final int QUALITY_NUMBER = 90;
+    public static final int MAX_DIMENSION = 1200;
+    public static final int QUALITY_NUMBER = 90;
     // maximum dimesion for images passed to google cloud API
-    private static final int MAX_RESULTS = 15;
+    public static final int MAX_RESULTS = 15;
     // API Key (do not abuse usage as we have limited calls
     private static final String API_KEY = "AIzaSyCPT4PRQAyO3iqTpWxJ6XHmchCSkxri9QA";
 
     // Attributes of ImageRecognitionService in case manipulation is necessary by outside classes
     private List<EntityAnnotation> entityAnnotationLabels;
+    private List<WebEntity> webEntities;
     private BatchAnnotateImagesResponse batchAnnotateImagesResponse;
 
     private Vision vision;
@@ -91,14 +95,12 @@ public class ImageRecognitionService{
         this.entityAnnotationLabels = entityAnnotationLabels;
     }
 
-    // accessor method for batchAnnotateImagesResponse
-    private BatchAnnotateImagesResponse getBatchAnnotateImagesResponse() {
-        return batchAnnotateImagesResponse;
+    private List<WebEntity> getWebEntities() {
+       return webEntities;
     }
 
-    // mutator method for batchAnnotateImagesResponse
-    private void setBatchAnnotateImagesResponse(BatchAnnotateImagesResponse batchAnnotateImagesResponse) {
-        batchAnnotateImagesResponse = batchAnnotateImagesResponse;
+    private void setWebEntities(List<WebEntity> webEntities) {
+       this.webEntities = webEntities;
     }
 
     // upload the image to the google vision api
@@ -124,13 +126,9 @@ public class ImageRecognitionService{
     @SuppressLint("StaticFieldLeak")
     private void callCloudVisionAPI(final Bitmap bitmap) throws IOException {
 
-        // cleans current state of ImageRecognition singleton's previous data
-        setEntityAnnotationLabels(null);
-        setBatchAnnotateImagesResponse(null);
-
-        new AsyncTask<Object, Void, List<EntityAnnotation>>() {
+        new AsyncTask<Object, Void, List<ImageRecognitionLabel>>() {
             @Override
-            protected List<EntityAnnotation> doInBackground(Object... params) {
+            protected List<ImageRecognitionLabel> doInBackground(Object... params) {
 
                 try {
                     // instantiates new BatchAnnotateImagesRequest
@@ -182,12 +180,10 @@ public class ImageRecognitionService{
                     BatchAnnotateImagesResponse response = annotateRequest.execute();
 
 
-                    // sets ImageRecognitionService attributes of batchAnnotateImagesResponse and entityAnnotationLabels created from response
-                    setBatchAnnotateImagesResponse(batchAnnotateImagesResponse);
-                    setEntityAnnotationLabels(response.getResponses().get(0).getLabelAnnotations());
-
+                    setEntityAnnotationLabels(response.getResponses() != null ? response.getResponses().get(0).getLabelAnnotations() : new ArrayList<EntityAnnotation>());
+                    setWebEntities(getWebEntities(response));
                     // returns the response transformed into entityAnnotationLabels which allow access to description and score attributes
-                    return getEntityAnnotationLabels();
+                    return mergeEntities();
 
                 } catch (GoogleJsonResponseException e) {
                     System.out.println("Request to API failed due to: " + e.getContent());
@@ -197,15 +193,46 @@ public class ImageRecognitionService{
                 return null;
             }
 
-            protected void onPostExecute(List<EntityAnnotation> result) {
+            protected void onPostExecute(List<ImageRecognitionLabel> result) {
                 callback.onVisionAPIResult(result);
             }
         }.execute();
     }
 
+    private List<ImageRecognitionLabel> mergeEntities() {
+       ArrayList<ImageRecognitionLabel> result = new ArrayList<ImageRecognitionLabel>();
+
+       for (EntityAnnotation entity : getEntityAnnotationLabels()) {
+           LabelAnnotationAdapter entityAdapter = new LabelAnnotationAdapter(entity);
+           result.add(entityAdapter);
+       }
+
+       for (WebEntity entity : getWebEntities()) {
+           result.add(entity);
+       }
+
+       return result;
+    }
+
+    private ArrayList<WebEntity> getWebEntities(BatchAnnotateImagesResponse response) {
+        ArrayList<WebEntity> result = new ArrayList<WebEntity>();
+
+        ArrayMap<String, ArrayList> list = response.getResponses() != null ? ((ArrayMap<String, ArrayList>) response.getResponses().get(0).get("webDetection")) : null;
+        if (list == null) {
+            return result;
+        }
+        ArrayList<ArrayMap> entities = list.get("webEntities");
+
+        for (ArrayMap entity: entities) {
+            result.add(new WebEntity((String) entity.get("description"), ((BigDecimal) entity.get("score")).doubleValue()));
+        }
+
+        return result;
+    }
+
 
     // Scales down image based on supplied max dimension
-    private static Bitmap scaleDown(Bitmap bitmapToScale, int maxDimension) {
+    protected Bitmap scaleDown(Bitmap bitmapToScale, int maxDimension) {
 
         // obtain original height and width
         int originalWidth = bitmapToScale.getWidth();
