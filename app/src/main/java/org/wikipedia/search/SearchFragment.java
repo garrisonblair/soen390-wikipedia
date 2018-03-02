@@ -580,7 +580,7 @@ public class SearchFragment extends Fragment implements BackPressedHandler,
 
             @Override
             public void onVisionAPIResult(List<ImageRecognitionLabel> results) {
-                busy.hide();
+                busy.dismiss();
                 Intent keywordSelectIntent = new Intent(getContext(), KeywordSelectActivity.class);
 
                 keywordSelectIntent.putExtra(KeywordSelectActivity.KEYWORD_LIST, (ArrayList<ImageRecognitionLabel>) results);
