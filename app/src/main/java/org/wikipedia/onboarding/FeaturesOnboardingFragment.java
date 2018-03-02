@@ -55,6 +55,10 @@ public class FeaturesOnboardingFragment extends OnboardingFragment {
                 new AlertDialog.Builder(getContext())
                         .setView(R.layout.view_tts_ui)
                         .show();
+            } else if (url.equals("#image_search")) {
+                new AlertDialog.Builder(getContext())
+                        .setView(R.layout.view_image_search_ui)
+                        .show();
             }
         }
     }
@@ -94,7 +98,8 @@ public class FeaturesOnboardingFragment extends OnboardingFragment {
 
     private enum OnboardingPage implements EnumCode {
         PAGE_NEW_UPDATES(R.layout.inflate_features_onboarding_page_zero),
-        TTS(R.layout.inflate_features_onboarding_page_one);
+        TTS(R.layout.inflate_features_onboarding_page_one),
+        IMAGE_SEARCH(R.layout.inflate_features_onboarding_page_two);
 
         private static EnumCodeMap<OnboardingPage> MAP
                 = new EnumCodeMap<>(OnboardingPage.class);
