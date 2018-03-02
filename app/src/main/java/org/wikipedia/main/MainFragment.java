@@ -36,7 +36,6 @@ import org.wikipedia.feed.FeedFragment;
 import org.wikipedia.feed.featured.FeaturedArticleCardView;
 import org.wikipedia.feed.image.FeaturedImage;
 import org.wikipedia.feed.image.FeaturedImageCard;
-import org.wikipedia.util.CameraUtil;
 import org.wikipedia.feed.news.NewsActivity;
 import org.wikipedia.feed.news.NewsItemCard;
 import org.wikipedia.feed.view.HorizontalScrollingListCardItemView;
@@ -59,6 +58,7 @@ import org.wikipedia.readinglist.AddToReadingListDialog;
 import org.wikipedia.search.SearchFragment;
 import org.wikipedia.search.SearchInvokeSource;
 import org.wikipedia.settings.Prefs;
+import org.wikipedia.util.CameraUtil;
 import org.wikipedia.util.ClipboardUtil;
 import org.wikipedia.util.FeedbackUtil;
 import org.wikipedia.util.GalleryUtil;
@@ -161,26 +161,27 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
                 && resultCode == GalleryActivity.ACTIVITY_RESULT_PAGE_SELECTED) {
             startActivity(data);
         } else if (requestCode == Constants.ACTIVITY_REQUEST_GALLERY_SELECTION){
-            
             Bitmap bitmap = GalleryUtil.getSelectedPicture(resultCode, data, getActivity());
-            if (bitmap != null){
+            if (bitmap != null) {
                 //section to start new activity
             }
-        }
-        else if (requestCode == Constants.ACTIVITY_REQUEST_LOGIN
+        } else if (requestCode == Constants.ACTIVITY_REQUEST_LOGIN
                 && resultCode == LoginActivity.RESULT_LOGIN_SUCCESS) {
             FeedbackUtil.showMessage(this, R.string.login_success_toast);
         } else if (requestCode == Constants.ACTIVITY_REQUEST_TAKE_PHOTO) {
             if (resultCode == Activity.RESULT_OK) {
                 Bitmap photo = BitmapFactory.decodeFile(currentPhotoPath);
-
                 //TODO do something with the bitmap file
-
 
                 //TODO Destory the temporary image file after using it. Please relocate it to the end of the process.
                 File tempFile = new File(currentPhotoPath);
                 Toast.makeText(getContext(), "Photo taken:" + tempFile.getName(), Toast.LENGTH_SHORT).show();
-                tempFile.delete();
+                if (Prefs.getSavePhoto()) {
+                    CameraUtil cameraUtil = new CameraUtil();
+                    cameraUtil.addPhotoToGallery(getContext(), currentPhotoPath);
+                } else {
+                    tempFile.delete();
+                }
                 currentPhotoPath = "";
             } else {
                 File tempFile = new File(currentPhotoPath);
