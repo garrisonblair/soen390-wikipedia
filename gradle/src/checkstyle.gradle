@@ -6,6 +6,7 @@ check.dependsOn 'checkstyle'
 checkstyle {
     configFile = file('../gradle/src/checkstyle.xml')
     toolVersion = '6.11.2'
+    ignoreFailures = true
 }
 
 task checkstyle(type: Checkstyle) {
