@@ -35,4 +35,12 @@ public class FeaturesOnBoarding {
         onView(withId(R.id.inflate_features_onboarding_page_zero)).perform(swipeLeft());
         onView(withId(R.id.inflate_features_onboarding_page_one)).check(matches(isDisplayed()));
     }
+
+    @Test
+    public void onBoardingPageTwo() {
+        activityRule.getActivity();
+        onView(withId(R.id.inflate_features_onboarding_page_zero)).perform(swipeLeft());
+        onView(withId(R.id.inflate_features_onboarding_page_one)).perform(swipeLeft());
+        onView(withId(R.id.inflate_features_onboarding_page_two)).check(matches(isDisplayed()));
+    }
 }
