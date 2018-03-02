@@ -3,6 +3,7 @@ package org.wikipedia.main;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,7 +22,6 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import org.apache.commons.lang3.StringUtils;
 import org.wikipedia.BackPressedHandler;
@@ -177,7 +177,7 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
                 && resultCode == LoginActivity.RESULT_LOGIN_SUCCESS) {
             FeedbackUtil.showMessage(this, R.string.login_success_toast);
         } else if (requestCode == Constants.ACTIVITY_REQUEST_TAKE_PHOTO) {
-            if (resultCode == Activity.RESULT_OK) {
+            if (resultCode == Activity.RESULT_OK && currentPhotoPath != null) {
                 Bitmap photo = BitmapFactory.decodeFile(currentPhotoPath);
 
                 getKeywordsFromPhoto(photo);
@@ -596,10 +596,17 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
 
     private void getKeywordsFromPhoto(Bitmap photo) {
         ImageRecognitionService imageRecognitionService = new ImageRecognitionService();
+
+        ProgressDialog busy = new ProgressDialog(getContext());
+        busy.setMessage("Retrieving Suggestions");
+
+        busy.show();
+
         imageRecognitionService.executeImageRecognition(photo, new ImageRecognitionService.Callback() {
 
             @Override
             public void onVisionAPIResult(List<ImageRecognitionLabel> results) {
+                busy.dismiss();
                 Intent keywordSelectIntent = new Intent(getContext(), KeywordSelectActivity.class);
 
                 keywordSelectIntent.putExtra(KeywordSelectActivity.KEYWORD_LIST, (ArrayList<ImageRecognitionLabel>) results);

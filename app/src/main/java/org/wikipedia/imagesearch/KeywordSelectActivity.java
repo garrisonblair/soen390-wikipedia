@@ -82,9 +82,9 @@ public class KeywordSelectActivity extends AppCompatActivity {
             @Override
             public int compare(ImageRecognitionLabel imageRecognitionLabel, ImageRecognitionLabel t1) {
                 if (imageRecognitionLabel.getScore() > t1.getScore()) {
-                    return 1;
-                } else if (imageRecognitionLabel.getScore() < t1.getScore()) {
                     return -1;
+                } else if (imageRecognitionLabel.getScore() < t1.getScore()) {
+                    return 1;
                 }
                 return 0;
             }
@@ -95,6 +95,7 @@ public class KeywordSelectActivity extends AppCompatActivity {
         ArrayList<ImageRecognitionLabel> removes = new ArrayList<>();
         for (ImageRecognitionLabel label : keywords) {
             for (ImageRecognitionLabel label2 : keywords) {
+
                 if (label != label2 && label.getDescription().toLowerCase().equals(label2.getDescription().toLowerCase())) {
                     removes.add(label);
                 }
