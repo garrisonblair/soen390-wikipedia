@@ -8,19 +8,22 @@ import com.google.api.services.vision.v1.model.EntityAnnotation;
 
 public class LabelAnnotationAdapter implements ImageRecognitionLabel {
 
-    private EntityAnnotation annotation;
+    private EntityAnnotation entityAnnotation;
 
-    public LabelAnnotationAdapter(EntityAnnotation annotation) {
-        this.annotation = annotation;
+    public LabelAnnotationAdapter(EntityAnnotation entityAnnotation){
+
+        this.entityAnnotation = entityAnnotation;
     }
 
     @Override
     public String getDescription() {
-        return annotation.getDescription();
+
+        return entityAnnotation.getDescription();
     }
 
     @Override
     public double getScore() {
-        return annotation.getScore();
+
+        return entityAnnotation.getScore();
     }
 }
