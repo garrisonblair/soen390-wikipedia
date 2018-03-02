@@ -182,10 +182,14 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
 
                 getKeywordsFromPhoto(photo);
 
-                //Destroy the temporary image file after using it. Please relocate it to the end of the process.
+                //Destroy or save the temporary image file after using it.
                 File tempFile = new File(currentPhotoPath);
-                Toast.makeText(getContext(), "Photo taken:" + tempFile.getName(), Toast.LENGTH_SHORT).show();
-                tempFile.delete();
+                if (Prefs.getSavePhoto()) {
+                    CameraUtil cameraUtil = new CameraUtil();
+                    cameraUtil.addPhotoToGallery(getContext(), currentPhotoPath);
+                } else {
+                    tempFile.delete();
+                }
                 currentPhotoPath = "";
             } else {
                 File tempFile = new File(currentPhotoPath);

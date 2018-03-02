@@ -631,5 +631,13 @@ public final class Prefs {
         setBoolean(R.string.preference_key_feed_customize_onboarding_card_enabled, enabled);
     }
 
+    public static void setSavePhoto(boolean isSavePhoto) {
+        setBoolean("savePhoto", isSavePhoto);
+    }
+
+    @NonNull
+    public static boolean getSavePhoto() {
+        return getBoolean("savePhoto", false);
+    }
     private Prefs() { }
 }
