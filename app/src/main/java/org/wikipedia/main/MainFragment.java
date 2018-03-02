@@ -173,9 +173,8 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
                 Bitmap photo = BitmapFactory.decodeFile(currentPhotoPath);
                 //TODO do something with the bitmap file
 
-                //TODO Destory the temporary image file after using it. Please relocate it to the end of the process.
+                //Save or Destroy the temporary image file after using it.
                 File tempFile = new File(currentPhotoPath);
-                Toast.makeText(getContext(), "Photo taken:" + tempFile.getName(), Toast.LENGTH_SHORT).show();
                 if (Prefs.getSavePhoto()) {
                     CameraUtil cameraUtil = new CameraUtil();
                     cameraUtil.addPhotoToGallery(getContext(), currentPhotoPath);

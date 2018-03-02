@@ -25,7 +25,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.wikipedia.BackPressedHandler;
 import org.wikipedia.Constants;
@@ -40,6 +39,7 @@ import org.wikipedia.offline.OfflineManager;
 import org.wikipedia.page.PageTitle;
 import org.wikipedia.readinglist.AddToReadingListDialog;
 import org.wikipedia.settings.LanguagePreferenceDialog;
+import org.wikipedia.settings.Prefs;
 import org.wikipedia.util.CameraUtil;
 import org.wikipedia.util.DeviceUtil;
 import org.wikipedia.util.FeedbackUtil;
@@ -221,10 +221,14 @@ public class SearchFragment extends Fragment implements BackPressedHandler,
                 //TODO do something with the bitmap file
 
 
-                //TODO Destory the temporary image file after using it. Please relocate it to the end of the process.
+                //Save or Destroy the temporary image file after using it.
                 File tempFile = new File(currentPhotoPath);
-                Toast.makeText(getContext(), "Photo taken:" + tempFile.getName(), Toast.LENGTH_SHORT).show();
-                tempFile.delete();
+                if (Prefs.getSavePhoto()) {
+                    CameraUtil cameraUtil = new CameraUtil();
+                    cameraUtil.addPhotoToGallery(getContext(), currentPhotoPath);
+                } else {
+                    tempFile.delete();
+                }
                 currentPhotoPath = "";
             } else {
                 File tempFile = new File(currentPhotoPath);
