@@ -41,6 +41,7 @@ import org.wikipedia.page.listeners.HideStopButtonOnDoneListener;
 import org.wikipedia.settings.Prefs;
 import org.wikipedia.texttospeech.TTSWrapper;
 import org.wikipedia.util.FeedbackUtil;
+import org.wikipedia.util.FileUtil;
 import org.wikipedia.util.ShareUtil;
 import org.wikipedia.util.StringUtil;
 import org.wikipedia.util.UriUtil;
@@ -66,6 +67,7 @@ public class ShareHandler {
     private static final String PAYLOAD_PURPOSE_EDIT_HERE = "edit_here";
     private static final String PAYLOAD_TEXT_KEY = "text";
     private WikipediaApp app = WikipediaApp.getInstance();
+    private static final String GET_SELECTION_SCRIPT_PATH = "getSelection.js";
 
     @NonNull private final PageFragment fragment;
     @NonNull private final CommunicationBridge bridge;
@@ -245,7 +247,7 @@ public class ShareHandler {
 
         onHighlightText();
     }
-    private void setStopButtonVisibility(int visibility){
+    private void setStopButtonVisibility(int visibility) {
     /**
      * Sets the visibility of the stopButton
      */
@@ -260,14 +262,17 @@ public class ShareHandler {
     /**
      * Passes the selected text to the TTSWapper to make it speak
      */
-        fragment.getWebView().evaluateJavascript("(function() { return window.getSelection().toString() }) ()",
-                new ValueCallback<String>() {
-                    @Override
-                    public void onReceiveValue(String value) {
-                        textToSpeech.speak(value);
-                    }
-                });
+        String scriptString = FileUtil.readJavascriptFile(fragment.getContext(), GET_SELECTION_SCRIPT_PATH);
+
+        fragment.getWebView().evaluateJavascript(scriptString, new ValueCallback<String>() {
+            @Override
+            public void onReceiveValue(String value) {
+                textToSpeech.speak(value);
+                }
+        });
     }
+
+
     private boolean shouldEnableWiktionaryDialog() {
         return Prefs.useRestBase() && isWiktionaryDialogEnabledForArticleLanguage();
     }
