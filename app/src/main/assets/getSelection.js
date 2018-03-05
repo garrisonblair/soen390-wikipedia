@@ -1,5 +1,3 @@
 (function () {
-    var selection = window.getSelection();
-    console.log(selection);
-    return selection.toString();
+    return window.getSelection().toString();
 })();
