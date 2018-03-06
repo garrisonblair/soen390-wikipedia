@@ -237,21 +237,12 @@ public class ShareHandler {
             }
         });
 
-        MenuItem takeNoteItem = menu.findItem(R.id.menu_text_add_note);
-
-        takeNoteItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-
+        //Provide a listener to the 'add note' button
+        MenuItem addNote = menu.findItem(R.id.menu_text_add_note);
+        addNote.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener(){
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-
-                String scriptString = FileUtil.readJavascriptFile(fragment.getContext(), GET_SELECTION_AND_REFERENCE_SCRIPT_PATH);
-
-                fragment.getWebView().evaluateJavascript(scriptString, new ValueCallback<String>() {
-                    @Override
-                    public void onReceiveValue(String value) {
-                        Log.d("DEV", value);
-                    }
-                });
+                addNote();
                 return true;
             }
         });
@@ -268,6 +259,16 @@ public class ShareHandler {
         }
 
         onHighlightText();
+    }
+    private void addNote() {
+        String scriptString = FileUtil.readJavascriptFile(fragment.getContext(), GET_SELECTION_AND_REFERENCE_SCRIPT_PATH);
+
+        fragment.getWebView().evaluateJavascript(scriptString, new ValueCallback<String>() {
+            @Override
+            public void onReceiveValue(String value) {
+                Log.d("DEV", value);
+            }
+        });
     }
     private void setStopButtonVisibility(int visibility) {
     /**
