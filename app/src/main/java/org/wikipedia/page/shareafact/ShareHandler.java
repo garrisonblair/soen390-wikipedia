@@ -212,8 +212,6 @@ public class ShareHandler {
 
         //Provide a listener to the speech button
         MenuItem toSpeechItem = menu.findItem(R.id.menu_text_to_speech);
-
-
         toSpeechItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -234,6 +232,17 @@ public class ShareHandler {
                 return true;
             }
         });
+
+        //Provide a listener to the 'add note' button
+        MenuItem addNote = menu.findItem(R.id.menu_text_add_note);
+        addNote.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener(){
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                addNote();
+                return true;
+            }
+        });
+
         MenuItem defineItem = menu.findItem(R.id.menu_text_select_define);
         if (shouldEnableWiktionaryDialog()) {
             defineItem.setVisible(true);
@@ -246,6 +255,9 @@ public class ShareHandler {
         }
 
         onHighlightText();
+    }
+    private void addNote() {
+
     }
     private void setStopButtonVisibility(int visibility) {
     /**

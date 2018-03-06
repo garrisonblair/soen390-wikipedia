@@ -1,4 +1,4 @@
-package org.wikipedia.note;
+package org.wikipedia.notebook;
 
 /**
  * Created by Andres on 2018-03-05.
