@@ -1,49 +1,63 @@
 (function () {
 
     var selection = window.getSelection();
-    getNodesInSelection(selection);
-    return selection.rangeCount
+    var nodes = getNodesInSelection(selection);
+    var referenceNodes = getReferenceNodes(nodes);
+
+    return selection.toString();
 })();
 
+
+//get all nodes between the anchorNode and the focusNode
 function getNodesInSelection(selection) {
-    var content = [document.getElementById("content")];
-    content = content[0];
+
+    var content = document.getElementById("content");
     var nodes = [];
 
-    getNodesInSelectionRecursive(content, selection, nodes, 0, null);
+    getNodesInSelectionRecursive(content, selection, nodes, {phase: 0, endNode: null});
 
-    return [];
+    return nodes;
 }
 
-function getNodesInSelectionRecursive(node, selection, nodes, phase, endNode) {
+
+//traverse DOM tree recursively and add appropriate nodes to array.
+//node: node to start at
+//selection: the selection object for which we need to nodes
+//nodes: array in which to store result
+//phase: phase of the algorithm (0, 1, 2)
+//endNode: once a boundary node has been reached, the endNode is a reference to the other boundary node
+function getNodesInSelectionRecursive(node, selection, nodes, state) {
     for (var i = 0; i < node.childNodes.length; i++) {
         var childNode = node.childNodes[i];
-        if(phase == 0) {
+        if(state.phase == 0) {
+            //phase = 0: have not reach a boundary node (focusNode or anchorNode) yet, do not add nodes
             if(childNode == selection.anchorNode) {
-                endNode = selection.focusNode;
+                state.endNode = selection.focusNode;
                 nodes.push(childNode);
-                phase = 1;
+                state.phase = 1;
             } else if (childNode == selection.focusNode) {
-                endNode = selection.anchorNode;
+                state.endNode = selection.anchorNode;
                 nodes.push(childNode);
-                phase = 1;
+                state.phase = 1;
             } else {
-                phase = getNodesInSelectionRecursive(childNode, selection, nodes, phase, endNode);
+                state = getNodesInSelectionRecursive(childNode, selection, nodes, state);
             }
-        } else if (phase == 1) {
+        } else if (state.phase == 1) {
+            //phase = 1: the first boundary node has been reached, all visited nodes are now added.
             nodes.push(childNode);
-            if (childNode == endNode) {
-                phase = 2;
-                return phase;
+            if (childNode == state.endNode) {
+                state.phase = 2;
+                return state;
             }
-            phase = getNodesInSelectionRecursive(childNode, selection, nodes, phase, endNode);
+            state = getNodesInSelectionRecursive(childNode, selection, nodes, state);
 
-        } else if (phase == 2) {
-            return phase;
+        } else if (state.phase == 2) {
+            //phase = 2: the second boundary node has been visited, the algorithm can end.
+            return state;
         }
     }
 
-    return phase
+    return state
 }
 
 //# sourceURL=getSelectionAndReferences.js
