@@ -2,11 +2,29 @@
 
     var selection = window.getSelection();
     var nodes = getNodesInSelection(selection);
-    var referenceNodes = getReferenceNodes(nodes);
+    var referenceNumbers = getReferenceNumbers(nodes);
 
     return selection.toString();
 })();
 
+// return all numbers for references. Makes the assumption that the node of a reference has the class "mw-ref"
+function getReferenceNumbers(nodes) {
+    var referenceNumbers = [];
+
+    for(var i = 0; i < nodes.length; i++) {
+        node = nodes[i];
+        if (node.classList && node.classList.contains("mw-ref")) {
+            var number = node.childNodes[0].childNodes[0].innerHTML
+
+            number = Number(number.substring(1, number.length - 1));
+            if(referenceNumbers.indexOf(number) < 0){
+                referenceNumbers.push(number);
+            }
+        }
+    }
+
+    return referenceNumbers;
+}
 
 //get all nodes between the anchorNode and the focusNode
 function getNodesInSelection(selection) {
