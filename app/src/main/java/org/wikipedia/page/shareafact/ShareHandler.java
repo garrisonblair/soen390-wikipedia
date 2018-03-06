@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -68,6 +69,7 @@ public class ShareHandler {
     private static final String PAYLOAD_TEXT_KEY = "text";
     private WikipediaApp app = WikipediaApp.getInstance();
     private static final String GET_SELECTION_SCRIPT_PATH = "getSelection.js";
+    private static final String GET_SELECTION_AND_REFERENCE_SCRIPT_PATH = "getSelectionAndReference.js";
 
     @NonNull private final PageFragment fragment;
     @NonNull private final CommunicationBridge bridge;
@@ -234,6 +236,26 @@ public class ShareHandler {
                 return true;
             }
         });
+
+        MenuItem takeNoteItem = menu.findItem(R.id.menu_text_add_note);
+
+        takeNoteItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+
+                String scriptString = FileUtil.readJavascriptFile(fragment.getContext(), GET_SELECTION_AND_REFERENCE_SCRIPT_PATH);
+
+                fragment.getWebView().evaluateJavascript(scriptString, new ValueCallback<String>() {
+                    @Override
+                    public void onReceiveValue(String value) {
+                        Log.d("DEV", value);
+                    }
+                });
+                return true;
+            }
+        });
+
         MenuItem defineItem = menu.findItem(R.id.menu_text_select_define);
         if (shouldEnableWiktionaryDialog()) {
             defineItem.setVisible(true);
