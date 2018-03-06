@@ -1,4 +1,4 @@
-package org.wikipedia.note;
+package org.wikipedia.notebook;
 
 import java.util.HashMap;
 
