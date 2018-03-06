@@ -92,6 +92,10 @@ function getNodesInSelectionRecursive(node, selection, nodes, state) {
             //phase = 1: the first boundary node has been reached, all visited nodes are now added.
             nodes.push(childNode);
             if (childNode == state.endNode) {
+                if(childNode.nextSibling) {
+                    //add the node after the endNode to include trailing references
+                    nodes.push(childNode.nextSibling);
+                }
                 state.phase = 2;
                 return state;
             }
