@@ -1,4 +1,4 @@
-package org.wikipedia.note;
+package org.wikipedia.notebook;
 
 import java.util.ArrayList;
 import java.util.List;
