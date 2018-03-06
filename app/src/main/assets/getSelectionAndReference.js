@@ -3,9 +3,37 @@
     var selection = window.getSelection();
     var nodes = getNodesInSelection(selection);
     var referenceNumbers = getReferenceNumbers(nodes);
-
-    return selection.toString();
+    var references = getReferenceTexts(referenceNumbers);
+    var result = {selectionText: selection.toString(), references: references};
+    return JSON.stringify(result);
 })();
+
+function getReferenceTexts(refNumbers) {
+    references = [];
+    referenceList = document.getElementById("References").nextSibling.childNodes[1].childNodes[1].childNodes[1].childNodes[0].childNodes[0].childNodes[1].childNodes;
+    for(var i = 0; i < refNumbers.length; i++) {
+        var node = referenceList[refNumbers[i]];
+        text = getReferenceTextRecursive(node, "");
+        references[i] = {number: refNumbers[i], text: text}
+    }
+
+    return references;
+}
+
+//find all text elements in the list node and concatenate their data
+function getReferenceTextRecursive(node, text) {
+    if (node.nodeName == "#text") {
+        return text + node.data;
+    } else {
+        var childNodes = node.childNodes;
+        if (childNodes) {
+            for (var i = 0; i < childNodes.length; i++) {
+                text = getReferenceTextRecursive(childNodes[i], text);
+            }
+        }
+    }
+    return text
+}
 
 // return all numbers for references. Makes the assumption that the node of a reference has the class "mw-ref"
 function getReferenceNumbers(nodes) {
