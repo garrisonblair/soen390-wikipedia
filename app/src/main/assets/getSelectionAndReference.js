@@ -5,7 +5,8 @@
     var referenceNumbers = getReferenceNumbers(nodes);
     var references = getReferenceTexts(referenceNumbers);
     var result = {selectionText: selection.toString(), references: references};
-    return JSON.stringify(result);
+
+    return result
 })();
 
 function getReferenceTexts(refNumbers) {

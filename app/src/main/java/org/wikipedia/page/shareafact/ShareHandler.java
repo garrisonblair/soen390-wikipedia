@@ -18,6 +18,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,6 +32,7 @@ import org.wikipedia.dataclient.mwapi.MwQueryResponse;
 import org.wikipedia.gallery.ImageLicense;
 import org.wikipedia.gallery.ImageLicenseFetchClient;
 import org.wikipedia.language.AppLanguageLookUpTable;
+import org.wikipedia.notebook.SelectionResult;
 import org.wikipedia.onboarding.PrefsOnboardingStateMachine;
 import org.wikipedia.page.Namespace;
 import org.wikipedia.page.NoDimBottomSheetDialog;
@@ -266,7 +269,9 @@ public class ShareHandler {
         fragment.getWebView().evaluateJavascript(scriptString, new ValueCallback<String>() {
             @Override
             public void onReceiveValue(String value) {
-                Log.d("DEV", value);
+                Gson gson = new Gson();
+                SelectionResult result = gson.fromJson(value, SelectionResult.class);
+
             }
         });
     }
