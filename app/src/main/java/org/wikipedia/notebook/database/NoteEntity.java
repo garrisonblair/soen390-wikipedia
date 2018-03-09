@@ -3,7 +3,6 @@ package org.wikipedia.notebook.database;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
-
 /**
  * Created by Andres on 2018-03-08.
  */
@@ -12,16 +11,17 @@ public class NoteEntity {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
-    private String articleId;
+    private int articleId;
     private String articleTitle;
     private String text;
 
-    public NoteEntity(String articleId, String text) {
+    public NoteEntity(int articleId, String articleTitle,  String text) {
         this.articleId = articleId;
+        this.articleTitle = articleTitle;
         this.text = text;
     }
 
-    public String getArticleId() {
+    public int getArticleId() {
         return this.articleId;
     }
 
@@ -37,7 +37,7 @@ public class NoteEntity {
 
     public void setArticleTitle(String articleTitle) { this.articleTitle = articleTitle; }
 
-    public void setArticleId(String articleId) {
+    public void setArticleId(int articleId) {
         this.articleId = articleId;
     }
 
