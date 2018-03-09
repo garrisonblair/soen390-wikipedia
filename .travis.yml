@@ -2,6 +2,16 @@ language: android
 env:
   global:
   - PATH=$HOME/.local/bin:$PATH
+  deploy:
+    provider: s3
+    access_key_id: AKIAJSPBEXPBXBHW77MA
+    secret_access_key:
+      secure: rnTtQgQF5IQtd7/GX8yYI3yfg73UV6rPTgufNpq4iwH3Ja9PGI566kIQKAetUJUDImL8NZrGEPSz3m6Hhj3+FNC/7Fwnulz/0NJK1NdfLdG8Ul0Wf9d037/D7ZmskJq+y2kO9BYOljdXK6xiU0h4IEG4qk0IE8fu4B4rwQ9an9BzXeonuUdubn/g3AHVs8Ud1J9a1ht0xzW1J1h08SJNucRySNht4gSnDM2t9dB4drhxs8223ks5dEOgtoSMyGueUaB0/qxPjqU59lKRwhWoCXD2cZ+yg4mG4r/F/Yo0eCnF1xhaJd8Quu5W9Kcp+/GJxucoI8FA7ZbKVefWUecd/yRzoJBAmAiZ1O8IcvPB3BWJ7210ZYtSEZ0SipWKSc/ppSAyc2lEmx5I+McA5wmn3FnYch/Ix4WpgpsPIGHF2Wf8DJd6jindoxgB09FjeG7Xm+TLcSDtYrwcVGrtmCmHN0KB88ZOW9XhfKQaNO1sQ0IAlEAVHBqdUwMn63Ggnt/XXtf6+U+2xECv6vGTkcmt6a7wNE9/LYSX4NQaA+2Y0zxYC7GTD5SaKsx8f1rBgnSjPJQ80/xzcrBgq9CIkjEdo6ybGF5riV0mR0fg6/bMUMMKbIA91Ci0vqS/pJF+nXWwZV8r9JIxYzVaUPPgFhsaTRSgd6PFqHB7F3ForKegSpA=
+    bucket: soen390deployment
+    acl: ''
+    on:
+      repo: SteveLocke/SOEN390-wiki
+
 android:
   components:
   - build-tools-26.0.1
@@ -12,12 +22,3 @@ before_install:
 - pip install --user awscli
 - mkdir -p ~/$TRAVIS_BUILD_NUMBER
 - aws s3 sync s3://soen390deployment/$TRAVIS_BUILD_NUMBER ~/$TRAVIS_BUILD_NUMBER
-deploy:
-  provider: s3
-  access_key_id: AKIAJSPBEXPBXBHW77MA
-  secret_access_key:
-    secure: rnTtQgQF5IQtd7/GX8yYI3yfg73UV6rPTgufNpq4iwH3Ja9PGI566kIQKAetUJUDImL8NZrGEPSz3m6Hhj3+FNC/7Fwnulz/0NJK1NdfLdG8Ul0Wf9d037/D7ZmskJq+y2kO9BYOljdXK6xiU0h4IEG4qk0IE8fu4B4rwQ9an9BzXeonuUdubn/g3AHVs8Ud1J9a1ht0xzW1J1h08SJNucRySNht4gSnDM2t9dB4drhxs8223ks5dEOgtoSMyGueUaB0/qxPjqU59lKRwhWoCXD2cZ+yg4mG4r/F/Yo0eCnF1xhaJd8Quu5W9Kcp+/GJxucoI8FA7ZbKVefWUecd/yRzoJBAmAiZ1O8IcvPB3BWJ7210ZYtSEZ0SipWKSc/ppSAyc2lEmx5I+McA5wmn3FnYch/Ix4WpgpsPIGHF2Wf8DJd6jindoxgB09FjeG7Xm+TLcSDtYrwcVGrtmCmHN0KB88ZOW9XhfKQaNO1sQ0IAlEAVHBqdUwMn63Ggnt/XXtf6+U+2xECv6vGTkcmt6a7wNE9/LYSX4NQaA+2Y0zxYC7GTD5SaKsx8f1rBgnSjPJQ80/xzcrBgq9CIkjEdo6ybGF5riV0mR0fg6/bMUMMKbIA91Ci0vqS/pJF+nXWwZV8r9JIxYzVaUPPgFhsaTRSgd6PFqHB7F3ForKegSpA=
-  bucket: soen390deployment
-  acl: ''
-  on:
-    repo: SteveLocke/SOEN390-wiki
