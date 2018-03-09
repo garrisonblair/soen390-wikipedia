@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,6 +17,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
@@ -29,6 +32,7 @@ import org.wikipedia.dataclient.mwapi.MwQueryResponse;
 import org.wikipedia.gallery.ImageLicense;
 import org.wikipedia.gallery.ImageLicenseFetchClient;
 import org.wikipedia.language.AppLanguageLookUpTable;
+import org.wikipedia.notebook.SelectionResult;
 import org.wikipedia.onboarding.PrefsOnboardingStateMachine;
 import org.wikipedia.page.Namespace;
 import org.wikipedia.page.NoDimBottomSheetDialog;
@@ -68,6 +72,7 @@ public class ShareHandler {
     private static final String PAYLOAD_TEXT_KEY = "text";
     private WikipediaApp app = WikipediaApp.getInstance();
     private static final String GET_SELECTION_SCRIPT_PATH = "getSelection.js";
+    private static final String GET_SELECTION_AND_REFERENCE_SCRIPT_PATH = "getSelectionAndReference.js";
 
     @NonNull private final PageFragment fragment;
     @NonNull private final CommunicationBridge bridge;
@@ -212,6 +217,8 @@ public class ShareHandler {
 
         //Provide a listener to the speech button
         MenuItem toSpeechItem = menu.findItem(R.id.menu_text_to_speech);
+
+
         toSpeechItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -257,7 +264,16 @@ public class ShareHandler {
         onHighlightText();
     }
     private void addNote() {
+        String scriptString = FileUtil.readJavascriptFile(fragment.getContext(), GET_SELECTION_AND_REFERENCE_SCRIPT_PATH);
 
+        fragment.getWebView().evaluateJavascript(scriptString, new ValueCallback<String>() {
+            @Override
+            public void onReceiveValue(String value) {
+                Gson gson = new Gson();
+                SelectionResult result = gson.fromJson(value, SelectionResult.class);
+
+            }
+        });
     }
     private void setStopButtonVisibility(int visibility) {
     /**
