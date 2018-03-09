@@ -15,10 +15,10 @@ import android.arch.persistence.room.ForeignKey;
 public class ReferenceEntity {
     private int noteId;
     private int referenceNum;
-    private String articleId;
+    private int articleId;
     private String text;
 
-    public ReferenceEntity(String articleId, int noteId, int referenceNum, String text) {
+    public ReferenceEntity(int articleId, int noteId, int referenceNum, String text) {
         this.noteId = noteId;
         this.articleId = articleId;
         this.referenceNum = referenceNum;
@@ -29,7 +29,7 @@ public class ReferenceEntity {
         return this.noteId;
     }
 
-    public String getArticleId() {
+    public int getArticleId() {
         return this.articleId;
     }
     public int getReferenceNum() {
@@ -52,7 +52,7 @@ public class ReferenceEntity {
         this.text = text;
     }
 
-    public void setArticleId(String articleId) {
+    public void setArticleId(int articleId) {
         this.articleId = articleId;
     }
 }
