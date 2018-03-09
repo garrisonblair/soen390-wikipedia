@@ -27,7 +27,11 @@ before_install:
   - mkdir -p ~/$TRAVIS_BUILD_NUMBER
   - aws s3 sync s3://soen390deployment/$TRAVIS_BUILD_NUMBER ~/$TRAVIS_BUILD_NUMBER
 
-
+deploy:
+  provider: s3
+  access_key_id: "AKIAJSPBEXPBXBHW77MA"
+  secret_access_key: "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"
+  bucket: "soen390deployment"
 
 #language: android
 #android:
