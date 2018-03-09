@@ -1,78 +1,23 @@
 language: android
-
 env:
   global:
-    # include $HOME/.local/bin for `aws`
-    - PATH=$HOME/.local/bin:$PATH
-
+  - PATH=$HOME/.local/bin:$PATH
 android:
   components:
-    # Uncomment the lines below if you want to
-    # use the latest revision of Android SDK Tools
-#    - tools
-#    - platform-tools
-
-    # The BuildTools version used by your project
-    - build-tools-26.0.1
-
-    # The SDK version used to compile your project
-    - android-26
-
-script: ./gradlew testDevDebug
-
+  - build-tools-26.0.1
+  - android-26
+script: "./gradlew testDevDebug"
 before_install:
-  - yes | sdkmanager "platforms;android-27"
-  # set up awscli packages
-  - pip install --user awscli
-  - mkdir -p ~/$TRAVIS_BUILD_NUMBER
-  - aws s3 sync s3://soen390deployment/$TRAVIS_BUILD_NUMBER ~/$TRAVIS_BUILD_NUMBER
-
+- yes | sdkmanager "platforms;android-27"
+- pip install --user awscli
+- mkdir -p ~/$TRAVIS_BUILD_NUMBER
+- aws s3 sync s3://soen390deployment/$TRAVIS_BUILD_NUMBER ~/$TRAVIS_BUILD_NUMBER
 deploy:
   provider: s3
   access_key_id: AKIAJSPBEXPBXBHW77MA
   secret_access_key:
-    secure: S+B1f45U0LGlbG/cndUbjlGV3F7XDXPb50S0kMwrhj2u4fM5MZImo/iMrnW8GnHIjM8hL7MEdxeWty3mIpHVjq1Gu2F8xnBzpUdAWqf9gyEZ7rGIcCaDQGxAg8y4AMlshizguk3NCc87uL93PpcNiP52CoWTEh5/vBqn21/kQFsDG5hbWQawbrNSfADQG7EPvSewZpIl/1XEQGPgevQmjxdbEOQfdwQ4zybDTpSdmbG7i6N0eCd1bzbNFe9zz0DY6iK/UhHse66JMVMBNTpr4rABhzPHGPkv0sT/CCahEMvaiiypVcqaN2dezr4kRZF2Hpu852ESxuxNd2QPEN7L5od6nxkJRnLh+YKgra9q+pi1AlSknnePM6YK2iP2cCZyIUtagBOEbDz/LnvTwEHXpD6Hio2NMmvqIkfAaeW00xlSddcO8cBk5E6TIDBhQRSEVLw+93vyEmxkQB3BaNqyBaaLxB+TSC+wB0xWfbWOk9Mr3UsX2dARRi9OU5pLykH/99fN4ECXUrXUFPwVyCk/Bas1gkmxN9akw6YGZL2PnWcuyihF7Qr3BP2PpulO4SNx7peOgPVTjdKs6vlNgU2s6HQZ94fqtH82ALPmVRjzFDzEU3MZ0aKAMBuG9VkOL3eTPKo+7AjlzyYokV1J3h1P6TVXKSn5+pqSRbjquHSOpj8=
+    secure: rnTtQgQF5IQtd7/GX8yYI3yfg73UV6rPTgufNpq4iwH3Ja9PGI566kIQKAetUJUDImL8NZrGEPSz3m6Hhj3+FNC/7Fwnulz/0NJK1NdfLdG8Ul0Wf9d037/D7ZmskJq+y2kO9BYOljdXK6xiU0h4IEG4qk0IE8fu4B4rwQ9an9BzXeonuUdubn/g3AHVs8Ud1J9a1ht0xzW1J1h08SJNucRySNht4gSnDM2t9dB4drhxs8223ks5dEOgtoSMyGueUaB0/qxPjqU59lKRwhWoCXD2cZ+yg4mG4r/F/Yo0eCnF1xhaJd8Quu5W9Kcp+/GJxucoI8FA7ZbKVefWUecd/yRzoJBAmAiZ1O8IcvPB3BWJ7210ZYtSEZ0SipWKSc/ppSAyc2lEmx5I+McA5wmn3FnYch/Ix4WpgpsPIGHF2Wf8DJd6jindoxgB09FjeG7Xm+TLcSDtYrwcVGrtmCmHN0KB88ZOW9XhfKQaNO1sQ0IAlEAVHBqdUwMn63Ggnt/XXtf6+U+2xECv6vGTkcmt6a7wNE9/LYSX4NQaA+2Y0zxYC7GTD5SaKsx8f1rBgnSjPJQ80/xzcrBgq9CIkjEdo6ybGF5riV0mR0fg6/bMUMMKbIA91Ci0vqS/pJF+nXWwZV8r9JIxYzVaUPPgFhsaTRSgd6PFqHB7F3ForKegSpA=
   bucket: soen390deployment
   acl: ''
   on:
     repo: SteveLocke/SOEN390-wiki
-
-
-
-#language: android
-#android:
-#  components:
-#    # Uncomment the lines below if you want to
-#    # use the latest revision of Android SDK Tools
-##    - tools
-##    - platform-tools
-#
-#    # The BuildTools version used by your project
-#    - build-tools-26.0.1
-#
-#    # The SDK version used to compile your project
-#    - android-26
-#
-##script: ./gradlew testDevDebug
-#
-#before_install:
-#  - yes | sdkmanager "platforms;android-27"
-#
-#jobs:
-#  include:
-#    # pre-build stage
-#    - stage: pre-build
-#      script: ./gradlew preDevDebugBuild
-#    # checkstyle stage
-#    - stage: checkstyle
-#      script: ./gradlew checkstyle
-#    # lint stage
-#    - stage: lint
-#      script: ./gradlew lintDevDebug
-#    # test stage
-#    # build stage
-#    - stage: build
-#      script: ./gradlew -q clean assembleDevDebug
-#    # test stage
-#    - stage: test #testDevDebug
-#      script: ./gradlew testDevDebugUnitTest
