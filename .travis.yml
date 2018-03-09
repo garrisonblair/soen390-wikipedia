@@ -39,7 +39,12 @@ jobs:
       script:
       - ./gradlew -q clean assembleDevDebug
       - echo $TRAVIS_BUILD_NUMBER
-      - ls -r app/build
+      - ls app/build/outputs
+      - ls app/build/outputs/apk
+      - ls app/build/outputs/apk/custom/debug
+      - ls app/build/outputs/apk/beta/debug
+      - ls app/build/outputs/apk/androidTest/debug
+      - ls app/build/outputs/apk/amazon/debug
       - ls build
       - cp ./app/build/outputs/apk/alpha/debug/app-alpha-debug.apk ~/$TRAVIS_BUILD_NUMBER
       - aws s3 sync ~/$TRAVIS_BUILD_NUMBER s3://soen390deployment/$TRAVIS_BUILD_NUMBER
