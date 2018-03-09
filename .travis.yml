@@ -5,12 +5,6 @@ env:
     # include $HOME/.local/bin for `aws`
     - PATH=$HOME/.local/bin:$PATH
 
-deploy:
-  provider: s3
-  access_key_id: "AKIAJSPBEXPBXBHW77MA"
-  secret_access_key: "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"
-  bucket: "soen390deployment"
-
 android:
   components:
     # Uncomment the lines below if you want to
@@ -32,6 +26,16 @@ before_install:
   - pip install --user awscli
   - mkdir -p ~/$TRAVIS_BUILD_NUMBER
   - aws s3 sync s3://soen390deployment/$TRAVIS_BUILD_NUMBER ~/$TRAVIS_BUILD_NUMBER
+
+deploy:
+  provider: s3
+  access_key_id: AKIAJSPBEXPBXBHW77MA
+  secret_access_key:
+    secure: S+B1f45U0LGlbG/cndUbjlGV3F7XDXPb50S0kMwrhj2u4fM5MZImo/iMrnW8GnHIjM8hL7MEdxeWty3mIpHVjq1Gu2F8xnBzpUdAWqf9gyEZ7rGIcCaDQGxAg8y4AMlshizguk3NCc87uL93PpcNiP52CoWTEh5/vBqn21/kQFsDG5hbWQawbrNSfADQG7EPvSewZpIl/1XEQGPgevQmjxdbEOQfdwQ4zybDTpSdmbG7i6N0eCd1bzbNFe9zz0DY6iK/UhHse66JMVMBNTpr4rABhzPHGPkv0sT/CCahEMvaiiypVcqaN2dezr4kRZF2Hpu852ESxuxNd2QPEN7L5od6nxkJRnLh+YKgra9q+pi1AlSknnePM6YK2iP2cCZyIUtagBOEbDz/LnvTwEHXpD6Hio2NMmvqIkfAaeW00xlSddcO8cBk5E6TIDBhQRSEVLw+93vyEmxkQB3BaNqyBaaLxB+TSC+wB0xWfbWOk9Mr3UsX2dARRi9OU5pLykH/99fN4ECXUrXUFPwVyCk/Bas1gkmxN9akw6YGZL2PnWcuyihF7Qr3BP2PpulO4SNx7peOgPVTjdKs6vlNgU2s6HQZ94fqtH82ALPmVRjzFDzEU3MZ0aKAMBuG9VkOL3eTPKo+7AjlzyYokV1J3h1P6TVXKSn5+pqSRbjquHSOpj8=
+  bucket: soen390deployment
+  acl: ''
+  on:
+    repo: SteveLocke/SOEN390-wiki
 
 
 
