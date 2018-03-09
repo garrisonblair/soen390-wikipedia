@@ -3,8 +3,6 @@ package org.wikipedia.notebook.database;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Andres on 2018-03-08.
@@ -15,6 +13,7 @@ public class NoteEntity {
     @PrimaryKey(autoGenerate = true)
     private int id;
     private String articleId;
+    private String articleTitle;
     private String text;
 
     public NoteEntity(String articleId, String text) {
@@ -33,6 +32,10 @@ public class NoteEntity {
     public String getText() {
         return this.text;
     }
+
+    public String getArticleTitle() { return this.articleTitle; }
+
+    public void setArticleTitle(String articleTitle) { this.articleTitle = articleTitle; }
 
     public void setArticleId(String articleId) {
         this.articleId = articleId;
