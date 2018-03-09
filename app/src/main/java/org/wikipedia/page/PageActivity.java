@@ -54,6 +54,7 @@ import org.wikipedia.feed.mainpage.MainPageClient;
 import org.wikipedia.gallery.GalleryActivity;
 import org.wikipedia.history.HistoryEntry;
 import org.wikipedia.language.LangLinksActivity;
+import org.wikipedia.notes.NotesActivity;
 import org.wikipedia.notes.NotesFragment;
 import org.wikipedia.page.linkpreview.LinkPreviewDialog;
 import org.wikipedia.page.listeners.HideStopButtonOnDoneListener;
@@ -247,9 +248,10 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
 
     @OnClick(R.id.page_toolbar_button_notes)
     public void onNotesButtonClicked() {
-        Log.i("EDWARD", "OPEN NOTES");
-        Log.i("EDWARD", Integer.toString(pageFragment.getPage().getPageProperties().getPageId()));
-        openNotesFragment(null, null);
+        String pageId = Integer.toString(pageFragment.getPage().getPageProperties().getPageId());
+        Intent intent = new Intent(pageFragment.getContext(), NotesActivity.class);
+        intent.putExtra("pageId", pageId);
+        startActivity(intent);
     }
 
     @OnClick(R.id.page_toolbar_button_search)
@@ -899,19 +901,18 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
                 .show();
     }
 
-    @SuppressLint("CommitTransaction")
-    private void openNotesFragment(@NonNull SearchInvokeSource source, @Nullable String query) {
-        Fragment fragment = notesFragment();
-
-        if (fragment == null) {
-            Log.i("EDWARD", "IS NULL");
-            fragment = NotesFragment.newInstance(source, StringUtils.trim(query));
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .add(R.id.activity_page_container, fragment)
-                    .commitNowAllowingStateLoss();
-        }
-    }
+//    @SuppressLint("CommitTransaction")
+//    private void openNotesFragment(@NonNull SearchInvokeSource source, @Nullable String query) {
+//        Fragment fragment = notesFragment();
+//
+//        if (fragment == null) {
+//            fragment = NotesFragment.newInstance(source, StringUtils.trim(query));
+//            getSupportFragmentManager()
+//                    .beginTransaction()
+//                    .add(R.id.activity_page_container, fragment)
+//                    .commitNowAllowingStateLoss();
+//        }
+//    }
 
     @SuppressLint("CommitTransaction")
     private void openSearchFragment(@NonNull SearchInvokeSource source, @Nullable String query) {

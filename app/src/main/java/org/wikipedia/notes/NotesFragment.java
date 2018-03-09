@@ -20,16 +20,14 @@ public class NotesFragment extends Fragment {
         return view;
     }
 
-    @NonNull
-    public static NotesFragment newInstance(@NonNull SearchInvokeSource source,
-                                             @Nullable String query) {
-        NotesFragment fragment = new NotesFragment();
-
-        Bundle args = new Bundle();
-//        args.putInt(ARG_INVOKE_SOURCE, source.code());
-//        args.putString(ARG_QUERY, query);
-
-        fragment.setArguments(args);
-        return fragment;
-    }
+//    @NonNull
+//    public static NotesFragment newInstance(@NonNull SearchInvokeSource source,
+//                                             @Nullable String query) {
+//        NotesFragment fragment = new NotesFragment();
+//
+//        Bundle args = new Bundle();
+//
+//        fragment.setArguments(args);
+//        return fragment;
+//    }
 }
