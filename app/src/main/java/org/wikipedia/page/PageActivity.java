@@ -24,6 +24,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -241,6 +242,12 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
             updateMenuPageInfo(menu);
         }
         return true;
+    }
+
+    @OnClick(R.id.page_toolbar_button_notes)
+    public void onNotesButtonClicked() {
+        Log.i("EDWARD", "OPEN NOTES");
+        Log.i("EDWARD", Integer.toString(pageFragment.getPage().getPageProperties().getPageId()));
     }
 
     @OnClick(R.id.page_toolbar_button_search)
