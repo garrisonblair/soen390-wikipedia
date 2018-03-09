@@ -38,14 +38,9 @@ jobs:
     - stage: build
       script:
       - ./gradlew -q clean assembleDevDebug
-      - echo $TRAVIS_BUILD_NUMBER
-      - ls app/build/outputs
-      - ls app/build/outputs/apk/dev
-      - ls app/build/outputs/apk/dev/debug
 
-
-      - ls build
-      - cp ./app/build/outputs/apk/alpha/debug/app-alpha-debug.apk ~/$TRAVIS_BUILD_NUMBER
+      - $TRAVIS_BUILD_NUMBER
+      - cp app/build/outputs/apk/dev/debug/app-alpha-debug.apk ~/$TRAVIS_BUILD_NUMBER
       - aws s3 sync ~/$TRAVIS_BUILD_NUMBER s3://soen390deployment/$TRAVIS_BUILD_NUMBER
 
 #    # test stage
