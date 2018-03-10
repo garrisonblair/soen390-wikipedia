@@ -10,6 +10,7 @@ checkstyle {
 }
 
 task checkstyle(type: Checkstyle) {
+
     source 'src/main/java'
     source 'src/androidTest/java'
     source 'src/test/java'

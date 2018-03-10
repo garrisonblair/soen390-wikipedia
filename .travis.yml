@@ -24,22 +24,21 @@ before_install:
 
 jobs:
   include:
-#    # pre-build stage
-#    - stage: pre-build
-#      script: ./gradlew preDevDebugBuild
-#    # checkstyle stage
-#    - stage: checkstyle
-#      script: ./gradlew checkstyle
-#    # lint stage
-#    - stage: lint
-#      script: ./gradlew lintDevDebug
-#    # test stage
-#    # build stage
+    # pre-build stage
+    - stage: pre-build
+      script: ./gradlew preDevDebugBuild
+    # checkstyle stage
+    - stage: checkstyle
+      script: ./gradlew checkstyle
+    # test stage
+    - stage: test
+      script: ./gradlew testDevDebug
+    # build stage
     - stage: build
       script:
       - ./gradlew -q clean assembleDevDebug
 
-      - ls $TRAVIS_BUILD_NUMBER
+      - ls
       - cp app/build/outputs/apk/dev/debug/app-dev-debug.apk ~/$TRAVIS_BUILD_NUMBER
       - aws s3 sync ~/$TRAVIS_BUILD_NUMBER s3://soen390deployment/$TRAVIS_BUILD_NUMBER
 
