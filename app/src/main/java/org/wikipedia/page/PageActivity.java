@@ -249,8 +249,10 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
     @OnClick(R.id.page_toolbar_button_notes)
     public void onNotesButtonClicked() {
         String pageId = Integer.toString(pageFragment.getPage().getPageProperties().getPageId());
+        String pageTitle = pageFragment.getPage().getTitle().getText();
         Intent intent = new Intent(pageFragment.getContext(), NotesActivity.class);
         intent.putExtra("pageId", pageId);
+        intent.putExtra("pageTitle", pageTitle);
         startActivity(intent);
     }
 
