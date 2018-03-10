@@ -384,7 +384,7 @@ public class FeedFragment extends Fragment implements BackPressedHandler {
 
         @Override
         public void onGalleryPictureSearchRequested(){
-            if(getCallback() != null) {
+            if (getCallback() != null) {
                 getCallback().onFeedGallerySearchRequested();
             }
         }
