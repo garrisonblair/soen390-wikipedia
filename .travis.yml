@@ -1,4 +1,10 @@
 language: android
+
+cache:
+  directories:
+  - .gradle
+  - gradle
+  - app/build
 android:
   components:
     # Uncomment the lines below if you want to
