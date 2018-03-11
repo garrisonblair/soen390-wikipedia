@@ -70,4 +70,9 @@ public class NoteReferenceService {
         }
         this.referenceDao.addReferences(referenceEntities);
     }
+
+    public void deleteNote(Note note) {
+        NoteEntity noteEntity = new NoteEntity(note.getArticleid(), note.getArticleTitle(), note.getText());
+        this.noteDao.deleteNote(noteEntity);
+    }
 }

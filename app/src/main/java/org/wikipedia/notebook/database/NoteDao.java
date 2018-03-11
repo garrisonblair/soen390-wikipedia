@@ -2,6 +2,7 @@ package org.wikipedia.notebook.database;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 
@@ -22,8 +23,8 @@ public interface NoteDao {
     @Query("SELECT ID FROM notes WHERE ID = (SELECT MAX(ID)  FROM notes);")
     public int getLastInsertedRowId();
 
-    /*@Query("SELECT * FROM notes n , `references` r WHERE n.id = r.noteId")
-    public*/
+    @Delete
+    public void deleteNote(NoteEntity note);
 
 }
 
