@@ -38,6 +38,8 @@ public class Reference {
         return notes;
     }
 
+    public void addNote(Note note) { this.notes.add(note); }
+
     public void setNotes(List<Note> notes) {
         this.notes = notes;
     }
