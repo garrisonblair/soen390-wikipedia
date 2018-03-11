@@ -74,4 +74,10 @@ public class NoteReferenceService {
         NoteEntity noteEntity = new NoteEntity(note.getArticleid(), note.getArticleTitle(), note.getText());
         this.noteDao.deleteNote(noteEntity);
     }
+    //Only for TEST
+    public void superSedeDbForTest(AppDatabase appDatabase) {
+        db = appDatabase;
+        noteDao = appDatabase.noteDao();
+        referenceDao = appDatabase.referenceDao();
+    }
 }
