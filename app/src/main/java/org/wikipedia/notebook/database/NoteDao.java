@@ -18,10 +18,7 @@ public interface NoteDao {
     public List<NoteEntity> getAllNotesFromArticle(String articleId);
 
     @Insert
-    public void addNote(NoteEntity note);
-
-    @Query("SELECT ID FROM notes WHERE ID = (SELECT MAX(ID)  FROM notes);")
-    public int getLastInsertedRowId();
+    public long addNote(NoteEntity note);
 
     @Delete
     public void deleteNote(NoteEntity note);

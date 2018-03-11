@@ -60,8 +60,7 @@ public class NoteReferenceService {
 
     public void addNote(Note newNote) {
         NoteEntity noteEntity = new NoteEntity(newNote.getId(), newNote.getArticleTitle(), newNote.getText());
-        this.noteDao.addNote(noteEntity);
-        int noteId = this.noteDao.getLastInsertedRowId();
+        int noteId = (int)this.noteDao.addNote(noteEntity);
         List<Reference> references = newNote.getAllReferences();
         List<ReferenceEntity> referenceEntities = new ArrayList<ReferenceEntity>();
         for (Reference reference : references) {
