@@ -13,7 +13,7 @@ import java.util.List;
 public interface ReferenceDao {
 
     @Query("SELECT * FROM `references` WHERE articleId = :articleId ORDER BY noteId ASC")
-    public List<ReferenceEntity> getAllArticleReferences(String articleId);
+    public List<ReferenceEntity> getAllArticleReferences(int articleId);
 
     @Insert
     public void addReferences(List<ReferenceEntity> references);

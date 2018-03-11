@@ -15,7 +15,7 @@ import java.util.List;
 public interface NoteDao {
 
     @Query("SELECT * FROM notes WHERE articleId = :articleId ORDER BY id ASC")
-    public List<NoteEntity> getAllNotesFromArticle(String articleId);
+    public List<NoteEntity> getAllNotesFromArticle(int articleId);
 
     @Insert
     public long addNote(NoteEntity note);

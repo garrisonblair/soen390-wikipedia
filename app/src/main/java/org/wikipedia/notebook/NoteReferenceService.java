@@ -31,7 +31,7 @@ public class NoteReferenceService {
         this.referenceDao = db.referenceDao();
     }
 
-    public List<Note> getAllArticleNotes(String articleId) {
+    public List<Note> getAllArticleNotes(int articleId) {
         List<NoteEntity> noteEntities = noteDao.getAllNotesFromArticle(articleId);
         List<ReferenceEntity> referenceEntities = referenceDao.getAllArticleReferences(articleId);
         HashMap<Integer, Reference> mapReference = new HashMap<Integer, Reference>();
