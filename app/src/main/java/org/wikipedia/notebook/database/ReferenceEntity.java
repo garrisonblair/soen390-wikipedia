@@ -3,6 +3,8 @@ package org.wikipedia.notebook.database;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 
+import static android.arch.persistence.room.ForeignKey.CASCADE;
+
 /**
  * Created by Andres on 2018-03-08.
  */
@@ -11,7 +13,8 @@ import android.arch.persistence.room.ForeignKey;
         primaryKeys = {"noteId", "referenceNum"},
         foreignKeys = @ForeignKey(entity = NoteEntity.class,
                                   parentColumns = "id",
-                                  childColumns = "noteId"))
+                                  childColumns = "noteId",
+                                  onDelete = CASCADE))
 public class ReferenceEntity {
     private int noteId;
     private int referenceNum;
