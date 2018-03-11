@@ -10,6 +10,7 @@ import org.wikipedia.notebook.database.ReferenceDao;
 import org.wikipedia.notebook.database.ReferenceEntity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -31,18 +32,30 @@ public class NoteReferenceService {
     }
 
     public List<Note> getAllArticleNotes(String articleId) {
-        List<Note> notes = new ArrayList<Note>();
         List<NoteEntity> noteEntities = noteDao.getAllNotesFromArticle(articleId);
         List<ReferenceEntity> referenceEntities = referenceDao.getAllArticleReferences(articleId);
+        HashMap<Integer, Reference> mapReference = new HashMap<Integer, Reference>();
+        HashMap<Integer, Note> mapNote = new HashMap<Integer, Note>();
+        /*if (noteEntities.isEmpty()) {
+            return new ArrayList<Note>();
+        }*/
+
         for (NoteEntity ne: noteEntities) {
             Note newNote = new Note(ne.getId(), ne.getArticleId(), ne.getArticleTitle(), ne.getText());
-            for (ReferenceEntity re: referenceEntities) {
-                if (re.getNoteId() == newNote.getId()) {
-                    newNote.addReference(new Reference(re.getReferenceNum(), re.getText()));
-                }
+            mapNote.put(newNote.getId(), newNote);
+            //notes.add(newNote);
+        }
+        for (ReferenceEntity re : referenceEntities) {
+            if (!mapReference.containsKey(re.getReferenceNum())) {
+                mapReference.put(re.getNoteId(), new Reference(re.getReferenceNum(), re.getText()));
             }
         }
-        return notes;
+        for (ReferenceEntity re : referenceEntities) {
+            mapNote.get(re.getNoteId()).addReference(mapReference.get(re.getReferenceNum()));
+            mapReference.get(re.getReferenceNum()).addNote(mapNote.get(re.getNoteId()));
+        }
+
+        return new ArrayList<Note>(mapNote.values());
     }
 
     public void addNote(Note newNote) {
