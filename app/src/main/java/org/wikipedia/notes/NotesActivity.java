@@ -1,8 +1,8 @@
 package org.wikipedia.notes;
 
-
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 
 
@@ -21,8 +21,6 @@ public class NotesActivity extends BaseActivity {
     private String pageTitle;
     private WikipediaApp app;
     private PageToolbarHideHandler toolbarHideHandler;
-
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,7 +46,16 @@ public class NotesActivity extends BaseActivity {
 
         setContentView(R.layout.activity_note);
 
-        Log.i("pageId", pageId);
+        NotesFragment fragment = (NotesFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.activity_page_container);
+
+        if (fragment == null) {
+            fragment = NotesFragment.newInstance(pageTitle, pageId);
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.activity_note_container, fragment)
+                    .commit();
+        }
     }
 
 }

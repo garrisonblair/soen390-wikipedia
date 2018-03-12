@@ -8,12 +8,12 @@
     android:layout_height="match_parent"
     android:background="@color/base10">
 
-    <fragment
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/note_fragment"
-        android:name="org.wikipedia.notes.NotesFragment"
-        android:layout="@layout/fragment_notes"
-        tools:layout="@layout/fragment_notes" />
+    <!--<fragment-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:id="@+id/note_fragment"-->
+        <!--android:name="org.wikipedia.notes.NotesFragment"-->
+        <!--android:layout="@layout/fragment_notes"-->
+        <!--tools:layout="@layout/fragment_notes" />-->
 
 </RelativeLayout>
