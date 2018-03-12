@@ -17,11 +17,9 @@ import org.wikipedia.notebook.database.ReferenceEntity;
 import java.util.Iterator;
 import java.util.List;
 
+import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -39,6 +37,7 @@ public class NoteReferenceServiceTest {
     private ReferenceDao referenceDaoMock = mock(ReferenceDao.class);
     @Mock
     private Context contextMock = mock(Context.class);
+
 
     private NoteReferenceService nrs;
 
@@ -79,5 +78,34 @@ public class NoteReferenceServiceTest {
         nrs.addNote(noteMock);
         inOrder.verify(this.noteDaoMock).addNote(any(NoteEntity.class));
         inOrder.verify(this.referenceDaoMock).addReferences(any(List.class));
+    }
+
+    @Test
+    public void getAllArticleNotesTest() {
+        List<NoteEntity> noteEntityListMock = mock(List.class);
+        List<ReferenceEntity> referenceEntityListMock = mock(List.class);
+        NoteEntity noteEntityMock = mock(NoteEntity.class);
+        ReferenceEntity referenceEntityMock = mock(ReferenceEntity.class);
+        when(this.noteDaoMock.getAllNotesFromArticle(1)).thenReturn(noteEntityListMock);
+        when(this.referenceDaoMock.getAllArticleReferences(1)).thenReturn(referenceEntityListMock);
+        Iterator iteratorMockNoteEntity = mock(Iterator.class);
+        when(noteEntityListMock.iterator()).thenReturn(iteratorMockNoteEntity);
+        when(referenceEntityListMock.size()).thenReturn(1);
+        when(referenceEntityListMock.get(0)).thenReturn(referenceEntityMock);
+        when(iteratorMockNoteEntity.hasNext()).thenReturn(true,false);
+        when(iteratorMockNoteEntity.next()).thenReturn(noteEntityMock);
+        when(noteEntityMock.getId()).thenReturn(1);
+        when(noteEntityMock.getArticleId()).thenReturn(2);
+        when(noteEntityMock.getArticleTitle()).thenReturn("title");
+        when(noteEntityMock.getText()).thenReturn("text");
+        when(referenceEntityMock.getNoteId()).thenReturn(1);
+        when(referenceEntityMock.getReferenceNum()).thenReturn(1);
+        when(referenceEntityMock.getText()).thenReturn("reference text");
+
+        List<Note> noteList = nrs.getAllArticleNotes(1);
+        verify(this.noteDaoMock).getAllNotesFromArticle(1);
+        verify(this.referenceDaoMock).getAllArticleReferences(1);
+        assertEquals(noteList.size(),1);
+        assertEquals(noteList.get(0).getAllReferences().size(), 1);
     }
 }
