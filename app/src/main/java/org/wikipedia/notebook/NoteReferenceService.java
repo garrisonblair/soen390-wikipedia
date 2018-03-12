@@ -31,6 +31,13 @@ public class NoteReferenceService {
         this.referenceDao = db.referenceDao();
     }
 
+    public NoteReferenceService(Context context, AppDatabase db) {
+        this.context = context;
+        this.db = db;
+        this.noteDao = db.noteDao();
+        this.referenceDao = db.referenceDao();
+    }
+
     public List<Note> getAllArticleNotes(int articleId) {
         List<NoteEntity> noteEntities = noteDao.getAllNotesFromArticle(articleId);
         List<ReferenceEntity> referenceEntities = referenceDao.getAllArticleReferences(articleId);
@@ -73,11 +80,5 @@ public class NoteReferenceService {
     public void deleteNote(Note note) {
         NoteEntity noteEntity = new NoteEntity(note.getArticleid(), note.getArticleTitle(), note.getText());
         this.noteDao.deleteNote(noteEntity);
-    }
-    //Only for TEST
-    public void superSedeDbForTest(AppDatabase appDatabase) {
-        db = appDatabase;
-        noteDao = appDatabase.noteDao();
-        referenceDao = appDatabase.referenceDao();
     }
 }
