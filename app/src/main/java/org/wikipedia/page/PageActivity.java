@@ -24,7 +24,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -903,24 +902,10 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
                 .show();
     }
 
-//    @SuppressLint("CommitTransaction")
-//    private void openNotesFragment(@NonNull SearchInvokeSource source, @Nullable String query) {
-//        Fragment fragment = notesFragment();
-//
-//        if (fragment == null) {
-//            fragment = NotesFragment.newInstance(source, StringUtils.trim(query));
-//            getSupportFragmentManager()
-//                    .beginTransaction()
-//                    .add(R.id.activity_page_container, fragment)
-//                    .commitNowAllowingStateLoss();
-//        }
-//    }
-
     @SuppressLint("CommitTransaction")
     private void openSearchFragment(@NonNull SearchInvokeSource source, @Nullable String query) {
         Fragment fragment = searchFragment();
         if (fragment == null) {
-            Log.i("EDWARD", "IS NULL");
             fragment = SearchFragment.newInstance(source, StringUtils.trim(query));
             getSupportFragmentManager()
                     .beginTransaction()
