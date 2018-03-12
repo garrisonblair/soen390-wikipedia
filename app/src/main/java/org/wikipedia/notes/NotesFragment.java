@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.wikipedia.R;
 
@@ -23,11 +24,10 @@ public class NotesFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments() != null) {
-            title = getArguments().getString("pageTitle");
-            pageId = getArguments().getString("pageId");
-            Log.i("GARRISON", title);
-            Log.i("GARRISON", pageId);
+        if (getActivity().getIntent().getExtras() != null) {
+            Bundle bundleRead = getActivity().getIntent().getExtras();
+            title = bundleRead.getString("pageTitle");
+            pageId = bundleRead.getString("pageId");
         }
     }
 
@@ -37,19 +37,14 @@ public class NotesFragment extends Fragment {
 
         ArrayList<String> notes = new ArrayList();
 
-        if (getArguments() != null) {
-            notes.add(getArguments().getString("pageTitle"));
-            notes.add(getArguments().getString("pageId"));
-        }
-
         notes.add("Material Design Icons' growing icon collection allows designers and developers targeting various platforms to download icons in the format, color and size they need for any project.");
         notes.add("The app is primarily being developed by the Wikimedia Foundation's Mobile Apps team. This README provides high-level guidelines for getting started with the project.");
 
-//        ArrayList<String> notes = getArguments().getStringArrayList("notes");
+        TextView titleView = view.findViewById(R.id.note_title);
+        titleView.setText(title);
         ListView noteList = view.findViewById(R.id.notes_list);
 
         noteList.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.simple_row, notes));
-        Log.i("GARRISON", "WAS HERE");
         return view;
     }
 
@@ -62,6 +57,12 @@ public class NotesFragment extends Fragment {
         args.putString("pageTitle", title);
 
         fragment.setArguments(args);
+        return fragment;
+    }
+
+    @NonNull
+    public static NotesFragment newInstance() {
+        NotesFragment fragment = new NotesFragment();
         return fragment;
     }
 }

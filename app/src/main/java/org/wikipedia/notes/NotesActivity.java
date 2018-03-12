@@ -22,12 +22,8 @@ public class NotesActivity extends BaseActivity {
         app = (WikipediaApp) getApplicationContext();
         setStatusBarColor(ResourceUtil.getThemedAttributeId(this, R.attr.page_status_bar_color));
 
-        Bundle bundleRead = getIntent().getExtras();
-        String pageId = bundleRead.getString("pageId");
-        String pageTitle = bundleRead.getString("pageTitle");
-
         setContentView(R.layout.activity_note);
-        openNotesFragment(pageId, pageTitle);
+        openNotesFragment();
     }
 
     private void openNotesFragment(@NonNull String pageId, @NonNull String pageTitle) {
@@ -35,6 +31,18 @@ public class NotesActivity extends BaseActivity {
 
         if (fragment == null) {
             fragment = NotesFragment.newInstance(pageTitle, pageId);
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.activity_note_container, fragment)
+                    .commit();
+        }
+    }
+
+    private void openNotesFragment() {
+        NotesFragment fragment = notesFragment();
+
+        if (fragment == null) {
+            fragment = NotesFragment.newInstance();
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.activity_note_container, fragment)
