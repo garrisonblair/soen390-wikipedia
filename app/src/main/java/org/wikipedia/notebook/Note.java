@@ -1,5 +1,6 @@
 package org.wikipedia.notebook;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,6 +19,7 @@ public class Note{
         this.text = text;
         this.articleTitle = articleTitle;
         this.articleid = articleid;
+        this.references = new ArrayList<Reference>();
     }
 
     public Note(int id, int articleid, String articleTitle, String text) {
@@ -25,6 +27,7 @@ public class Note{
         this.articleid = articleid;
         this.articleTitle = articleTitle;
         this.text = text;
+        this.references = new ArrayList<Reference>();
     }
 
     public void addReference(Reference reference) {
