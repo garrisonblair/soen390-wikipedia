@@ -52,14 +52,16 @@ public class NoteReferenceService {
             mapNote.put(newNote.getId(), newNote);
             //notes.add(newNote);
         }
-        for (ReferenceEntity re : referenceEntities) {
-            if (!mapReference.containsKey(re.getReferenceNum())) {
-                mapReference.put(re.getNoteId(), new Reference(re.getReferenceNum(), re.getText()));
+        for (int i = 0; i< referenceEntities.size(); i++) {
+            if (!mapReference.containsKey(referenceEntities.get(i).getReferenceNum())) {
+                mapReference.put(referenceEntities.get(i).getNoteId(),
+                        new Reference(referenceEntities.get(i).getReferenceNum(), referenceEntities.get(i).getText()));
             }
         }
-        for (ReferenceEntity re : referenceEntities) {
-            mapNote.get(re.getNoteId()).addReference(mapReference.get(re.getReferenceNum()));
-            mapReference.get(re.getReferenceNum()).addNote(mapNote.get(re.getNoteId()));
+
+        for (int i = 0; i < referenceEntities.size(); i++) {
+            mapNote.get(referenceEntities.get(i).getNoteId()).addReference(mapReference.get(referenceEntities.get(i).getReferenceNum()));
+            mapReference.get(referenceEntities.get(i).getReferenceNum()).addNote(mapNote.get(referenceEntities.get(i).getNoteId()));
         }
 
         return new ArrayList<Note>(mapNote.values());
