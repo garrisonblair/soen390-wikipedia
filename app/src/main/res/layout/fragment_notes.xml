@@ -11,10 +11,11 @@
         android:layout_height="wrap_content"
         android:textAlignment="center"
         android:textAllCaps="true"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:textSize="24sp"/>
     <ListView android:id="@+id/notes_list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:choiceMode="singleChoice" />
+        android:clickable="true"/>
 
 </LinearLayout>
