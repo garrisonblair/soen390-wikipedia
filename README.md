@@ -15,6 +15,9 @@ To make sure every commit links to an issue, there is a commit-msg hook that wil
 
 `sh scripts/setup_hooks.sh`
 
+#### Android Tests
+Please test and write tests that pass on a Nexus S, SDK 24 emulator
+
 Afterwards every commit message that doesn't contain the regex '#[0-9]+' will be rejected.
 
 ## Conventions
