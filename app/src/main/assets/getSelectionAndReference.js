@@ -1,17 +1,33 @@
 (function () {
 
-    var selection = window.getSelection();
-    var nodes = getNodesInSelection(selection);
-    var referenceNumbers = getReferenceNumbers(nodes);
-    var references = getReferenceTexts(referenceNumbers);
-    var result = {selectionText: selection.toString(), references: references};
+    try {
+        var selection = window.getSelection();
+        var nodes = getNodesInSelection(selection);
+        var referenceNumbers = getReferenceNumbers(nodes);
+        var references = getReferenceTexts(referenceNumbers);
+        var result = {selectionText: selection.toString(), references: references};
+    } catch(err) {
+        console.log(err.message);
+        return {selectionText: selection.toString(), references: null};
+    }
+
 
     return result
 })();
 
 function getReferenceTexts(refNumbers) {
     references = [];
-    referenceList = document.getElementById("References").nextSibling.childNodes[1].childNodes[1].childNodes[1].childNodes[0].childNodes[0].childNodes[1].childNodes;
+    referenceList = null;
+    try{
+        referenceList = document.getElementById("References").nextSibling.childNodes[1].childNodes[1].childNodes[1].childNodes[0].childNodes[0].childNodes[1].childNodes;
+    } catch(err) {
+        console.log(err.message);
+    }
+
+    if (!referenceList) {
+        referenceList = document.getElementById("Footnotes").nextSibling.childNodes[1].childNodes[1].childNodes[1].childNodes[0].childNodes[0].childNodes[1].childNodes;
+    }
+
     for(var i = 0; i < refNumbers.length; i++) {
         var node = referenceList[refNumbers[i]];
         text = getReferenceTextRecursive(node, "");
