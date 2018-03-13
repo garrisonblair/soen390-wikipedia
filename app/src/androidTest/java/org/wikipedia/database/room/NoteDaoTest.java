@@ -2,7 +2,6 @@ package org.wikipedia.database.room;
 
 import android.arch.persistence.room.Room;
 import android.content.Context;
-import android.database.Cursor;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -12,15 +11,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wikipedia.notebook.database.NoteDao;
 import org.wikipedia.notebook.database.NoteEntity;
-import org.wikipedia.notebook.database.ReferenceEntity;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Created by Andres on 2018-03-08.
