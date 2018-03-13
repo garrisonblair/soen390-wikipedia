@@ -7,6 +7,7 @@
         var references = getReferenceTexts(referenceNumbers);
         var result = {selectionText: selection.toString(), references: references};
     } catch(err) {
+        throw err;
         console.log(err.message);
         return {selectionText: selection.toString(), references: []};
     }
@@ -19,17 +20,18 @@ function getReferenceTexts(refNumbers) {
     references = [];
     referenceList = null;
     try{
-        referenceList = document.getElementById("References").nextSibling.childNodes[1].childNodes[1].childNodes[1].childNodes[0].childNodes[0].childNodes[1].childNodes;
+        referenceList = document.getElementById("References").nextSibling.getElementsByClassName("mw-references")[0].childNodes;
+
     } catch(err) {
         console.log(err.message);
     }
 
     if (!referenceList) {
-        referenceList = document.getElementById("Footnotes").nextSibling.childNodes[1].childNodes[1].childNodes[1].childNodes[0].childNodes[0].childNodes[1].childNodes;
+        referenceList = referenceList = document.getElementById("Footnotes").nextSibling.getElementsByClassName("mw-references")[0].childNodes;
     }
 
     for(var i = 0; i < refNumbers.length; i++) {
-        var node = referenceList[refNumbers[i]];
+        var node = referenceList[refNumbers[i] - 1];
         text = getReferenceTextRecursive(node, "");
         references[i] = {number: refNumbers[i], text: text}
     }
@@ -76,6 +78,14 @@ function getNodesInSelection(selection) {
 
     var content = document.getElementById("content");
     var nodes = [];
+
+    if (selection.anchorNode == selection.focusNode) {
+        nodes.push(selection.anchorNode);
+        if (selection.anchorNode.nextSibling) {
+            nodes.push(selection.anchorNode.nextSibling);
+        }
+        return nodes;
+    }
 
     getNodesInSelectionRecursive(content, selection, nodes, {phase: 0, endNode: null});
 
