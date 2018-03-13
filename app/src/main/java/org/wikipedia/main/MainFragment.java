@@ -653,7 +653,7 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
                     Prefs.setSavePhoto(true);
                     takePhotoIntent();
                 } else {
-                    requestTakePhotoWriteExternalStoragePgiermission();
+                    requestTakePhotoWriteExternalStoragePermission();
                 }
                 return;
             } });
