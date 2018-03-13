@@ -8,7 +8,7 @@
         var result = {selectionText: selection.toString(), references: references};
     } catch(err) {
         console.log(err.message);
-        return {selectionText: selection.toString(), references: null};
+        return {selectionText: selection.toString(), references: []};
     }
 
 
