@@ -7,7 +7,6 @@
         var references = getReferenceTexts(referenceNumbers);
         var result = {selectionText: selection.toString(), references: references};
     } catch(err) {
-        throw err;
         console.log(err.message);
         return {selectionText: selection.toString(), references: []};
     }
