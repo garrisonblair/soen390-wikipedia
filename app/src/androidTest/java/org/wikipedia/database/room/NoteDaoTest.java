@@ -44,7 +44,7 @@ public class NoteDaoTest {
 
         mNoteDao.addNote(noteEntity);
 
-        List<NoteEntity> allNotes = mNoteDao.getAllNotesFromArticle(123);
+        List<NoteEntity> allNotes = mNoteDao.getAllNotesForArticle(123);
 
         assertEquals(allNotes.get(0).getArticleId(),noteEntity.getArticleId());
         assertEquals(allNotes.size(),1);
@@ -55,12 +55,11 @@ public class NoteDaoTest {
         NoteEntity noteEntity = new NoteEntity(123,"title","new note");
         int rowId = (int)mNoteDao.addNote(noteEntity);
         noteEntity.setId(rowId);
-        List<NoteEntity> noteEntityList = mNoteDao.getAllNotesFromArticle(123);
+        List<NoteEntity> noteEntityList = mNoteDao.getAllNotesForArticle(123);
         assertEquals(noteEntityList.size(), 1);
         mNoteDao.deleteNote(noteEntity);
-        noteEntityList = mNoteDao.getAllNotesFromArticle(123);
+        noteEntityList = mNoteDao.getAllNotesForArticle(123);
         assertEquals(noteEntityList.size(), 0);
-
 
     }
 }

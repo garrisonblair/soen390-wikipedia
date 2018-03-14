@@ -56,7 +56,7 @@ public class NoteReferenceService {
 
             @Override
             protected List<Note> doInBackground(Object... objects) {
-                List<NoteEntity> noteEntities = noteDao.getAllNotesFromArticle(articleId);
+                List<NoteEntity> noteEntities = noteDao.getAllNotesForArticle(articleId);
                 List<ReferenceEntity> referenceEntities = referenceDao.getAllArticleReferences(articleId);
                 HashMap<Integer, Reference> mapReference = new HashMap<Integer, Reference>();
                 HashMap<Integer, Note> mapNote = new HashMap<Integer, Note>();
