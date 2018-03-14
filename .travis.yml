@@ -29,7 +29,7 @@ jobs:
   include:
   - stage: Android Tests
     before_script:
-    - echo no | android create avd --force -n test -k 'system_image;android-24;google_apis;x86' --abi x86
+    - echo no | android create avd --force -n test -t android-24 --abi x86
     - emulator -avd test -no-window &
     - android-wait-for-emulator
     - adb shell input keyevent 82 &
