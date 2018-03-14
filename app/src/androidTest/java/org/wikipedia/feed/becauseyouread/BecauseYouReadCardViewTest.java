@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.theories.Theory;
 import org.junit.experimental.theories.suppliers.TestedOn;
@@ -74,6 +75,7 @@ public class BecauseYouReadCardViewTest extends ViewTest {
         snap(subject);
     }
 
+    @Ignore
     @Test public void testSetCard() {
         setUp(WIDTH_DP_L, LayoutDirection.LOCALE, FontScale.DEFAULT, Theme.LIGHT,
                 PrimaryTestStr.SHORT, SecondaryTestStr.SHORT, TODAY, MAX_SUGGESTIONS);
@@ -83,6 +85,7 @@ public class BecauseYouReadCardViewTest extends ViewTest {
         assertThat(subject.getCard(), is(card));
     }
 
+    @Ignore
     @Theory public void testSetSubtitle(@TestedOn(ints = {TODAY, TOMORROW, 2}) int age) {
         setUp(WIDTH_DP_L, LayoutDirection.LOCALE, FontScale.DEFAULT, Theme.LIGHT,
                 PrimaryTestStr.SHORT, SecondaryTestStr.SHORT, TODAY, MAX_SUGGESTIONS);

@@ -225,7 +225,8 @@ public class SearchFragment extends Fragment implements BackPressedHandler,
             if (resultCode == Activity.RESULT_OK && currentPhotoPath != null) {
                 Bitmap photo = BitmapFactory.decodeFile(currentPhotoPath);
 
-                getKeywordsFromPhoto(photo);
+                if (photo != null)
+                    getKeywordsFromPhoto(photo);
 
                 //Save or Destroy the temporary image file after using it.
                 File tempFile = new File(currentPhotoPath);

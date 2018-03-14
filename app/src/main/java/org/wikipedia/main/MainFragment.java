@@ -180,7 +180,9 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
             if (resultCode == Activity.RESULT_OK && currentPhotoPath != null) {
                 Bitmap photo = BitmapFactory.decodeFile(currentPhotoPath);
 
-                getKeywordsFromPhoto(photo);
+                if (photo != null) {
+                    getKeywordsFromPhoto(photo);
+                }
 
                 //Destroy or save the temporary image file after using it.
                 File tempFile = new File(currentPhotoPath);

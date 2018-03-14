@@ -18,36 +18,45 @@ android:
     # The SDK version used to compile your project
     - android-26
 
-script: ./gradlew testDevDebug
-
-before_install:
-  - cp -r ./.aws ~
-  - ls ~/.aws
-  - yes | sdkmanager "platforms;android-27"
-  - pip install --user awscli
-  - mkdir -p ~/$TRAVIS_BUILD_NUMBER
-  - aws s3 sync s3://soen390deployment/$TRAVIS_BUILD_NUMBER ~/$TRAVIS_BUILD_NUMBER
-
 jobs:
   include:
-    # pre-build stage
-    - stage: pre-build
-      script: ./gradlew preDevDebugBuild
-    # checkstyle stage
-    - stage: checkstyle
-      script: ./gradlew checkstyle
-    # test stage
-    - stage: test
-      script: ./gradlew testDevDebug
-    # build stage
-    - stage: build
-      script:
-      - ./gradlew -q clean assembleDevDebug
+  - stage: Checkstyle
+    script: ./gradlew checkstyle
+  - stage: UnitTests
+    script: ./gradlew testDevDebug
+script: ./gradlew testDevDebug
 
-      - ls
-      - cp app/build/outputs/apk/dev/debug/app-dev-debug.apk ~/$TRAVIS_BUILD_NUMBER
-      - aws s3 sync ~/$TRAVIS_BUILD_NUMBER s3://soen390deployment/$TRAVIS_BUILD_NUMBER
 
+#work done with trying to store build result remotely between stages
+
+#before_install:
+#  - cp -r ./.aws ~
+#  - ls ~/.aws
+#  - yes | sdkmanager "platforms;android-27"
+#  - pip install --user awscli
+#  - mkdir -p ~/$TRAVIS_BUILD_NUMBER
+#  - aws s3 sync s3://soen390deployment/$TRAVIS_BUILD_NUMBER ~/$TRAVIS_BUILD_NUMBER
+#
+#jobs:
+#  include:
+#    # pre-build stage
+#    - stage: pre-build
+#      script: ./gradlew preDevDebugBuild
+#    # checkstyle stage
+#    - stage: checkstyle
+#      script: ./gradlew checkstyle
+#    # test stage
+#    - stage: test
+#      script: ./gradlew testDevDebugUnitTest
+#    # build stage
+#    - stage: build
+#      script:
+#      - ./gradlew -q clean assembleDevDebug
+#
+#      - ls
+#      - cp app/build/outputs/apk/dev/debug/app-dev-debug.apk ~/$TRAVIS_BUILD_NUMBER
+#      - aws s3 sync ~/$TRAVIS_BUILD_NUMBER s3://soen390deployment/$TRAVIS_BUILD_NUMBER
+#
 #    # test stage
 #    - stage: test #testDevDebug
 #      script: ./gradlew testDevDebugUnitTest

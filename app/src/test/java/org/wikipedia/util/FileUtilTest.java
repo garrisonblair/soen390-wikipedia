@@ -24,6 +24,11 @@ import java.io.PrintWriter;
 public class FileUtilTest {
 
     @Test
+    public void test() {
+        assertTrue(true);
+    }
+
+    @Test
     public void testReadJavascriptFile() {
         try {
             //create test file and inputStream for that file

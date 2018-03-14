@@ -3,6 +3,7 @@ package org.wikipedia.menu;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.wikipedia.R;
@@ -25,6 +26,7 @@ public class SelectedTextTest{
     @Rule
      public ActivityTestRule<PageActivity> activityRule = new ActivityTestRule(PageActivity.class);
 
+    @Ignore
     @Test
     public void ToSpeechUITest(){
         activityRule.getActivity();

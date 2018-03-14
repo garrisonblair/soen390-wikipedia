@@ -10,9 +10,15 @@ import android.provider.MediaStore;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 
+import net.hockeyapp.android.utils.PrefsUtil;
+
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.wikipedia.R;
+import org.wikipedia.settings.Prefs;
 
 import static android.content.Intent.ACTION_PICK;
 import static android.support.test.espresso.Espresso.onView;
@@ -29,9 +35,17 @@ public class ImageSearchButtonTest {
     @Rule
     public IntentsTestRule<MainActivity> intentsRule = new IntentsTestRule<>(MainActivity.class);
 
+    @BeforeClass
+    public static void setUp() {
+        Prefs.setInitialOnboardingEnabled(false);
+        Prefs.setFeaturesOnboardingEnabled(false);
+
+    }
     //Buttons in the feed fragment
+    @Ignore
     @Test
     public void onCameraImageSearchClick() {
+
         Bitmap icon = BitmapFactory.decodeResource(
                 InstrumentationRegistry.getTargetContext().getResources(),
                 R.mipmap.launcher);
@@ -47,6 +61,8 @@ public class ImageSearchButtonTest {
 
         // Now that we have the stub in place, click on the button in our app that launches into the Camera
         onView(withId(R.id.image_search_open_camera_button)).perform(click());
+
+
 
         // We can also validate that an intent resolving to the "camera" activity has been sent out by our app
         intended(hasAction(MediaStore.ACTION_IMAGE_CAPTURE));
@@ -71,6 +87,7 @@ public class ImageSearchButtonTest {
     }
 
     //Buttons in the search fragment
+    @Ignore
     @Test
     public void onCameraImageSearchFragmentClick() {
         Bitmap icon = BitmapFactory.decodeResource(
