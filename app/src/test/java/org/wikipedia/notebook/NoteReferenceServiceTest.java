@@ -5,9 +5,10 @@ import android.content.Context;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InOrder;
-import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.robolectric.RobolectricTestRunner;
 import org.wikipedia.database.room.AppDatabase;
 import org.wikipedia.notebook.database.NoteDao;
 import org.wikipedia.notebook.database.NoteEntity;
@@ -22,20 +23,18 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.wikipedia.notebook.NoteReferenceService.*;
 
 /**
  * Created by Andres on 2018-03-10.
  */
 
+@RunWith(RobolectricTestRunner.class)
 public class NoteReferenceServiceTest {
 
-    @Mock
     private AppDatabase dbMock = mock(AppDatabase.class);
-    @Mock
     private NoteDao noteDaoMock = mock(NoteDao.class);
-    @Mock
     private ReferenceDao referenceDaoMock = mock(ReferenceDao.class);
-    @Mock
     private Context contextMock = mock(Context.class);
 
 
@@ -50,16 +49,19 @@ public class NoteReferenceServiceTest {
 
     @Test
     public void deleteNoteTest() {
+        DeleteNoteCallBack callBack = mock(DeleteNoteCallBack.class);
         Note noteMock = mock(Note.class);
+        when(noteMock.getId()).thenReturn(1);
         when(noteMock.getArticleid()).thenReturn(1);
         when(noteMock.getArticleTitle()).thenReturn("");
         when(noteMock.getText()).thenReturn("");
-        nrs.deleteNote(noteMock);
+        nrs.deleteNote(noteMock, callBack);
         verify(noteDaoMock).deleteNote(any(NoteEntity.class));
     }
 
     @Test
     public void addNoteTest() {
+        NoteReferenceService.SaveCallback callback = mock(NoteReferenceService.SaveCallback.class);
         InOrder inOrder = Mockito.inOrder(this.noteDaoMock, this.referenceDaoMock);
         Note noteMock = mock(Note.class);
         when(noteMock.getArticleid()).thenReturn(1);
@@ -75,18 +77,25 @@ public class NoteReferenceServiceTest {
         when(referenceListMock.iterator()).thenReturn(iteratorMock);
         when(iteratorMock.hasNext()).thenReturn(true, false);
 
-        nrs.addNote(noteMock);
+        nrs.addNote(noteMock, callback);
         inOrder.verify(this.noteDaoMock).addNote(any(NoteEntity.class));
         inOrder.verify(this.referenceDaoMock).addReferences(any(List.class));
     }
 
     @Test
     public void getAllArticleNotesTest() {
+        NoteReferenceService.GetNotesCallback callback = new GetNotesCallback() {
+            @Override
+            public void afterGetNotes(List<Note> notes) {
+                assertEquals(notes.size(), 1);
+                assertEquals(notes.get(0).getAllReferences().size(), 1);
+            }
+        };
         List<NoteEntity> noteEntityListMock = mock(List.class);
         List<ReferenceEntity> referenceEntityListMock = mock(List.class);
         NoteEntity noteEntityMock = mock(NoteEntity.class);
         ReferenceEntity referenceEntityMock = mock(ReferenceEntity.class);
-        when(this.noteDaoMock.getAllNotesFromArticle(1)).thenReturn(noteEntityListMock);
+        when(this.noteDaoMock.getAllNotesForArticle(1)).thenReturn(noteEntityListMock);
         when(this.referenceDaoMock.getAllArticleReferences(1)).thenReturn(referenceEntityListMock);
         Iterator iteratorMockNoteEntity = mock(Iterator.class);
         when(noteEntityListMock.iterator()).thenReturn(iteratorMockNoteEntity);
@@ -101,11 +110,8 @@ public class NoteReferenceServiceTest {
         when(referenceEntityMock.getNoteId()).thenReturn(1);
         when(referenceEntityMock.getReferenceNum()).thenReturn(1);
         when(referenceEntityMock.getText()).thenReturn("reference text");
-
-        List<Note> noteList = nrs.getAllArticleNotes(1);
-        verify(this.noteDaoMock).getAllNotesFromArticle(1);
+        nrs.getAllArticleNotes(1, callback);
+        verify(this.noteDaoMock).getAllNotesForArticle(1);
         verify(this.referenceDaoMock).getAllArticleReferences(1);
-        assertEquals(noteList.size(),1);
-        assertEquals(noteList.get(0).getAllReferences().size(), 1);
     }
 }
