@@ -12,6 +12,9 @@ public class Reference {
     private String text;
     private List<Note> notes;
 
+    public Reference() {
+        notes = new ArrayList<Note>();
+    }
     public Reference(int number, String text) {
         this.number = number;
         this.text = text;
@@ -37,6 +40,8 @@ public class Reference {
     public List<Note> getNotes() {
         return notes;
     }
+
+    public void addNote(Note note) { this.notes.add(note); }
 
     public void setNotes(List<Note> notes) {
         this.notes = notes;
