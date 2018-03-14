@@ -643,7 +643,7 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
         dontShowAgain = eulaLayout.findViewById(R.id.askSavePhoto);
         adb.setView(eulaLayout);
         adb.setTitle("Save Photo");
-        adb.setMessage(Html.fromHtml("Do you want to save photos to your device. You can still change this preference in the setting afterward. "));
+        adb.setMessage(Html.fromHtml("Do you want to save photos to your device? You can still change this preference in the setting afterward. "));
         adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 if (dontShowAgain.isChecked()) {
