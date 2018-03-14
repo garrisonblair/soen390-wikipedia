@@ -675,4 +675,6 @@
     <!-- Image Recognition -->
     <string name="image_recognition_busy_indicator">Retrieving suggestions.</string>
 
+    <!-- Notes List -->
+    <string name="note_remove_from_list">Remove from notes list</string>
 </resources>
