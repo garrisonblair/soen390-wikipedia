@@ -16,7 +16,7 @@ android:
 
     # The BuildTools version used by your project
     - build-tools-26.0.1
-
+    - avdmanager
     # The SDK version used to compile your project
     - android-26
     - sys-img-armeabi-v7a-android-2
