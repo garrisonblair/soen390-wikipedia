@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -32,6 +31,8 @@ import org.wikipedia.dataclient.mwapi.MwQueryResponse;
 import org.wikipedia.gallery.ImageLicense;
 import org.wikipedia.gallery.ImageLicenseFetchClient;
 import org.wikipedia.language.AppLanguageLookUpTable;
+import org.wikipedia.notebook.Note;
+import org.wikipedia.notebook.NoteReferenceService;
 import org.wikipedia.notebook.SelectionResult;
 import org.wikipedia.onboarding.PrefsOnboardingStateMachine;
 import org.wikipedia.page.Namespace;
@@ -71,6 +72,7 @@ public class ShareHandler {
     private static final String PAYLOAD_PURPOSE_EDIT_HERE = "edit_here";
     private static final String PAYLOAD_TEXT_KEY = "text";
     private WikipediaApp app = WikipediaApp.getInstance();
+    private NoteReferenceService noteReferenceService;
     private static final String GET_SELECTION_SCRIPT_PATH = "getSelection.js";
     private static final String GET_SELECTION_AND_REFERENCE_SCRIPT_PATH = "getSelectionAndReference.js";
 
@@ -95,7 +97,7 @@ public class ShareHandler {
     public ShareHandler(@NonNull PageFragment fragment, @NonNull CommunicationBridge bridge) {
         this.fragment = fragment;
         this.bridge = bridge;
-
+        noteReferenceService = new NoteReferenceService(fragment.getContext().getApplicationContext());
         pageLanguage = app.getAppLanguageCanonicalName(app.getAppOrSystemLanguageCode());
         PageActivity pageActivity = (PageActivity) fragment.getActivity();
         textToSpeech = TTSWrapper.getInstance(pageActivity, new HideStopButtonOnDoneListener(pageActivity));
@@ -241,8 +243,8 @@ public class ShareHandler {
         });
 
         //Provide a listener to the 'add note' button
-        MenuItem addNote = menu.findItem(R.id.menu_text_add_note);
-        addNote.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener(){
+        MenuItem addNoteItem = menu.findItem(R.id.menu_text_add_note);
+        addNoteItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener(){
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 addNote();
@@ -270,8 +272,28 @@ public class ShareHandler {
             @Override
             public void onReceiveValue(String value) {
                 Gson gson = new Gson();
-                SelectionResult result = gson.fromJson(value, SelectionResult.class);
+                SelectionResult selectionResult = gson.fromJson(value, SelectionResult.class);
+                final Page page = fragment.getPage();
+                final PageProperties pageProperties = page.getPageProperties();
+                if (selectionResult != null) {
+                    saveTheNote(pageProperties, selectionResult, page);
+                }
+            }
+        });
+    }
 
+
+    private void saveTheNote(PageProperties pageProperties, SelectionResult selectionResult, Page page) {
+        Note note = new Note(pageProperties.getPageId(), page.getTitle().getText(), selectionResult.getSelectionText());
+        for (int i = 0; i < selectionResult.getReferences().size() && selectionResult.getReferences() != null; i++) {
+            selectionResult.getReferences().get(i).addNote(note);
+            note.addReference(selectionResult.getReferences().get(i));
+        }
+
+        noteReferenceService.addNote(note, new NoteReferenceService.SaveCallback() {
+            @Override
+            public void afterSave() {
+                System.out.println("Note was saved!");
             }
         });
     }
