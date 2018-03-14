@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.speech.tts.UtteranceProgressListener;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,83 +54,88 @@ public class NotesFragment extends Fragment {
             @Override
             public void onError(String utteranceId) {}
         });
-
-        NoteReferenceService service = new NoteReferenceService(getContext());
-        if (service.getAllArticleNotes(pageId) != null) {
-            notes = service.getAllArticleNotes(pageId);
-        }
     }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notes, container, false);
 
-        // Creating ArrayList with text notes
-        ArrayList<String> notesText = new ArrayList();
-        for (Note note : notes) {
-            notesText.add(note.getText());
-        }
-
-        // Setting Title in the TextView
-        TextView titleView = view.findViewById(R.id.note_title);
-        titleView.setText(title);
-        // Creating the ListView of notes
-        ListView noteList = view.findViewById(R.id.notes_list);
-        noteList.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.simple_row, notesText));
-
-        // Setting listener to the items in the ListView to open individual notes in dialog
-        noteList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        NoteReferenceService service = new NoteReferenceService(getContext());
+        service.getAllArticleNotes(pageId, new NoteReferenceService.GetNotesCallback() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                final Dialog dialog = new Dialog(getContext());
-                dialog.setContentView(R.layout.single_note_dialog);
+            public void afterGetNotes(List<Note> notes) {
 
-                // TextView for Title
-                TextView dialogTitle = dialog.findViewById(R.id.note_dialog_title);
-                dialogTitle.setText(title);
+                // Creating ArrayList with text notes
+                ArrayList<String> notesText = new ArrayList();
 
-                // TextView for Body
-                TextView dialogBody = dialog.findViewById(R.id.note_dialog_body);
-                dialogBody.setText(notesText.get(position));
-
-                // Button for text-to-speech of the note
-                ImageButton speak = dialog.findViewById(R.id.note_speak);
-                speak.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        int colorId = speak.getSolidColor();
-                        if (speaking) {
-                            tts.stop();
-                            speaking = false;
-                            speak.setColorFilter(colorId);
-                        }
-                        else {
-                            tts.speak(notesText.get(position));
-                            speaking = true;
-                            speak.setColorFilter(Color.BLUE);
-                        }
+                if (notes != null) {
+                    for (Note note: notes) {
+                        notesText.add(note.getText());
                     }
-                });
-
-                // Getting the references for the selected note and creating strings with them
-                references = notes.get(position).getAllReferences();
-                ArrayList<String> refsText = new ArrayList();
-                String ref;
-                for (Reference reference : references) {
-                    ref = "[" + reference.getNumber() + "] " + reference.getText();
-                    refsText.add(ref);
                 }
 
-                // Creating ListView for references
-                ListView dialogRefs = dialog.findViewById(R.id.reference_list);
-                dialogRefs.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.reference_row, refsText));
+                // Setting Title in the TextView
+                TextView titleView = view.findViewById(R.id.note_title);
+                titleView.setText(title);
+                // Creating the ListView of notes
+                ListView noteList = view.findViewById(R.id.notes_list);
+                noteList.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.simple_row, notesText));
 
-                dialog.show();
-
-                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                // Setting listener to the items in the ListView to open individual notes in dialog
+                noteList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        tts.stop();
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        final Dialog dialog = new Dialog(getContext());
+                        dialog.setContentView(R.layout.single_note_dialog);
+
+                        // TextView for Title
+                        TextView dialogTitle = dialog.findViewById(R.id.note_dialog_title);
+                        dialogTitle.setText(title);
+
+                        // TextView for Body
+                        TextView dialogBody = dialog.findViewById(R.id.note_dialog_body);
+                        dialogBody.setText(notesText.get(position));
+
+                        // Button for text-to-speech of the note
+                        ImageButton speak = dialog.findViewById(R.id.note_speak);
+                        speak.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                int colorId = speak.getSolidColor();
+                                if (speaking) {
+                                    tts.stop();
+                                    speaking = false;
+                                    speak.setColorFilter(colorId);
+                                }
+                                else {
+                                    tts.speak(notesText.get(position));
+                                    speaking = true;
+                                    speak.setColorFilter(Color.BLUE);
+                                }
+                            }
+                        });
+
+                        // Getting the references for the selected note and creating strings with them
+                        references = notes.get(position).getAllReferences();
+                        ArrayList<String> refsText = new ArrayList();
+                        String ref;
+                        for (Reference reference : references) {
+                            ref = "[" + reference.getNumber() + "] " + reference.getText();
+                            refsText.add(ref);
+                        }
+
+                        // Creating ListView for references
+                        ListView dialogRefs = dialog.findViewById(R.id.reference_list);
+                        dialogRefs.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.reference_row, refsText));
+
+                        dialog.show();
+
+                        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                                tts.stop();
+                            }
+                        });
                     }
                 });
             }
