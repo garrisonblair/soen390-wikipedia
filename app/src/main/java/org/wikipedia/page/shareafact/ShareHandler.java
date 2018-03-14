@@ -86,7 +86,7 @@ public class ShareHandler {
     @Nullable private Locale selectedLocale;
     @Nullable private final ReentrantLock lock = new ReentrantLock();
 
-    
+
     private void createFunnel() {
         final Page page = fragment.getPage();
         final PageProperties pageProperties = page.getPageProperties();
