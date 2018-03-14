@@ -20,7 +20,7 @@ public abstract class AppDatabase extends RoomDatabase{
     public abstract NoteDao noteDao();
     public abstract ReferenceDao referenceDao();
 
-    public static AppDatabase getINSTANCE(Context context) {
+    public static AppDatabase getInstance(Context context) {
         if (INSTANCE == null) {
             INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                     AppDatabase.class, "SOEN390-database").build();

@@ -38,7 +38,7 @@ public class NoteReferenceService {
 
     public NoteReferenceService(Context context) {
         this.context = context;
-        this.db = AppDatabase.getINSTANCE(context);
+        this.db = AppDatabase.getInstance(context);
         this.noteDao = db.noteDao();
         this.referenceDao = db.referenceDao();
     }
