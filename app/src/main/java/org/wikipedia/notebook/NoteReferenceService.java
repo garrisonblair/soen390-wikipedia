@@ -113,6 +113,7 @@ public class NoteReferenceService {
             @Override
             protected Void doInBackground(Object... objects) {
                 NoteEntity noteEntity = new NoteEntity(note.getArticleid(), note.getArticleTitle(), note.getText());
+                noteEntity.setId(note.getId());
                 noteDao.deleteNote(noteEntity);
                 callBack.afterDeleteNote();
                 return null;
