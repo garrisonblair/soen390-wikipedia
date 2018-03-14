@@ -48,11 +48,11 @@ public class NotesFragment extends Fragment {
 
         tts = TTSWrapper.getInstance(getContext(), new UtteranceProgressListener() {
             @Override
-            public void onStart(String utteranceId) {}
+            public void onStart(String utteranceId) { }
             @Override
-            public void onDone(String utteranceId) {}
+            public void onDone(String utteranceId) { }
             @Override
-            public void onError(String utteranceId) {}
+            public void onError(String utteranceId) { }
         });
     }
 
@@ -106,8 +106,7 @@ public class NotesFragment extends Fragment {
                                     tts.stop();
                                     speaking = false;
                                     speak.setColorFilter(colorId);
-                                }
-                                else {
+                                } else {
                                     tts.speak(notesText.get(position));
                                     speaking = true;
                                     speak.setColorFilter(Color.BLUE);
@@ -116,10 +115,14 @@ public class NotesFragment extends Fragment {
                         });
 
                         // Getting the references for the selected note and creating strings with them
-                        references = notes.get(position).getAllReferences();
+                        if (notes.get(position).getAllReferences() != null) {
+                            Log.i("REFERENCE SIZE", Integer.toString(notes.get(position).getAllReferences().size()));
+                            references = notes.get(position).getAllReferences();
+                        }
                         ArrayList<String> refsText = new ArrayList();
                         String ref;
                         for (Reference reference : references) {
+                            Log.i("REFERENCES", reference.getText());
                             ref = "[" + reference.getNumber() + "] " + reference.getText();
                             refsText.add(ref);
                         }
@@ -160,5 +163,17 @@ public class NotesFragment extends Fragment {
     public static NotesFragment newInstance() {
         NotesFragment fragment = new NotesFragment();
         return fragment;
+    }
+
+    @Override
+    public void onDestroyView() {
+        tts.shutdown();
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        tts.shutdown();
     }
 }

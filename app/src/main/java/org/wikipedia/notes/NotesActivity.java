@@ -13,7 +13,7 @@ import org.wikipedia.util.ResourceUtil;
 public class NotesActivity extends BaseActivity {
 
     private WikipediaApp app;
-    private PageToolbarHideHandler toolbarHideHandler;
+    private NotesFragment notesFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,5 +53,28 @@ public class NotesActivity extends BaseActivity {
     private NotesFragment notesFragment() {
         return (NotesFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.activity_note_container);
+    }
+
+    @Override
+    public void onBackPressed() {
+        app.getSessionFunnel().backPressed();
+        super.onBackPressed();
+        finish();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        app.getSessionFunnel().persistSession();
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 }
