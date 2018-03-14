@@ -22,7 +22,7 @@ android:
     - sys-img-armeabi-v7a-android-2
 
 before_install:
-  - yes | sdkmanager "platforms;android-24"
+  - yes | sdkmanager "platforms;android-27"
 
 
 jobs:
