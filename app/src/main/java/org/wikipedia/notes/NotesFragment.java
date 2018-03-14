@@ -2,10 +2,8 @@ package org.wikipedia.notes;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -19,6 +17,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.wikipedia.R;
+import org.wikipedia.notebook.Note;
+import org.wikipedia.notebook.NoteReferenceService;
 import org.wikipedia.notebook.Reference;
 import org.wikipedia.texttospeech.TTSWrapper;
 
@@ -28,12 +28,12 @@ import java.util.List;
 public class NotesFragment extends Fragment {
 
     private String title;
-    private String pageId;
+    private int pageId;
     private TTSWrapper tts;
     private boolean speaking = false;
 
     private List<Note> notes;
-    private List<Reference> refs;
+    private List<Reference> references;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,7 +42,7 @@ public class NotesFragment extends Fragment {
         if (getActivity().getIntent().getExtras() != null) {
             Bundle bundleRead = getActivity().getIntent().getExtras();
             title = bundleRead.getString("pageTitle");
-            pageId = bundleRead.getString("pageId");
+            pageId = bundleRead.getInt("pageId");
         }
 
         tts = TTSWrapper.getInstance(getContext(), new UtteranceProgressListener() {
@@ -53,26 +53,22 @@ public class NotesFragment extends Fragment {
             @Override
             public void onError(String utteranceId) {}
         });
+
+        NoteReferenceService service = new NoteReferenceService(getContext());
+        if (service.getAllArticleNotes(pageId) != null) {
+            notes = service.getAllArticleNotes(pageId);
+        }
     }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notes, container, false);
 
-        // FOR TESTING PURPOSES ONLY
-        // Will be replaced with list of notes that will be loaded from internal db
-//        ArrayList<String> notes = new ArrayList();
-//        notes.add("Material Design Icons' growing icon collection allows designers and developers targeting various platforms to download icons in the format, color and size they need for any project.");
-//        notes.add("The app is primarily being developed by the Wikimedia Foundation's Mobile Apps team. This README provides high-level guidelines for getting started with the project.");
-
+        // Creating ArrayList with text notes
         ArrayList<String> notesText = new ArrayList();
         for (Note note : notes) {
-            notesText.add(note.getText);
+            notesText.add(note.getText());
         }
-
-//        ArrayList<String> refs = new ArrayList();
-//        refs.add("Reference 1");
-//        refs.add("Reference 2");
 
         // Setting Title in the TextView
         TextView titleView = view.findViewById(R.id.note_title);
@@ -88,13 +84,15 @@ public class NotesFragment extends Fragment {
                 final Dialog dialog = new Dialog(getContext());
                 dialog.setContentView(R.layout.single_note_dialog);
 
+                // TextView for Title
                 TextView dialogTitle = dialog.findViewById(R.id.note_dialog_title);
                 dialogTitle.setText(title);
 
+                // TextView for Body
                 TextView dialogBody = dialog.findViewById(R.id.note_dialog_body);
                 dialogBody.setText(notesText.get(position));
 
-                // BUTTON FOR TEXT TO SPEECH TO BE IMPLEMENTED
+                // Button for text-to-speech of the note
                 ImageButton speak = dialog.findViewById(R.id.note_speak);
                 speak.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -113,14 +111,16 @@ public class NotesFragment extends Fragment {
                     }
                 });
 
+                // Getting the references for the selected note and creating strings with them
                 references = notes.get(position).getAllReferences();
-                ArrayList<String> refsText;
+                ArrayList<String> refsText = new ArrayList();
                 String ref;
                 for (Reference reference : references) {
                     ref = "[" + reference.getNumber() + "] " + reference.getText();
                     refsText.add(ref);
                 }
 
+                // Creating ListView for references
                 ListView dialogRefs = dialog.findViewById(R.id.reference_list);
                 dialogRefs.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.reference_row, refsText));
 
