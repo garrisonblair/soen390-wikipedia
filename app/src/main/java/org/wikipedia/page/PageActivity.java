@@ -24,6 +24,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -112,7 +113,7 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
     private EventBusMethods busMethods;
     private ActionMode currentActionMode;
 
-    private static TTSWrapper textToSpeech;
+    private static TTSWrapper TEXTTOSPEECH;
 
     private PageToolbarHideHandler toolbarHideHandler;
 
@@ -127,6 +128,7 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         app = (WikipediaApp) getApplicationContext();
         MetricsManager.register(app);
@@ -192,6 +194,7 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
             // then we must have been launched with an Intent, so... handle it!
             handleIntent(getIntent());
         }
+
     }
 
     @Override
@@ -254,8 +257,8 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
     }
 
     @OnClick(R.id.page_stop_button)
-    public void onStopButtonClicked(){
-        textToSpeech.stop();
+    public void onStopButtonClicked() {
+        TEXTTOSPEECH.stop();
         stopButton.setVisibility(View.INVISIBLE);
     }
 
@@ -735,7 +738,7 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
         app.resetWikiSite();
         app.getSessionFunnel().touchSession();
 
-        textToSpeech = TTSWrapper.getInstance(this, new HideStopButtonOnDoneListener(this));
+        TEXTTOSPEECH = TTSWrapper.getInstance(this, new HideStopButtonOnDoneListener(this));
     }
 
     @Override
@@ -744,7 +747,7 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
             // Explicitly close any current ActionMode (see T147191)
             finishActionMode();
         }
-        textToSpeech.shutdown();
+        TEXTTOSPEECH.shutdown();
         super.onPause();
     }
 
@@ -926,6 +929,7 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
         return pageFragment.getTabLayout();
     }
 
+
     private class EventBusMethods {
         @Subscribe public void on(ChangeTextSizeEvent event) {
             if (pageFragment != null && pageFragment.getWebView() != null) {
@@ -968,4 +972,20 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
         }
         return volumnOff;
     }
+
+    // Method call to open notes page activity. This is used by the button and eventually swipe feature if possible
+    private void openNotesPage() {
+        Log.d("DEV_DEBUG", "Should open notes activity");
+        //Currently commenting out until NotesActivity is merged into code
+        //startActivity(new Intent(PageActivity.this, NotesActivity.class));
+        //finish();
+    }
+
+    // Method to handle on click action of notes button by calling the open notes page activity
+    @OnClick(R.id.notesButton)
+    public void onNotesButtonClicked() {
+        Log.d("DEV_DEBUG", "Should call notes activity opening method");
+        openNotesPage();
+    }
+
 }
