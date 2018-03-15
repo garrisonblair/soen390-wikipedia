@@ -6,10 +6,15 @@
         android:icon="@drawable/ic_volume_up_black_24dp"
         android:title="@string/menu_text_to_speech"
         app:showAsAction="ifRoom" />
-    <item android:id="@+id/menu_text_select_copy"
-          android:title="@string/menu_text_select_copy"
-          android:icon="@drawable/ic_content_copy_themed_24dp"
-          app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_text_add_note"
+        android:icon="@drawable/ic_define"
+        android:title="@string/menu_text_add_note"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_text_select_copy"
+        android:icon="@drawable/ic_content_copy_themed_24dp"
+        android:title="@string/menu_text_select_copy" />
 
     <item android:id="@+id/menu_text_select_share"
           android:title="@string/menu_text_select_share"

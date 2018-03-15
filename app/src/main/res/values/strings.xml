@@ -51,6 +51,7 @@
     <string name="menu_text_select_share">Share</string>
     <string name="menu_text_select_edit_here">Edit here</string>
     <string name="menu_text_to_speech">To speech</string>
+    <string name="menu_text_add_note">Add note</string>
 
     <!-- Nearby -->
     <string name="nav_item_nearby">Nearby</string>

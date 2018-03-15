@@ -12,6 +12,7 @@ import org.junit.runners.JUnit4;
 import static org.junit.Assert.*;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -30,14 +31,15 @@ public class FileUtilTest {
 
     @Test
     public void testReadJavascriptFile() {
+        String path = "testfile.js";
         try {
             //create test file and inputStream for that file
             InputStream inputStream;
-            String path = "testfile.js";
+
 
             PrintWriter printWriter = new PrintWriter(path, "UTF-8");
 
-            printWriter.println("Test \nString");
+            printWriter.print("Test \nString");
 
             printWriter.close();
 
@@ -57,11 +59,16 @@ public class FileUtilTest {
 
             verify(context).getAssets();
             verify(assetManager).open(path);
-            assertEquals("Test String", result);
+            assertEquals("Test \nString", result);
+
+
             return;
         } catch (Exception e) {
             String message = e.getMessage();
             Log.d("ERR", "Error with File IO: " + message);
+        } finally {
+            File file = new File(path);
+            file.delete();
         }
 
         fail();
