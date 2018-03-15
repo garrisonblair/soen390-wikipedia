@@ -976,8 +976,12 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
     // Method call to open notes page activity. This is used by the button and eventually swipe feature if possible
     private void openNotesPage() {
         Log.d("DEV_DEBUG", "Should open notes activity");
-        //Currently commenting out until NotesActivity is merged into code
-        //startActivity(new Intent(PageActivity.this, NotesActivity.class));
+        int pageId = pageFragment.getPage().getPageProperties().getPageId();
+        String pageTitle = pageFragment.getPage().getDisplayTitle();
+        Intent intent = new Intent(pageFragment.getContext(), NotesActivity.class);
+        intent.putExtra("pageId", pageId);
+        intent.putExtra("pageTitle", pageTitle);
+        startActivity(intent);
         //finish();
     }
 
