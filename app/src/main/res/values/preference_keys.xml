@@ -26,6 +26,7 @@
     <!-- /end of alternative option -->
     <!-- Image-based Search key -->
     <string name="preference_key_save_photo">savePhoto</string>
+    <string name="preference_key_ask_save_photo">askSavePhoto</string>
     <!-- /Image-based Search key -->
     <!-- /of text to speech keys for storing preferences -->
     <string name="preference_key_app_channel">channel</string>
