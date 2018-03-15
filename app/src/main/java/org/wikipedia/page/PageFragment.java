@@ -220,7 +220,6 @@ public class PageFragment extends Fragment implements BackPressedHandler {
                 addToReadingList(getTitle(), AddToReadingListDialog.InvokeSource.BOOKMARK_BUTTON);
             }
         }
-
         @Override
         public void onSharePageTabSelected() {
             sharePageLink();
