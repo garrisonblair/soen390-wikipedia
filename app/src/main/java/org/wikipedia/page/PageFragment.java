@@ -1,5 +1,6 @@
 package org.wikipedia.page;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -58,6 +59,7 @@ import org.wikipedia.page.action.PageActionTab;
 import org.wikipedia.page.action.PageActionToolbarHideHandler;
 import org.wikipedia.page.bottomcontent.BottomContentView;
 import org.wikipedia.page.leadimages.LeadImagesHandler;
+import org.wikipedia.page.listeners.OnSwipeTouchListener;
 import org.wikipedia.page.shareafact.ShareHandler;
 import org.wikipedia.page.tabs.Tab;
 import org.wikipedia.page.tabs.TabsProvider;
@@ -103,6 +105,7 @@ import static org.wikipedia.util.UriUtil.decodeURL;
 import static org.wikipedia.util.UriUtil.visitInExternalBrowser;
 
 public class PageFragment extends Fragment implements BackPressedHandler {
+
     public interface Callback {
         void onPageShowBottomSheet(@NonNull BottomSheetDialog dialog);
         void onPageShowBottomSheet(@NonNull BottomSheetDialogFragment dialog);
@@ -140,6 +143,8 @@ public class PageFragment extends Fragment implements BackPressedHandler {
     private PageFragmentLoadState pageFragmentLoadState;
     private PageViewModel model;
     private PageInfo pageInfo;
+
+    private static final String DEBUG_TAG = "Gestures";
 
     /**
      * List of tabs, each of which contains a backstack of page titles.
@@ -295,6 +300,7 @@ public class PageFragment extends Fragment implements BackPressedHandler {
 
         pageFragmentLoadState = new PageFragmentLoadState();
 
+
         initTabs();
     }
 
@@ -304,6 +310,7 @@ public class PageFragment extends Fragment implements BackPressedHandler {
         View rootView = inflater.inflate(R.layout.fragment_page, container, false);
 
         webView = rootView.findViewById(R.id.page_web_view);
+
         initWebViewListeners();
 
         tocDrawer = rootView.findViewById(R.id.page_toc_drawer);
@@ -454,6 +461,7 @@ public class PageFragment extends Fragment implements BackPressedHandler {
                 && ACTION_SHOW_TAB_LIST.equals(activity.getIntent().getAction());
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void initWebViewListeners() {
         webView.addOnUpOrCancelMotionEventListener(new ObservableWebView.OnUpOrCancelMotionEventListener() {
             @Override
@@ -471,6 +479,25 @@ public class PageFragment extends Fragment implements BackPressedHandler {
                 }
             }
         });
+
+        webView.setOnTouchListener(new OnSwipeTouchListener(getContext()){
+            public void onSwipeRight() {
+                Log.d("DEV_DEBUG", "Swipe Right");
+                //Currently commenting out until NotesActivity is merged into code
+                //startActivity(new Intent(PageActivity.this, NotesActivity.class));
+                //finish();
+            }
+            public void onSwipeLeft() {
+                Log.d("DEV_DEBUG", "Swipe Left");
+            }
+            public void onSwipeTop() {
+                Log.d("DEV_DEBUG", "Swipe Up");
+            }
+            public void onSwipeBottom() {
+                Log.d("DEV_DEBUG", "Swipe Down");
+            }
+        });
+
         webView.setWebViewClient(new OkHttpWebViewClient() {
             @NonNull @Override public WikiSite getWikiSite() {
                 return model.getTitle().getWikiSite();
@@ -1461,4 +1488,5 @@ public class PageFragment extends Fragment implements BackPressedHandler {
     public Callback callback() {
         return FragmentUtil.getCallback(this, Callback.class);
     }
+
 }
