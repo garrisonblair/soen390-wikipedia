@@ -22,6 +22,7 @@ import org.wikipedia.notebook.Note;
 import org.wikipedia.notebook.NoteReferenceService;
 import org.wikipedia.notebook.Reference;
 import org.wikipedia.texttospeech.TTSWrapper;
+import org.wikipedia.util.ShareUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,9 +78,27 @@ public class NotesFragment extends Fragment {
                 // Setting Title in the TextView
                 TextView titleView = view.findViewById(R.id.note_title);
                 titleView.setText(title);
+
                 // Creating the ListView of notes
                 ListView noteList = view.findViewById(R.id.notes_list);
                 noteList.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.simple_row, notesText));
+
+                //Listener for the share notes button
+                ImageButton shareButton = view.findViewById(R.id.notes_share);
+                shareButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (notes != null && notes.size() != 0) {
+                            StringBuilder notesToShare = new StringBuilder();
+                            notesToShare.append("Notes for Wikipedia article: " + title + "\n\n");
+                            for (Note noteItem:notes) {
+                                notesToShare.append("Note " + noteItem.getId() + "\n\n");
+                                notesToShare.append(noteItem.getText() + "\n\n");
+                            }
+                            ShareUtil.shareText(getContext(), title, notesToShare.toString());
+                        }
+                    }
+                });
 
                 // Setting listener to the items in the ListView to open individual notes in dialog
                 noteList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
