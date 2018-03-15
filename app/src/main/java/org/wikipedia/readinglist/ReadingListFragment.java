@@ -1,5 +1,6 @@
 package org.wikipedia.readinglist;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -37,6 +38,7 @@ import org.wikipedia.concurrency.CallbackTask;
 import org.wikipedia.history.HistoryEntry;
 import org.wikipedia.history.SearchActionModeCallback;
 import org.wikipedia.main.MainActivity;
+import org.wikipedia.notebook.NoteReferenceService;
 import org.wikipedia.page.ExclusiveBottomSheetPresenter;
 import org.wikipedia.page.PageActivity;
 import org.wikipedia.page.PageTitle;
@@ -547,7 +549,12 @@ public class ReadingListFragment extends Fragment implements ReadingListItemActi
     @Override
     public void onDeleteItem(int pageIndex) {
         ReadingListPage page = readingList == null ? null : readingList.pages().get(pageIndex);
-        deleteSinglePage(page);
+        NoteReferenceService noteReferenceService = new NoteReferenceService(getContext().getApplicationContext());
+        if (noteReferenceService.articleCannotDelete(getContext(), page.title())) {
+            deleteArticleWithNotesDialog(page);
+        } else {
+            deleteSinglePage(page);
+        }
     }
 
     private void toggleOffline(@NonNull ReadingListPage page) {
@@ -645,6 +652,8 @@ public class ReadingListFragment extends Fragment implements ReadingListItemActi
 
         @Override
         public void onSwipe() {
+            NoteReferenceService noteReferenceService = new NoteReferenceService(getContext().getApplicationContext());
+            noteReferenceService.deleteAllNotes(page.title());
             deleteSinglePage(page);
         }
     }
@@ -810,6 +819,18 @@ public class ReadingListFragment extends Fragment implements ReadingListItemActi
         }
 
         @Override protected void onDeleteSelected() {
+            NoteReferenceService noteReferenceService = new NoteReferenceService(getContext().getApplicationContext());
+            boolean keepDeleting = false;
+            for (ReadingListPage page : getSelectedPages()) {
+                if (noteReferenceService.articleCannotDelete(getContext(), page.title())) {
+                    if (!keepDeleting) {
+                        deleteArticleWithNotesDialog(page);
+                        keepDeleting = true;
+                    } else {
+                        noteReferenceService.deleteAllNotes(page.title());
+                    }
+                }
+            }
             deleteSelectedPages();
         }
 
@@ -826,5 +847,32 @@ public class ReadingListFragment extends Fragment implements ReadingListItemActi
                 updateReadingListData();
             }
         }
+    }
+
+    private void deleteArticleWithNotesDialog(ReadingListPage page) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
+        dialog.setMessage("Are you sure to delete the article? The notes in this article will be deleted at the same time.");
+        dialog.setCancelable(true);
+        dialog.setPositiveButton(
+                "Yes",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        NoteReferenceService noteReferenceService = new NoteReferenceService(getContext().getApplicationContext());
+                        noteReferenceService.deleteAllNotes(page.title());
+                        deleteSinglePage(page);
+                        return;
+                    }
+                });
+
+        dialog.setNegativeButton(
+                "No",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alert = dialog.create();
+        alert.show();
     }
 }

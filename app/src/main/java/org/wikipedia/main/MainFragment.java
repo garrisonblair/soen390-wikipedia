@@ -19,6 +19,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -315,6 +316,7 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
     @Override
     public void onFeedRemovePageFromList(@NonNull FeaturedArticleCardView view,
                                          @NonNull HistoryEntry entry) {
+
         FeedbackUtil.showMessage(getActivity(),
                 getString(R.string.reading_list_item_deleted, entry.getTitle().getDisplayText()));
         view.updateFooter();
