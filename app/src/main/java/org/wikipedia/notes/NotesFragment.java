@@ -25,7 +25,9 @@ import org.wikipedia.texttospeech.TTSWrapper;
 import org.wikipedia.util.ShareUtil;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class NotesFragment extends Fragment {
 
@@ -90,10 +92,29 @@ public class NotesFragment extends Fragment {
                     public void onClick(View v) {
                         if (notes != null && notes.size() != 0) {
                             StringBuilder notesToShare = new StringBuilder();
+                            Set<Reference> referencesToShare = new HashSet<>();
+                            int indexNote = 0;
+//                            String uriOrigin = UriUtil.getUrlWithProvenance(getContext(), pageTitle, R.string.prov_share_link);
+
                             notesToShare.append("Notes for Wikipedia article: " + title + "\n\n");
+//                            notesToShare.append(uriOrigin + "\n\n");
                             for (Note noteItem:notes) {
-                                notesToShare.append("Note " + noteItem.getId() + "\n\n");
+                                indexNote++;
+                                notesToShare.append("- Note " + indexNote + ":\n\n");
                                 notesToShare.append(noteItem.getText() + "\n\n");
+                                List<Reference> noteRefs = noteItem.getAllReferences();
+                                if (noteRefs.size() > 0) {
+                                    referencesToShare.addAll(noteRefs);
+                                }
+                            }
+
+                            notesToShare.append("References:\n\n");
+                            if (referencesToShare == null) {
+                                notesToShare.append("None.");
+                            } else {
+                                for (Reference referenceItem : referencesToShare) {
+                                    notesToShare.append("- " + referenceItem.getText() + "\n");
+                                }
                             }
                             ShareUtil.shareText(getContext(), title, notesToShare.toString());
                         }
