@@ -33,7 +33,6 @@ public class NotesFragment extends Fragment {
     private TTSWrapper tts;
     private boolean speaking = false;
 
-    private List<Note> notes;
     private List<Reference> references;
 
     @Override
@@ -122,7 +121,6 @@ public class NotesFragment extends Fragment {
                         ArrayList<String> refsText = new ArrayList();
                         String ref;
                         for (Reference reference : references) {
-                            Log.i("REFERENCES", reference.getText());
                             ref = "[" + reference.getNumber() + "] " + reference.getText();
                             refsText.add(ref);
                         }
