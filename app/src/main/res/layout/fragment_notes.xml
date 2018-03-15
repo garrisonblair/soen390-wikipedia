@@ -13,6 +13,16 @@
         android:textAllCaps="true"
         android:textStyle="bold"
         android:textSize="24sp"/>
+
+    <ImageButton
+        android:id="@+id/notes_share"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:background="?attr/selectableItemBackground"
+        android:gravity="end"
+        android:clickable="true"
+        android:src="@drawable/ic_share_black_24dp" />
+
     <ListView android:id="@+id/notes_list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
