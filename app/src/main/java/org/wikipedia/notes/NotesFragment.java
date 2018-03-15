@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.speech.tts.UtteranceProgressListener;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -115,7 +114,6 @@ public class NotesFragment extends Fragment {
 
                         // Getting the references for the selected note and creating strings with them
                         if (notes.get(position).getAllReferences() != null) {
-                            Log.i("REFERENCE SIZE", Integer.toString(notes.get(position).getAllReferences().size()));
                             references = notes.get(position).getAllReferences();
                         }
                         ArrayList<String> refsText = new ArrayList();

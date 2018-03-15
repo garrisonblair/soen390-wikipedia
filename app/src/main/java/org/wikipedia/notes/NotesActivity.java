@@ -7,13 +7,11 @@ import android.support.annotation.Nullable;
 import org.wikipedia.R;
 import org.wikipedia.WikipediaApp;
 import org.wikipedia.activity.BaseActivity;
-import org.wikipedia.page.PageToolbarHideHandler;
 import org.wikipedia.util.ResourceUtil;
 
 public class NotesActivity extends BaseActivity {
 
     private WikipediaApp app;
-    private NotesFragment notesFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
