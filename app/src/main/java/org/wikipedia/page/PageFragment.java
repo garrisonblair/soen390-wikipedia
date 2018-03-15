@@ -1418,6 +1418,7 @@ public class PageFragment extends Fragment implements BackPressedHandler {
         Callback callback = callback();
         if (callback != null) {
             callback.onPageAddToReadingList(title, source);
+            source.setHasNote(false);
         }
     }
 

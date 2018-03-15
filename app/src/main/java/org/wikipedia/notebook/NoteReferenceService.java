@@ -1,7 +1,6 @@
 package org.wikipedia.notebook;
 
 import android.annotation.SuppressLint;
-import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
