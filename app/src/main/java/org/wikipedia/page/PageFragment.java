@@ -829,6 +829,7 @@ public class PageFragment extends Fragment implements BackPressedHandler {
                 addToReadingList(getTitle(), AddToReadingListDialog.InvokeSource.PAGE_OVERFLOW_MENU);
                 return true;
             case R.id.menu_page_remove_from_list:
+                //Toast.makeText(getContext(), "" + model.getPage().getTitle().getText(), Toast.LENGTH_SHORT).show();
                 if (noteReferenceService.articleCannotDelete(getContext(), model.getPage().getTitle().getText())) {
                     //Toast.makeText(getContext(), "The article contains note(s), cannot be deleted.", Toast.LENGTH_LONG).show();
                     deleteArticleWithNotesDialog();

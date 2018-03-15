@@ -1,8 +1,10 @@
 package org.wikipedia.notebook;
 
 import android.annotation.SuppressLint;
+import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import org.wikipedia.database.room.AppDatabase;
 import org.wikipedia.notebook.database.NoteDao;
@@ -132,6 +134,8 @@ public class NoteReferenceService {
     public boolean articleCannotDelete(Context context, String currentTitle) {
         //NoteReferenceService noteReferenceService = new NoteReferenceService(getContext().getApplicationContext());
         //List<String> articleTitles = noteReferenceService.getAllNotedArticles();
+        Toast.makeText(context, "Title: " + currentTitle, Toast.LENGTH_SHORT).show();
+
         List<String> articleTitles = getAllNotedArticles();
         boolean cannotDelete = false;
         for (String title : articleTitles) {
@@ -141,6 +145,7 @@ public class NoteReferenceService {
                 cannotDelete = true;
             }
         }
+        Toast.makeText(context, "Title: " + cannotDelete, Toast.LENGTH_SHORT).show();
         return cannotDelete;
     }
 }
