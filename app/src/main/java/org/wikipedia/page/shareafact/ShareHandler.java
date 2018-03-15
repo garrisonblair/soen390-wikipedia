@@ -17,6 +17,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,6 +31,9 @@ import org.wikipedia.dataclient.mwapi.MwQueryResponse;
 import org.wikipedia.gallery.ImageLicense;
 import org.wikipedia.gallery.ImageLicenseFetchClient;
 import org.wikipedia.language.AppLanguageLookUpTable;
+import org.wikipedia.notebook.Note;
+import org.wikipedia.notebook.NoteReferenceService;
+import org.wikipedia.notebook.SelectionResult;
 import org.wikipedia.onboarding.PrefsOnboardingStateMachine;
 import org.wikipedia.page.Namespace;
 import org.wikipedia.page.NoDimBottomSheetDialog;
@@ -41,6 +46,7 @@ import org.wikipedia.page.listeners.HideStopButtonOnDoneListener;
 import org.wikipedia.settings.Prefs;
 import org.wikipedia.texttospeech.TTSWrapper;
 import org.wikipedia.util.FeedbackUtil;
+import org.wikipedia.util.FileUtil;
 import org.wikipedia.util.ShareUtil;
 import org.wikipedia.util.StringUtil;
 import org.wikipedia.util.UriUtil;
@@ -66,6 +72,9 @@ public class ShareHandler {
     private static final String PAYLOAD_PURPOSE_EDIT_HERE = "edit_here";
     private static final String PAYLOAD_TEXT_KEY = "text";
     private WikipediaApp app = WikipediaApp.getInstance();
+    private NoteReferenceService noteReferenceService;
+    private static final String GET_SELECTION_SCRIPT_PATH = "getSelection.js";
+    private static final String GET_SELECTION_AND_REFERENCE_SCRIPT_PATH = "getSelectionAndReference.js";
 
     @NonNull private final PageFragment fragment;
     @NonNull private final CommunicationBridge bridge;
@@ -88,7 +97,7 @@ public class ShareHandler {
     public ShareHandler(@NonNull PageFragment fragment, @NonNull CommunicationBridge bridge) {
         this.fragment = fragment;
         this.bridge = bridge;
-
+        noteReferenceService = new NoteReferenceService(fragment.getContext().getApplicationContext());
         pageLanguage = app.getAppLanguageCanonicalName(app.getAppOrSystemLanguageCode());
         PageActivity pageActivity = (PageActivity) fragment.getActivity();
         textToSpeech = TTSWrapper.getInstance(pageActivity, new HideStopButtonOnDoneListener(pageActivity));
@@ -232,6 +241,17 @@ public class ShareHandler {
                 return true;
             }
         });
+
+        //Provide a listener to the 'add note' button
+        MenuItem addNoteItem = menu.findItem(R.id.menu_text_add_note);
+        addNoteItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener(){
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                addNote();
+                return true;
+            }
+        });
+
         MenuItem defineItem = menu.findItem(R.id.menu_text_select_define);
         if (shouldEnableWiktionaryDialog()) {
             defineItem.setVisible(true);
@@ -245,7 +265,39 @@ public class ShareHandler {
 
         onHighlightText();
     }
-    private void setStopButtonVisibility(int visibility){
+    private void addNote() {
+        String scriptString = FileUtil.readJavascriptFile(fragment.getContext(), GET_SELECTION_AND_REFERENCE_SCRIPT_PATH);
+
+        fragment.getWebView().evaluateJavascript(scriptString, new ValueCallback<String>() {
+            @Override
+            public void onReceiveValue(String value) {
+                Gson gson = new Gson();
+                SelectionResult selectionResult = gson.fromJson(value, SelectionResult.class);
+                final Page page = fragment.getPage();
+                final PageProperties pageProperties = page.getPageProperties();
+                if (selectionResult != null) {
+                    saveTheNote(pageProperties, selectionResult, page);
+                }
+            }
+        });
+    }
+
+
+    private void saveTheNote(PageProperties pageProperties, SelectionResult selectionResult, Page page) {
+        Note note = new Note(pageProperties.getPageId(), page.getTitle().getText(), selectionResult.getSelectionText());
+        for (int i = 0; i < selectionResult.getReferences().size() && selectionResult.getReferences() != null; i++) {
+            selectionResult.getReferences().get(i).addNote(note);
+            note.addReference(selectionResult.getReferences().get(i));
+        }
+
+        noteReferenceService.addNote(note, new NoteReferenceService.SaveCallback() {
+            @Override
+            public void afterSave() {
+                System.out.println("Note was saved!");
+            }
+        });
+    }
+    private void setStopButtonVisibility(int visibility) {
     /**
      * Sets the visibility of the stopButton
      */
@@ -260,14 +312,17 @@ public class ShareHandler {
     /**
      * Passes the selected text to the TTSWapper to make it speak
      */
-        fragment.getWebView().evaluateJavascript("(function() { return window.getSelection().toString() }) ()",
-                new ValueCallback<String>() {
-                    @Override
-                    public void onReceiveValue(String value) {
-                        textToSpeech.speak(value);
-                    }
-                });
+        String scriptString = FileUtil.readJavascriptFile(fragment.getContext(), GET_SELECTION_SCRIPT_PATH);
+
+        fragment.getWebView().evaluateJavascript(scriptString, new ValueCallback<String>() {
+            @Override
+            public void onReceiveValue(String value) {
+                textToSpeech.speak(value);
+                }
+        });
     }
+
+
     private boolean shouldEnableWiktionaryDialog() {
         return Prefs.useRestBase() && isWiktionaryDialogEnabledForArticleLanguage();
     }

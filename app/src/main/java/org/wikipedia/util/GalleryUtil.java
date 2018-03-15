@@ -21,12 +21,12 @@ public class GalleryUtil{
 
     public static Bitmap getSelectedPicture(int resultCode, Intent data, Activity activity){
         Bitmap bitmap = null;
-        if(resultCode == Activity.RESULT_OK){
+        if (resultCode == Activity.RESULT_OK){
             if (data != null){
                 try{
                     bitmap = MediaStore.Images.Media.getBitmap(activity.getContentResolver(),data.getData());
                 }
-                catch(IOException e){
+                catch (IOException e){
                     e.printStackTrace();
                 }
             }

@@ -1,8 +1,10 @@
 package org.wikipedia.util;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.StatFs;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -15,6 +17,26 @@ import java.io.InputStreamReader;
 public final class FileUtil {
     public static final int JPEG_QUALITY = 85;
     private static final int KILOBYTE = 1000;
+
+    public static String readJavascriptFile(Context context, String path) {
+        String scriptString = null;
+        InputStream input;
+        try {
+            input = context.getAssets().open(path);
+
+
+            byte[] buffer = new byte[input.available()];
+            input.read(buffer);
+            input.close();
+
+            scriptString = new String(buffer);
+
+        } catch (Exception e) {
+            Log.d("ERR", "Error loading javascript asset at " + path);
+        }
+
+        return scriptString;
+    }
 
     public static long physicalToLogicalSize(long physical, long blockSize) {
         if (physical == 0) {
