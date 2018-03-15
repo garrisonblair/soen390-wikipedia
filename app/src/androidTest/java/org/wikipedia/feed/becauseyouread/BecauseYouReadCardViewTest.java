@@ -47,6 +47,7 @@ public class BecauseYouReadCardViewTest extends ViewTest {
 
     private Subject subject;
 
+    @Ignore
     @Theory public void testWidth(@TestedOn(ints = {WIDTH_DP_L, WIDTH_DP_M}) int widthDp,
                                   @NonNull FontScale fontScale, @NonNull PrimaryTestStr title,
                                   @NonNull SecondaryTestStr subtitle,
@@ -56,18 +57,21 @@ public class BecauseYouReadCardViewTest extends ViewTest {
         snap(subject, title + "_title", subtitle + "_subtitle", suggestions + "_suggestions");
     }
 
+    @Ignore
     @Theory public void testLayoutDirection(@NonNull LayoutDirection direction) {
         setUp(WIDTH_DP_L, direction, FontScale.DEFAULT, Theme.LIGHT, PrimaryTestStr.SHORT,
                 SecondaryTestStr.SHORT, TODAY, MAX_SUGGESTIONS);
         snap(subject);
     }
 
+    @Ignore
     @Theory public void testTheme(@NonNull Theme theme) {
         setUp(WIDTH_DP_L, LayoutDirection.LOCALE, FontScale.DEFAULT, theme, PrimaryTestStr.SHORT,
                 SecondaryTestStr.SHORT, TODAY, MAX_SUGGESTIONS);
         snap(subject);
     }
 
+    @Ignore
     @Theory public void testFocus(@NonNull Theme theme) {
         setUp(WIDTH_DP_L, LayoutDirection.LOCALE, FontScale.DEFAULT, theme, PrimaryTestStr.SHORT,
                 SecondaryTestStr.SHORT, TODAY, MAX_SUGGESTIONS);

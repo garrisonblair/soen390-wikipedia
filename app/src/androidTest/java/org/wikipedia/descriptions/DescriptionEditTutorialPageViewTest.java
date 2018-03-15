@@ -3,6 +3,7 @@ package org.wikipedia.descriptions;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 
+import org.junit.Ignore;
 import org.junit.experimental.theories.Theory;
 import org.junit.experimental.theories.suppliers.TestedOn;
 import org.wikipedia.onboarding.OnboardingPageView;
@@ -35,6 +36,7 @@ public class DescriptionEditTutorialPageViewTest extends ViewTest {
         }
     }
 
+    @Ignore
     @Theory public void testFocus(@NonNull Theme theme) {
         for (DescriptionEditTutorialPage page : DescriptionEditTutorialPage.values()) {
             setUp(page, WIDTH_DP_L, LayoutDirection.LOCALE, FontScale.DEFAULT, theme);

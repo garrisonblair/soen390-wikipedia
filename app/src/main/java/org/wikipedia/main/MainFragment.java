@@ -172,6 +172,7 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
             Bitmap photo = GalleryUtil.getSelectedPicture(resultCode, data, getActivity());
             if (photo != null) {
                 getKeywordsFromPhoto(photo);
+
             }
         } else if (requestCode == Constants.ACTIVITY_REQUEST_LOGIN
                 && resultCode == LoginActivity.RESULT_LOGIN_SUCCESS) {
