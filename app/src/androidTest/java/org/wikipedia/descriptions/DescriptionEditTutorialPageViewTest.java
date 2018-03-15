@@ -12,6 +12,7 @@ import org.wikipedia.test.view.LayoutDirection;
 import org.wikipedia.test.view.ViewTest;
 import org.wikipedia.theme.Theme;
 
+@Ignore
 public class DescriptionEditTutorialPageViewTest extends ViewTest {
     private OnboardingPageView subject;
 

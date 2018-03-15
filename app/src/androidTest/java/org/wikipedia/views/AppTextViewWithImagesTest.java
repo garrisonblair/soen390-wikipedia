@@ -9,6 +9,7 @@ import android.text.Spanned;
 import android.text.style.ImageSpan;
 import android.view.View;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.theories.Theory;
 import org.junit.experimental.theories.suppliers.TestedOn;
@@ -26,6 +27,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class AppTextViewWithImagesTest extends ViewTest {
     private AppTextViewWithImages subject;
 
+    @Ignore
     @Theory public void testWidth(@TestedOn(ints = {WIDTH_DP_XS, WIDTH_DP_S, WIDTH_DP_M, WIDTH_DP_XL}) int widthDp,
                                   @NonNull FontScale fontScale, @NonNull TertiaryTestStr text) {
         setUp(widthDp, LayoutDirection.LOCALE, fontScale, Theme.LIGHT);
@@ -33,6 +35,7 @@ public class AppTextViewWithImagesTest extends ViewTest {
         snap(subject, text + "_text");
     }
 
+    @Ignore
     @Theory public void testLayoutDirection(@TestedOn(ints = {WIDTH_DP_XS, WIDTH_DP_M}) int widthDp,
                                             @NonNull LayoutDirection direction) {
         setUp(widthDp, direction, FontScale.DEFAULT, Theme.LIGHT);
@@ -40,6 +43,7 @@ public class AppTextViewWithImagesTest extends ViewTest {
         snap(subject);
     }
 
+    @Ignore
     @Theory public void testTheme(@NonNull Theme theme) {
         setUp(WIDTH_DP_L, LayoutDirection.LOCALE, FontScale.DEFAULT, theme);
         subject.setTextWithDrawables("Every good ^1 does ^2.", R.drawable.ic_mode_edit_white_24dp, R.drawable.cc_logo);
