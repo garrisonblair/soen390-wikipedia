@@ -120,4 +120,27 @@ public class NoteReferenceService {
             }
         }.execute(new Object());
     }
+
+    public List<String> getAllNotedArticles() {
+        return noteDao.getAllArticles();
+    }
+
+    public void deleteAllNotes(String title) {
+        noteDao.deleteAllNotes(title);
+    }
+
+    public boolean articleCannotDelete(Context context, String currentTitle) {
+        //NoteReferenceService noteReferenceService = new NoteReferenceService(getContext().getApplicationContext());
+        //List<String> articleTitles = noteReferenceService.getAllNotedArticles();
+        List<String> articleTitles = getAllNotedArticles();
+        boolean cannotDelete = false;
+        for (String title : articleTitles) {
+            //if (model.getPage().getTitle().getText() == title) {
+            if (title == currentTitle) {
+                //Toast.makeText(getContext(), "The article contains note(s), cannot be deleted.", Toast.LENGTH_LONG).show();
+                cannotDelete = true;
+            }
+        }
+        return cannotDelete;
+    }
 }

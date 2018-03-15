@@ -14,13 +14,19 @@ import java.util.List;
 public interface NoteDao {
 
     @Query("SELECT * FROM notes WHERE articleId = :articleId ORDER BY id ASC")
-    public List<NoteEntity> getAllNotesForArticle(int articleId);
+    List<NoteEntity> getAllNotesForArticle(int articleId);
+
+
+    @Query("SELECT DISTINCT articleTitle FROM notes")
+    List<String> getAllArticles();
 
     @Insert
-    public long addNote(NoteEntity note);
+    long addNote(NoteEntity note);
 
     @Delete
-    public void deleteNote(NoteEntity note);
+    void deleteNote(NoteEntity note);
 
+    @Query("DELETE FROM notes WHERE articleTitle = :articleTitle")
+    void deleteAllNotes(String articleTitle);
 }
 

@@ -46,6 +46,7 @@ import org.wikipedia.page.PageProperties;
 import org.wikipedia.page.PageTitle;
 import org.wikipedia.page.listeners.HideStopButtonOnDoneListener;
 import org.wikipedia.readinglist.AddToReadingListDialog;
+import org.wikipedia.readinglist.database.ReadingListDbHelper;
 import org.wikipedia.settings.Prefs;
 import org.wikipedia.texttospeech.TTSWrapper;
 import org.wikipedia.util.FeedbackUtil;
@@ -252,7 +253,10 @@ public class ShareHandler {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 addNote();
-                addNotedArticleToList();
+                ReadingListDbHelper readingListDbHelper = new ReadingListDbHelper();
+                if (!readingListDbHelper.articleExistInList(fragment.getTitle())) {
+                    addNotedArticleToList();
+                }
                 return true;
             }
         });
@@ -533,6 +537,7 @@ public class ShareHandler {
         addToReadingList(fragment.getTitle(), AddToReadingListDialog.InvokeSource.BOOKMARK_BUTTON);
     }
     public void addToReadingList(@NonNull PageTitle title, @NonNull AddToReadingListDialog.InvokeSource source) {
+        source.setHasNote(true);
         PageFragment.Callback callback = callback();
         if (callback != null) {
             callback.onPageAddToReadingList(title, source);

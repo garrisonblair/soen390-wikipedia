@@ -2,6 +2,7 @@ package org.wikipedia.page;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -28,6 +29,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
@@ -52,6 +54,7 @@ import org.wikipedia.gallery.GalleryActivity;
 import org.wikipedia.history.HistoryEntry;
 import org.wikipedia.history.UpdateHistoryTask;
 import org.wikipedia.language.LangLinksActivity;
+import org.wikipedia.notebook.NoteReferenceService;
 import org.wikipedia.offline.OfflineManager;
 import org.wikipedia.onboarding.PrefsOnboardingStateMachine;
 import org.wikipedia.page.action.PageActionTab;
@@ -140,6 +143,7 @@ public class PageFragment extends Fragment implements BackPressedHandler {
     private PageFragmentLoadState pageFragmentLoadState;
     private PageViewModel model;
     private PageInfo pageInfo;
+    private NoteReferenceService noteReferenceService;
 
     /**
      * List of tabs, each of which contains a backstack of page titles.
@@ -293,6 +297,7 @@ public class PageFragment extends Fragment implements BackPressedHandler {
         model = new PageViewModel();
 
         pageFragmentLoadState = new PageFragmentLoadState();
+        noteReferenceService = new NoteReferenceService(getContext());
 
         initTabs();
     }
@@ -824,7 +829,12 @@ public class PageFragment extends Fragment implements BackPressedHandler {
                 addToReadingList(getTitle(), AddToReadingListDialog.InvokeSource.PAGE_OVERFLOW_MENU);
                 return true;
             case R.id.menu_page_remove_from_list:
-                showRemoveFromListsDialog();
+                if (noteReferenceService.articleCannotDelete(getContext(), model.getPage().getTitle().getText())) {
+                    //Toast.makeText(getContext(), "The article contains note(s), cannot be deleted.", Toast.LENGTH_LONG).show();
+                    deleteArticleWithNotesDialog();
+                } else {
+                    showRemoveFromListsDialog();
+                }
                 return true;
             case R.id.menu_page_find_in_page:
                 showFindInPage();
@@ -1459,5 +1469,31 @@ public class PageFragment extends Fragment implements BackPressedHandler {
     @Nullable
     public Callback callback() {
         return FragmentUtil.getCallback(this, Callback.class);
+    }
+
+    private void deleteArticleWithNotesDialog() {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
+        dialog.setMessage("Are you sure to delete the article? The notes in this article will be deleted at the same time.");
+        dialog.setCancelable(true);
+        dialog.setPositiveButton(
+                "Yes",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        noteReferenceService.deleteAllNotes(model.getTitle().getText());
+                        showRemoveFromListsDialog();
+                        return;
+                    }
+                });
+
+        dialog.setNegativeButton(
+                "No",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alert = dialog.create();
+        alert.show();
     }
 }
