@@ -1,6 +1,7 @@
 package org.wikipedia.main;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
@@ -20,9 +21,11 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 
 import org.apache.commons.lang3.StringUtils;
 import org.wikipedia.BackPressedHandler;
@@ -227,6 +230,11 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
                             R.string.gallery_save_image_write_permission_rationale);
                 }
                 break;
+            case Constants.ACTIVITY_REQUEST_TAKE_PHOTO_WRITE_EXTERNAL_STORAGE_PERMISSION:
+                if (PermissionUtil.isPermitted(grantResults)) {
+                    Prefs.setSavePhoto(true);
+                }
+                takePhotoIntent();
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
@@ -282,8 +290,13 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
         startActivityForResult(photoPickerIntent, Constants.ACTIVITY_REQUEST_GALLERY_SELECTION);
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
     @Override public void onFeedImageCameraSearchRequested() {
-        takePhotoIntent();
+        if (!Prefs.getAskSavePhoto() || Prefs.getSavePhoto()) {
+            takePhotoIntent();
+        } else {
+            showAskSavePhotoDialog();
+        }
 
     }
 
@@ -546,6 +559,11 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
                 Constants.ACTIVITY_REQUEST_WRITE_EXTERNAL_STORAGE_PERMISSION);
     }
 
+    private void requestTakePhotoWriteExternalStoragePermission() {
+        PermissionUtil.requestWriteStorageRuntimePermissions(this,
+                Constants.ACTIVITY_REQUEST_TAKE_PHOTO_WRITE_EXTERNAL_STORAGE_PERMISSION);
+    }
+
     @SuppressLint("CommitTransaction")
     private void openSearchFragment(@NonNull SearchInvokeSource source, @Nullable String query) {
         Fragment fragment = searchFragment();
@@ -616,5 +634,41 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
                 startActivityForResult(keywordSelectIntent, ACTIVITY_REQUEST_IMAGE_KEYWORD);
             }
         });
+    }
+    private void showAskSavePhotoDialog() {
+        CheckBox dontShowAgain;
+
+        AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
+        LayoutInflater adbInflater = LayoutInflater.from(getActivity());
+        View eulaLayout = adbInflater.inflate(R.layout.checkbox, null);
+        dontShowAgain = eulaLayout.findViewById(R.id.askSavePhoto);
+        adb.setView(eulaLayout);
+        adb.setTitle("Save Photo");
+        adb.setMessage(Html.fromHtml("Do you want to save photo"));
+        adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                if (dontShowAgain.isChecked()) {
+                    Prefs.setAskSavePhoto(false);
+                }
+                if (PermissionUtil.hasWriteExternalStoragePermission(getActivity())) {
+                    Prefs.setSavePhoto(true);
+                    takePhotoIntent();
+                } else {
+                    requestTakePhotoWriteExternalStoragePermission();
+                }
+                return;
+            } });
+        adb.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                if (dontShowAgain.isChecked()) {
+                    Prefs.setAskSavePhoto(false);
+                }
+                takePhotoIntent();
+                dialog.dismiss();
+            }
+        });
+        adb.show();
     }
 }
