@@ -111,6 +111,16 @@ public class NotesFragment extends Fragment {
 
                 noteList.setOnTouchListener(swipeListener);
 
+                // Button for text-to-speech of the note
+                ImageButton backButton = view.findViewById(R.id.notes_back_button);
+                backButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.d("DEV_DEBUG", "Back button pressed");
+                        getActivity().onBackPressed();
+                    }
+                });
+
                 // Setting listener to the items in the ListView to open individual notes in dialog
                 noteList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
