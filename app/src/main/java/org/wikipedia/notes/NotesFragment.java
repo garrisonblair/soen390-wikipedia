@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -118,7 +119,7 @@ public class NotesFragment extends Fragment {
                         });
 
                         // Button for text-to-speech of the note
-                        ImageButton deleteNote = dialog.findViewById(R.id.note_delete);
+                        Button deleteNote = dialog.findViewById(R.id.note_delete);
                         deleteNote.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
