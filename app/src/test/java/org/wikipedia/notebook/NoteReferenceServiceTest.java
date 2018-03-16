@@ -2,10 +2,10 @@ package org.wikipedia.notebook;
 
 import android.content.Context;
 
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
 import org.robolectric.RobolectricTestRunner;
@@ -15,12 +15,16 @@ import org.wikipedia.notebook.database.NoteEntity;
 import org.wikipedia.notebook.database.ReferenceDao;
 import org.wikipedia.notebook.database.ReferenceEntity;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.wikipedia.notebook.NoteReferenceService.*;
@@ -113,5 +117,25 @@ public class NoteReferenceServiceTest {
         nrs.getAllArticleNotes(1, callback);
         verify(this.noteDaoMock).getAllNotesForArticle(1);
         verify(this.referenceDaoMock).getAllArticleReferences(1);
+    }
+
+    @Test
+    public void testGetAllNotedArticles () {
+
+        List<String> titles = new ArrayList<String>();
+        titles.add("Canada");
+        titles.add("Concordia");
+        when(noteDaoMock.getAllArticles()).thenReturn(titles);
+        assertEquals(2, nrs.getAllNotedArticles().size());
+    }
+
+    @Test
+    public void testArticleCannotDelete() {
+        List<String> titles = new ArrayList<String>();
+        titles.add("Canada");
+        titles.add("Concordia");
+        when(nrs.getAllNotedArticles()).thenReturn(titles);
+        boolean deleteOrNot = nrs.articleCannotDelete(contextMock, "Concordia");
+        assertTrue(deleteOrNot);
     }
 }

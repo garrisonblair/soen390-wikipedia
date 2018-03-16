@@ -3,7 +3,6 @@ package org.wikipedia.notebook;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 import org.wikipedia.database.room.AppDatabase;
 import org.wikipedia.notebook.database.NoteDao;
