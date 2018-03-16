@@ -119,4 +119,23 @@ public class NoteReferenceService {
             }
         }.execute(new Object());
     }
+
+    public List<String> getAllNotedArticles() {
+        return noteDao.getAllArticles();
+    }
+
+    public void deleteAllNotes(String title) {
+        noteDao.deleteAllNotes(title);
+    }
+
+    public boolean articleCannotDelete(Context context, String currentTitle) {
+        List<String> articleTitles = getAllNotedArticles();
+        boolean cannotDelete = false;
+        for (String title : articleTitles) {
+            if (title.equals(currentTitle)) {
+                cannotDelete = true;
+            }
+        }
+        return cannotDelete;
+    }
 }

@@ -329,6 +329,7 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
     @Override
     public void onFeedRemovePageFromList(@NonNull FeaturedArticleCardView view,
                                          @NonNull HistoryEntry entry) {
+
         FeedbackUtil.showMessage(getActivity(),
                 getString(R.string.reading_list_item_deleted, entry.getTitle().getDisplayText()));
         view.updateFooter();
