@@ -108,7 +108,7 @@ public class NotesFragment extends Fragment {
                             }
 
                             notesToShare.append("\n\nReferences:\n\n");
-                            if (referencesToShare == null) {
+                            if (referencesToShare == null || referencesToShare.size() == 0) {
                                 notesToShare.append("None.");
                             } else {
                                 for (Reference referenceItem : referencesToShare) {
