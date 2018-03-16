@@ -63,7 +63,7 @@
                         android:paddingLeft="12dp"
                         android:paddingRight="12dp"
                         android:contentDescription="content"
-                        app:srcCompat="@drawable/ic_star_black_24dp"
+                        app:srcCompat="@drawable/icon_notes"
                         app:tint="?attr/page_toolbar_icon_color"
                         app:tintMode="src_in"/>
                     <android.support.v7.widget.AppCompatImageView
