@@ -54,8 +54,6 @@ import org.wikipedia.feed.mainpage.MainPageClient;
 import org.wikipedia.gallery.GalleryActivity;
 import org.wikipedia.history.HistoryEntry;
 import org.wikipedia.language.LangLinksActivity;
-import org.wikipedia.notebook.Note;
-import org.wikipedia.notebook.NoteReferenceService;
 import org.wikipedia.notes.NotesActivity;
 import org.wikipedia.notes.NotesFragment;
 import org.wikipedia.page.linkpreview.LinkPreviewDialog;
@@ -255,12 +253,7 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
 
     @OnClick(R.id.page_toolbar_button_notes)
     public void onNotesButtonClicked() {
-        int pageId = pageFragment.getPage().getPageProperties().getPageId();
-        String pageTitle = pageFragment.getPage().getDisplayTitle();
-        Intent intent = new Intent(pageFragment.getContext(), NotesActivity.class);
-        intent.putExtra("pageId", pageId);
-        intent.putExtra("pageTitle", pageTitle);
-        startActivity(intent);
+        openNotesPage();
     }
 
     @OnClick(R.id.page_toolbar_button_search)

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.speech.tts.UtteranceProgressListener;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import org.wikipedia.R;
 import org.wikipedia.notebook.Note;
 import org.wikipedia.notebook.NoteReferenceService;
 import org.wikipedia.notebook.Reference;
+import org.wikipedia.page.listeners.OnSwipeTouchListener;
 import org.wikipedia.texttospeech.TTSWrapper;
 
 import java.util.ArrayList;
@@ -57,6 +59,24 @@ public class NotesFragment extends Fragment {
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notes, container, false);
+
+        view.setOnTouchListener(new OnSwipeTouchListener(getContext()){
+            public void onSwipeRight() {
+                Log.d("DEV_DEBUG", "Swipe Right");
+            }
+            public void onSwipeLeft() {
+                Log.d("DEV_DEBUG", "Swipe Left");
+                Log.d("DEV_DEBUG", "Should close notes activity and go back to article");
+                getActivity().onBackPressed();
+            }
+            public void onSwipeTop() {
+                Log.d("DEV_DEBUG", "Swipe Up");
+            }
+            public void onSwipeBottom() {
+                Log.d("DEV_DEBUG", "Swipe Down");
+            }
+        });
+
 
         NoteReferenceService service = new NoteReferenceService(getContext());
         service.getAllArticleNotes(pageId, new NoteReferenceService.GetNotesCallback() {

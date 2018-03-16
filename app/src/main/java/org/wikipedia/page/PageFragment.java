@@ -53,6 +53,7 @@ import org.wikipedia.gallery.GalleryActivity;
 import org.wikipedia.history.HistoryEntry;
 import org.wikipedia.history.UpdateHistoryTask;
 import org.wikipedia.language.LangLinksActivity;
+import org.wikipedia.notes.NotesActivity;
 import org.wikipedia.offline.OfflineManager;
 import org.wikipedia.onboarding.PrefsOnboardingStateMachine;
 import org.wikipedia.page.action.PageActionTab;
@@ -483,8 +484,16 @@ public class PageFragment extends Fragment implements BackPressedHandler {
         webView.setOnTouchListener(new OnSwipeTouchListener(getContext()){
             public void onSwipeRight() {
                 Log.d("DEV_DEBUG", "Swipe Right");
-                //Currently commenting out until NotesActivity is merged into code
-                //startActivity(new Intent(PageActivity.this, NotesActivity.class));
+                Log.d("DEV_DEBUG", "Should open notes activity");
+                //int pageId = pageFragment.getPage().getPageProperties().getPageId();
+                //String pageTitle = pageFragment.getPage().getDisplayTitle();
+                //Intent intent = new Intent(pageFragment.getContext(), NotesActivity.class);
+                int pageId = getPage().getPageProperties().getPageId();
+                String pageTitle = getPage().getDisplayTitle();
+                Intent intent = new Intent(getContext(), NotesActivity.class);
+                intent.putExtra("pageId", pageId);
+                intent.putExtra("pageTitle", pageTitle);
+                startActivity(intent);
                 //finish();
             }
             public void onSwipeLeft() {
