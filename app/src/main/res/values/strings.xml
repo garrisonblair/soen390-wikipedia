@@ -637,7 +637,7 @@
     <string name="features_onboarding_feature_two_title">Image Search</string>
     <string name="features_onboarding_feature_two_text"><![CDATA[Too lazy to write text on the search bar? You can search by taking a photo from the camera or gallery! <a href="#image_search">Learn More</a>]]></string>
     <string name="features_onboarding_feature_three_title">Notes</string>
-    <string name="features_onboarding_feature_three_text"><![CDATA[Want to quickly access something interesting you read in an article? Save your personalized notes with the new Notes feature! <a href="#image_search">Learn More</a>]]></string>
+    <string name="features_onboarding_feature_three_text"><![CDATA[Want to quickly access something interesting you read in an article? <a href="#notes_add_note">Save your personalized notes</a> with the new Notes feature and <a href="#notes_ui">access them later!</a> <a href="#notes_button">Learn More</a>]]></string>
     <string name="features_onboarding_feature_three_title_ui">Notes UI</string>
     <!-- Our Wikipedia extra features onboarding strings -->
 
