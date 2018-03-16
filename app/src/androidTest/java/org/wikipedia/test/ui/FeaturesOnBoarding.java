@@ -39,17 +39,67 @@ public class FeaturesOnBoarding {
     @Test
     public void onBoardingPageTwo() {
         activityRule.getActivity();
+        // Wait for search response
+        try{
+            Thread.sleep(1000);
+        }
+        catch(InterruptedException e){
+
+        }
         onView(withId(R.id.inflate_features_onboarding_page_zero)).perform(swipeLeft());
+        // Wait for search response
+        try{
+            Thread.sleep(1000);
+        }
+        catch(InterruptedException e){
+
+        }
         onView(withId(R.id.inflate_features_onboarding_page_one)).perform(swipeLeft());
+        // Wait for search response
+        try{
+            Thread.sleep(1000);
+        }
+        catch(InterruptedException e){
+
+        }
         onView(withId(R.id.inflate_features_onboarding_page_two)).check(matches(isDisplayed()));
     }
+
 
     @Test
     public void onBoardingPageThree() {
         activityRule.getActivity();
+        // Wait for search response
+        try{
+            Thread.sleep(1000);
+        }
+        catch(InterruptedException e){
+
+        }
         onView(withId(R.id.inflate_features_onboarding_page_zero)).perform(swipeLeft());
+        // Wait for search response
+        try{
+            Thread.sleep(1000);
+        }
+        catch(InterruptedException e){
+
+        }
         onView(withId(R.id.inflate_features_onboarding_page_one)).perform(swipeLeft());
+        // Wait for search response
+        try{
+            Thread.sleep(1000);
+        }
+        catch(InterruptedException e){
+
+        }
         onView(withId(R.id.inflate_features_onboarding_page_two)).perform(swipeLeft());
+        // Wait for search response
+        try{
+            Thread.sleep(1000);
+        }
+        catch(InterruptedException e){
+
+        }
         onView(withId(R.id.inflate_features_onboarding_page_three)).check(matches(isDisplayed()));
     }
 }
