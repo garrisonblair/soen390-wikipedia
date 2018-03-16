@@ -24,6 +24,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -53,6 +54,10 @@ import org.wikipedia.feed.mainpage.MainPageClient;
 import org.wikipedia.gallery.GalleryActivity;
 import org.wikipedia.history.HistoryEntry;
 import org.wikipedia.language.LangLinksActivity;
+import org.wikipedia.notebook.Note;
+import org.wikipedia.notebook.NoteReferenceService;
+import org.wikipedia.notes.NotesActivity;
+import org.wikipedia.notes.NotesFragment;
 import org.wikipedia.page.linkpreview.LinkPreviewDialog;
 import org.wikipedia.page.listeners.HideStopButtonOnDoneListener;
 import org.wikipedia.page.tabs.TabsProvider;
@@ -72,6 +77,9 @@ import org.wikipedia.util.log.L;
 import org.wikipedia.views.ObservableWebView;
 import org.wikipedia.widgets.WidgetProviderFeaturedPage;
 import org.wikipedia.wiktionary.WiktionaryDialog;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -241,6 +249,16 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
             updateMenuPageInfo(menu);
         }
         return true;
+    }
+
+    @OnClick(R.id.page_toolbar_button_notes)
+    public void onNotesButtonClicked() {
+        int pageId = pageFragment.getPage().getPageProperties().getPageId();
+        String pageTitle = pageFragment.getPage().getDisplayTitle();
+        Intent intent = new Intent(pageFragment.getContext(), NotesActivity.class);
+        intent.putExtra("pageId", pageId);
+        intent.putExtra("pageTitle", pageTitle);
+        startActivity(intent);
     }
 
     @OnClick(R.id.page_toolbar_button_search)
@@ -915,6 +933,11 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
     @SuppressLint("CommitTransaction")
     private void closeSearchFragment(@NonNull SearchFragment fragment) {
         getSupportFragmentManager().beginTransaction().remove(fragment).commitNowAllowingStateLoss();
+    }
+
+    @Nullable private NotesFragment notesFragment() {
+        return (NotesFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.activity_page_container);
     }
 
     @Nullable private SearchFragment searchFragment() {
