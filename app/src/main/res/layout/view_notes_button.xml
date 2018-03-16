@@ -13,7 +13,7 @@ android:padding="10dip">
     android:layout_centerVertical="true"
     android:layout_gravity="center"
     android:contentDescription="@string/features_onboarding_feature_three_title_ui"
-    android:src="@drawable/notes_ui"
+    android:src="@drawable/notes_button"
     android:visibility="visible" />
 
 </RelativeLayout>

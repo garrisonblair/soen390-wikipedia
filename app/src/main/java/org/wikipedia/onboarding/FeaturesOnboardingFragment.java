@@ -59,9 +59,17 @@ public class FeaturesOnboardingFragment extends OnboardingFragment {
                 new AlertDialog.Builder(getContext())
                         .setView(R.layout.view_image_search_ui)
                         .show();
-            } else if (url.equals("#notes")) {
+            } else if (url.equals("#notes_add_note")) {
                 new AlertDialog.Builder(getContext())
-                        .setView(R.layout.view_notes_ui)
+                        .setView(R.layout.view_notes_add_note)
+                        .show();
+            } else if (url.equals("#notes_ui")) {
+                new AlertDialog.Builder(getContext())
+                    .setView(R.layout.view_notes_ui)
+                    .show();
+            } else if (url.equals("#notes_button")) {
+                new AlertDialog.Builder(getContext())
+                        .setView(R.layout.view_notes_button)
                         .show();
             }
         }
