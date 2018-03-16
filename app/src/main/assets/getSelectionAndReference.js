@@ -7,6 +7,7 @@
         var references = getReferenceTexts(referenceNumbers);
         var result = {selectionText: selection.toString(), references: references};
     } catch(err) {
+        throw err;
         console.log(err.message);
         return {selectionText: selection.toString(), references: []};
     }
@@ -80,9 +81,7 @@ function getNodesInSelection(selection) {
 
     if (selection.anchorNode == selection.focusNode) {
         nodes.push(selection.anchorNode);
-        if (selection.anchorNode.nextSibling) {
-            nodes.push(selection.anchorNode.nextSibling);
-        }
+        appendTrailingReferences(selection.anchorNode);
         return nodes;
     }
 
@@ -91,6 +90,22 @@ function getNodesInSelection(selection) {
     return nodes;
 }
 
+function isReferenceNode(node) {
+    if (node.classList) {
+        return node.classList.contains("mw-ref");
+    }
+    return false;
+}
+
+function appendTrailingReferences(list, node) {
+    node = node.nextSibling;
+
+    while (node && isReferenceNode(node)) {
+        list.push(node);
+
+        node = node.nextSibling;
+    }
+}
 
 //traverse DOM tree recursively and add appropriate nodes to array.
 //node: node to start at
@@ -118,10 +133,8 @@ function getNodesInSelectionRecursive(node, selection, nodes, state) {
             //phase = 1: the first boundary node has been reached, all visited nodes are now added.
             nodes.push(childNode);
             if (childNode == state.endNode) {
-                if(childNode.nextSibling) {
-                    //add the node after the endNode to include trailing references
-                    nodes.push(childNode.nextSibling);
-                }
+
+                appendTrailingReferences(nodes, childNode);
                 state.phase = 2;
                 return state;
             }
@@ -137,4 +150,3 @@ function getNodesInSelectionRecursive(node, selection, nodes, state) {
 }
 
 //# sourceURL=getSelectionAndReferences.js
-
