@@ -1,5 +1,6 @@
 package org.wikipedia.notes;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -12,9 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.wikipedia.R;
 import org.wikipedia.notebook.Note;
@@ -31,7 +34,9 @@ public class NotesFragment extends Fragment {
     private int pageId;
     private TTSWrapper tts;
     private boolean speaking = false;
+    private NoteReferenceService noteReferenceService;
 
+    private List<Note> notesList;
     private List<Reference> references;
 
     @Override
@@ -62,7 +67,7 @@ public class NotesFragment extends Fragment {
         service.getAllArticleNotes(pageId, new NoteReferenceService.GetNotesCallback() {
             @Override
             public void afterGetNotes(List<Note> notes) {
-
+                notesList = notes;
                 // Creating ArrayList with text notes
                 ArrayList<String> notesText = new ArrayList();
 
@@ -109,6 +114,43 @@ public class NotesFragment extends Fragment {
                                     speaking = true;
                                     speak.setColorFilter(Color.BLUE);
                                 }
+                            }
+                        });
+
+                        // Button for text-to-speech of the note
+                        ImageButton deleteNote = dialog.findViewById(R.id.note_delete);
+                        deleteNote.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Note test = notesList.get(position);
+                                Dialog currentNoteDialog = dialog;
+
+                                new AlertDialog.Builder(getContext())
+                                        .setTitle("Delete Note")
+                                        .setMessage("Do you really want to delete this note?")
+                                        .setIcon(android.R.drawable.ic_dialog_alert)
+                                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                                            public void onClick(DialogInterface dialog, int whichButton) {
+                                                Note noteToDelete = notesList.get(position);
+                                                notesText.remove(position);
+                                                notesList.remove(position);
+                                                noteReferenceService = new NoteReferenceService(getContext().getApplicationContext());
+                                                noteReferenceService.deleteNote(noteToDelete, new NoteReferenceService.DeleteNoteCallBack() {
+                                                    @Override
+                                                    public void afterDeleteNote() {
+                                                        getActivity().runOnUiThread(new Runnable() {
+                                                            @Override
+                                                            public void run() {
+                                                                ((BaseAdapter)noteList.getAdapter()).notifyDataSetChanged();
+                                                                currentNoteDialog.dismiss();
+                                                            }
+                                                        });
+                                                    }
+                                                });
+                                                Toast.makeText(getContext(), "Note successfully deleted", Toast.LENGTH_SHORT).show();
+                                            }})
+                                        .setNegativeButton(android.R.string.no, null).show();
                             }
                         });
 
