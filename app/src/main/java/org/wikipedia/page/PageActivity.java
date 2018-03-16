@@ -1006,11 +1006,4 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
         startActivity(intent);
         //finish();
     }
-
-    // Method to handle on click action of notes button by calling the open notes page activity
-    @OnClick(R.id.notesButton)
-    public void onNotesButtonClicked() {
-        Log.d("DEV_DEBUG", "Should call notes activity opening method");
-        openNotesPage();
-    }
 }
