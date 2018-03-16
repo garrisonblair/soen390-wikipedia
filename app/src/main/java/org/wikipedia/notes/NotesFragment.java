@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.speech.tts.UtteranceProgressListener;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import org.wikipedia.R;
 import org.wikipedia.notebook.Note;
 import org.wikipedia.notebook.NoteReferenceService;
 import org.wikipedia.notebook.Reference;
+import org.wikipedia.page.listeners.OnSwipeTouchListener;
 import org.wikipedia.texttospeech.TTSWrapper;
 import org.wikipedia.util.ShareUtil;
 
@@ -36,6 +38,12 @@ public class NotesFragment extends Fragment {
     private boolean speaking = false;
 
     private List<Reference> references;
+
+    private View view;
+    private View rootView;
+
+    private View.OnTouchListener swipeListener;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,14 +63,36 @@ public class NotesFragment extends Fragment {
             @Override
             public void onError(String utteranceId) { }
         });
+
+        swipeListener = new OnSwipeTouchListener(getContext()){
+            public void onSwipeRight() {
+                Log.d("DEV_DEBUG", "Swipe Right");
+                Log.d("DEV_DEBUG", "Should close notes activity and go back to article");
+                getActivity().onBackPressed();
+            }
+            public void onSwipeLeft() {
+                Log.d("DEV_DEBUG", "Swipe Left");
+            }
+            public void onSwipeTop() {
+                Log.d("DEV_DEBUG", "Swipe Up");
+            }
+            public void onSwipeBottom() {
+                Log.d("DEV_DEBUG", "Swipe Down");
+            }
+        };
+
     }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_notes, container, false);
+        //View view = inflater.inflate(R.layout.fragment_notes, container, false);
+        view = inflater.inflate(R.layout.fragment_notes, container, false);
+        rootView = view.getRootView();
+        rootView.setOnTouchListener(swipeListener);
 
         NoteReferenceService service = new NoteReferenceService(getContext());
         service.getAllArticleNotes(pageId, new NoteReferenceService.GetNotesCallback() {
+
             @Override
             public void afterGetNotes(List<Note> notes) {
 
@@ -119,6 +149,18 @@ public class NotesFragment extends Fragment {
                         }
                     }
                 });
+                
+                noteList.setOnTouchListener(swipeListener);
+
+                // Button for text-to-speech of the note
+                ImageButton backButton = view.findViewById(R.id.notes_back_button);
+                backButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.d("DEV_DEBUG", "Back button pressed");
+                        getActivity().onBackPressed();
+                    }
+                });
 
                 // Setting listener to the items in the ListView to open individual notes in dialog
                 noteList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -166,6 +208,9 @@ public class NotesFragment extends Fragment {
 
                         // Creating ListView for references
                         ListView dialogRefs = dialog.findViewById(R.id.reference_list);
+
+                        dialogRefs.setOnTouchListener(swipeListener);
+
                         dialogRefs.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.reference_row, refsText));
 
                         dialog.show();
