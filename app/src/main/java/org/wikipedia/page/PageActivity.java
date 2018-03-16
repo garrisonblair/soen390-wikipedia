@@ -991,5 +991,4 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
         Log.d("DEV_DEBUG", "Should call notes activity opening method");
         openNotesPage();
     }
-
 }
