@@ -54,8 +54,6 @@ import org.wikipedia.feed.mainpage.MainPageClient;
 import org.wikipedia.gallery.GalleryActivity;
 import org.wikipedia.history.HistoryEntry;
 import org.wikipedia.language.LangLinksActivity;
-import org.wikipedia.notebook.Note;
-import org.wikipedia.notebook.NoteReferenceService;
 import org.wikipedia.notes.NotesActivity;
 import org.wikipedia.notes.NotesFragment;
 import org.wikipedia.page.linkpreview.LinkPreviewDialog;
@@ -120,7 +118,7 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
     private EventBusMethods busMethods;
     private ActionMode currentActionMode;
 
-    private static TTSWrapper textToSpeech;
+    private static TTSWrapper TEXTTOSPEECH;
 
     private PageToolbarHideHandler toolbarHideHandler;
 
@@ -135,6 +133,7 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         app = (WikipediaApp) getApplicationContext();
         MetricsManager.register(app);
@@ -200,6 +199,7 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
             // then we must have been launched with an Intent, so... handle it!
             handleIntent(getIntent());
         }
+
     }
 
     @Override
@@ -253,12 +253,7 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
 
     @OnClick(R.id.page_toolbar_button_notes)
     public void onNotesButtonClicked() {
-        int pageId = pageFragment.getPage().getPageProperties().getPageId();
-        String pageTitle = pageFragment.getPage().getDisplayTitle();
-        Intent intent = new Intent(pageFragment.getContext(), NotesActivity.class);
-        intent.putExtra("pageId", pageId);
-        intent.putExtra("pageTitle", pageTitle);
-        startActivity(intent);
+        openNotesPage();
     }
 
     @OnClick(R.id.page_toolbar_button_search)
@@ -272,8 +267,8 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
     }
 
     @OnClick(R.id.page_stop_button)
-    public void onStopButtonClicked(){
-        textToSpeech.stop();
+    public void onStopButtonClicked() {
+        TEXTTOSPEECH.stop();
         stopButton.setVisibility(View.INVISIBLE);
     }
 
@@ -753,7 +748,7 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
         app.resetWikiSite();
         app.getSessionFunnel().touchSession();
 
-        textToSpeech = TTSWrapper.getInstance(this, new HideStopButtonOnDoneListener(this));
+        TEXTTOSPEECH = TTSWrapper.getInstance(this, new HideStopButtonOnDoneListener(this));
     }
 
     @Override
@@ -762,7 +757,7 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
             // Explicitly close any current ActionMode (see T147191)
             finishActionMode();
         }
-        textToSpeech.shutdown();
+        TEXTTOSPEECH.shutdown();
         super.onPause();
     }
 
@@ -949,6 +944,7 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
         return pageFragment.getTabLayout();
     }
 
+
     private class EventBusMethods {
         @Subscribe public void on(ChangeTextSizeEvent event) {
             if (pageFragment != null && pageFragment.getWebView() != null) {
@@ -990,5 +986,17 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
                 break;
         }
         return volumnOff;
+    }
+
+    // Method call to open notes page activity. This is used by the button and eventually swipe feature if possible
+    private void openNotesPage() {
+        Log.d("DEV_DEBUG", "Should open notes activity");
+        int pageId = pageFragment.getPage().getPageProperties().getPageId();
+        String pageTitle = pageFragment.getPage().getDisplayTitle();
+        Intent intent = new Intent(pageFragment.getContext(), NotesActivity.class);
+        intent.putExtra("pageId", pageId);
+        intent.putExtra("pageTitle", pageTitle);
+        startActivity(intent);
+        //finish();
     }
 }
