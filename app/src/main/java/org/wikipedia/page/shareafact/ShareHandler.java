@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.view.ActionMode;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -235,7 +236,9 @@ public class ShareHandler {
                 } else {
                     boolean isSetLanguage = textToSpeech.setTTSLanguage(textToSpeech.getLocaleForTTS(pageLanguage));
                     if (isSetLanguage) {
-                        Toast.makeText(fragment.getActivity(), "Text to speech language has set to : " + textToSpeech.getTTSLanguage(), Toast.LENGTH_SHORT).show();
+                        Toast toast = Toast.makeText(fragment.getActivity(), "Text to speech language has set to : " + textToSpeech.getTTSLanguage(), Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.TOP, 0, 0);
+                        toast.show();
                         selectedTextToSpeech();
                         setStopButtonVisibility(View.VISIBLE);
                         leaveActionMode();
