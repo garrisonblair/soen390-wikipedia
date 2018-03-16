@@ -12,15 +12,18 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -48,6 +51,7 @@ import org.wikipedia.util.CameraUtil;
 import org.wikipedia.util.DeviceUtil;
 import org.wikipedia.util.FeedbackUtil;
 import org.wikipedia.util.GalleryUtil;
+import org.wikipedia.util.PermissionUtil;
 import org.wikipedia.views.ViewUtil;
 
 import java.io.File;
@@ -349,9 +353,11 @@ public class SearchFragment extends Fragment implements BackPressedHandler,
     }
 
     @OnClick(R.id.search_open_camera_button) void onOpenCameraButtonClick() {
-        CameraUtil cameraUtil = new CameraUtil();
-        startActivityForResult(cameraUtil.takePhoto(getContext()), Constants.ACTIVITY_REQUEST_TAKE_PHOTO);
-        currentPhotoPath = cameraUtil.getPath();
+        if (!Prefs.getAskSavePhoto() || Prefs.getSavePhoto()) {
+            takePhotoIntent();
+        } else {
+            showAskSavePhotoDialog();
+        }
     }
 
     @OnClick(R.id.search_gallery_button) void onGalleryButtonClick() {
@@ -589,5 +595,69 @@ public class SearchFragment extends Fragment implements BackPressedHandler,
                 startActivityForResult(keywordSelectIntent, ACTIVITY_REQUEST_IMAGE_KEYWORD);
             }
         });
+    }
+
+
+    private void showAskSavePhotoDialog() {
+        CheckBox dontShowAgain;
+
+        AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
+        LayoutInflater adbInflater = LayoutInflater.from(getActivity());
+        View eulaLayout = adbInflater.inflate(R.layout.checkbox, null);
+        dontShowAgain = eulaLayout.findViewById(R.id.askSavePhoto);
+        adb.setView(eulaLayout);
+        adb.setTitle("Save Photo");
+        adb.setMessage(Html.fromHtml("Do you want to save photo"));
+        adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                if (dontShowAgain.isChecked()) {
+                    Prefs.setAskSavePhoto(false);
+                }
+                if (PermissionUtil.hasWriteExternalStoragePermission(getActivity())) {
+                    Prefs.setSavePhoto(true);
+                    takePhotoIntent();
+                } else {
+                    requestTakePhotoWriteExternalStoragePermission();
+                }
+                return;
+            } });
+        adb.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                if (dontShowAgain.isChecked()) {
+                    Prefs.setAskSavePhoto(false);
+                }
+                takePhotoIntent();
+                dialog.dismiss();
+            }
+        });
+        adb.show();
+    }
+
+    private void takePhotoIntent() {
+        CameraUtil cameraUtil = new CameraUtil();
+        startActivityForResult(cameraUtil.takePhoto(getContext()), Constants.ACTIVITY_REQUEST_TAKE_PHOTO);
+        currentPhotoPath = cameraUtil.getPath();
+    }
+
+    private void requestTakePhotoWriteExternalStoragePermission() {
+        PermissionUtil.requestWriteStorageRuntimePermissions(this,
+                Constants.ACTIVITY_REQUEST_TAKE_PHOTO_WRITE_EXTERNAL_STORAGE_PERMISSION);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case Constants.ACTIVITY_REQUEST_TAKE_PHOTO_WRITE_EXTERNAL_STORAGE_PERMISSION:
+                if (PermissionUtil.isPermitted(grantResults)) {
+                    Prefs.setSavePhoto(true);
+                }
+                takePhotoIntent();
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 }

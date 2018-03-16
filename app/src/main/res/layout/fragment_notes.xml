@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragment_notes"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp">
+    <RelativeLayout android:id="@+id/upperView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dip" >
+        <ImageButton android:id="@+id/notes_back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_back_themed_24dp"
+            android:background="@android:color/transparent"
+            android:layout_alignParentLeft="true"
+            android:clickable="true" />
+        <TextView android:id="@+id/note_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:textSize="24sp"/>
+        <ImageButton android:id="@+id/notes_share_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_share_themed_24dp"
+            android:background="@android:color/transparent"
+            android:layout_alignParentRight="true"
+            android:clickable="true" />
+    </RelativeLayout>
+    <ListView android:id="@+id/notes_list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:clickable="true"/>
+
+</LinearLayout>

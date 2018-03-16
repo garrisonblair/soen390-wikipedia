@@ -30,8 +30,6 @@ public final class FileUtil {
             input.close();
 
             scriptString = new String(buffer);
-            scriptString =
-                    scriptString.replace("\n", "").replace("\r", "");
 
         } catch (Exception e) {
             Log.d("ERR", "Error loading javascript asset at " + path);
