@@ -7,7 +7,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import org.wikipedia.R;
-import org.wikipedia.texttospeech.TTSPreviewPreference;
 import org.wikipedia.texttospeech.TTSWrapper;
 
 public class SettingsFragment extends PreferenceLoaderFragment {

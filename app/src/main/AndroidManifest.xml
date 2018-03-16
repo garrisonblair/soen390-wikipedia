@@ -164,6 +164,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity android:name=".notes.NotesActivity"
+            android:parentActivityName=".activity.BaseActivity"/>
         <activity
             android:name=".crash.CrashReportActivity"
             android:excludeFromRecents="true"
