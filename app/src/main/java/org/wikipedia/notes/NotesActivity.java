@@ -9,6 +9,8 @@ import org.wikipedia.WikipediaApp;
 import org.wikipedia.activity.BaseActivity;
 import org.wikipedia.util.ResourceUtil;
 
+import butterknife.OnClick;
+
 public class NotesActivity extends BaseActivity {
 
     private WikipediaApp app;
@@ -75,4 +77,5 @@ public class NotesActivity extends BaseActivity {
     public void onDestroy() {
         super.onDestroy();
     }
+
 }
