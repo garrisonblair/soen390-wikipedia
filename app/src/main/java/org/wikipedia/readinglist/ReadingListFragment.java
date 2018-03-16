@@ -1,5 +1,6 @@
 package org.wikipedia.readinglist;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -37,6 +38,7 @@ import org.wikipedia.concurrency.CallbackTask;
 import org.wikipedia.history.HistoryEntry;
 import org.wikipedia.history.SearchActionModeCallback;
 import org.wikipedia.main.MainActivity;
+import org.wikipedia.notebook.NoteReferenceService;
 import org.wikipedia.page.ExclusiveBottomSheetPresenter;
 import org.wikipedia.page.PageActivity;
 import org.wikipedia.page.PageTitle;
@@ -94,6 +96,8 @@ public class ReadingListFragment extends Fragment implements ReadingListItemActi
     private SearchCallback searchActionModeCallback = new SearchCallback();
     private MultiSelectActionModeCallback multiSelectActionModeCallback = new MultiSelectCallback();
     private ExclusiveBottomSheetPresenter bottomSheetPresenter = new ExclusiveBottomSheetPresenter();
+    private NoteReferenceService noteReferenceService;
+    private String deleteOption;
 
     @NonNull private List<ReadingListPage> displayedPages = new ArrayList<>();
     private String currentSearchQuery;
@@ -139,6 +143,7 @@ public class ReadingListFragment extends Fragment implements ReadingListItemActi
         readingListId = getArguments().getLong(EXTRA_READING_LIST_ID);
 
         WikipediaApp.getInstance().getBus().register(eventBusMethods);
+        noteReferenceService = new NoteReferenceService(getContext());
 
         return view;
     }
@@ -547,7 +552,12 @@ public class ReadingListFragment extends Fragment implements ReadingListItemActi
     @Override
     public void onDeleteItem(int pageIndex) {
         ReadingListPage page = readingList == null ? null : readingList.pages().get(pageIndex);
-        deleteSinglePage(page);
+        if (noteReferenceService.articleCannotDelete(getContext(), ReadingListPage.toPageTitle(page).getText())) {
+            deleteOption = "single";
+            deleteArticleWithNotesDialog(page);
+        } else {
+            deleteSinglePage(page);
+        }
     }
 
     private void toggleOffline(@NonNull ReadingListPage page) {
@@ -645,7 +655,12 @@ public class ReadingListFragment extends Fragment implements ReadingListItemActi
 
         @Override
         public void onSwipe() {
-            deleteSinglePage(page);
+            if (noteReferenceService.articleCannotDelete(getContext(), ReadingListPage.toPageTitle(page).getText())) {
+                deleteOption = "single";
+                deleteArticleWithNotesDialog(page);
+            } else {
+                deleteSinglePage(page);
+            }
         }
     }
 
@@ -826,5 +841,75 @@ public class ReadingListFragment extends Fragment implements ReadingListItemActi
                 updateReadingListData();
             }
         }
+    }
+
+    private void deleteArticleWithNotesDialog(ReadingListPage page) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
+        dialog.setMessage("Are you sure to delete the article? The notes in this article will be deleted at the same time.");
+        dialog.setCancelable(false);
+        dialog.setPositiveButton(
+                "Yes",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        switch(deleteOption) {
+                            case "single":
+                                noteReferenceService.deleteAllNotes(ReadingListPage.toPageTitle(page).getText());
+                                deleteSinglePage(page);
+                                break;
+                            default:
+                                break;
+                        }
+                        deleteOption = "";
+                        return;
+                    }
+                });
+
+        dialog.setNegativeButton(
+                "No",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        deleteOption = "";
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = dialog.create();
+        alert.show();
+    }
+
+    private void deleteArticleWithNotesDialog(List<ReadingListPage> pages) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
+        dialog.setMessage("Are you sure to delete the articles? The notes in these articles will be deleted at the same time.");
+        dialog.setCancelable(false);
+        dialog.setPositiveButton(
+                "Yes",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Toast.makeText(getContext(), "Pages: " + ReadingListPage.toPageTitle(pages.get(0)).getText(), Toast.LENGTH_SHORT).show();
+
+                        for (ReadingListPage page : pages) {
+                            Toast.makeText(getContext(), "for: " + ReadingListPage.toPageTitle(page).getText(), Toast.LENGTH_SHORT).show();
+
+                            if (noteReferenceService.articleCannotDelete(getContext(), ReadingListPage.toPageTitle(page).getText())) {
+                                Toast.makeText(getContext(), "delete: " + ReadingListPage.toPageTitle(page).getText(), Toast.LENGTH_SHORT).show();
+                                noteReferenceService.deleteAllNotes(ReadingListPage.toPageTitle(page).getText());
+                                break;
+                            }
+                        }
+                        deleteSelectedPages();
+                        return;
+                    }
+                });
+
+        dialog.setNegativeButton(
+                "No",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        deleteOption = "";
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = dialog.create();
+        alert.show();
     }
 }
