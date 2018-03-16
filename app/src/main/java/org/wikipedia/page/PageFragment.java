@@ -144,6 +144,7 @@ public class PageFragment extends Fragment implements BackPressedHandler {
     private PageViewModel model;
     private PageInfo pageInfo;
     private NoteReferenceService noteReferenceService;
+    private String deleteOption;
 
     /**
      * List of tabs, each of which contains a backstack of page titles.
@@ -215,8 +216,13 @@ public class PageFragment extends Fragment implements BackPressedHandler {
 
                     @Override
                     public void onDeleted(@Nullable ReadingListPage page) {
-                        if (callback() != null) {
-                            callback().onPageRemoveFromReadingLists(getTitle());
+                        if (noteReferenceService.articleCannotDelete(getContext(), model.getPage().getTitle().getText())) {
+                            deleteOption = "button";
+                            deleteArticleWithNotesDialog();
+                        } else {
+                            if (callback() != null) {
+                                callback().onPageRemoveFromReadingLists(getTitle());
+                            }
                         }
                     }
                 }).show(getTitle());
@@ -829,9 +835,8 @@ public class PageFragment extends Fragment implements BackPressedHandler {
                 addToReadingList(getTitle(), AddToReadingListDialog.InvokeSource.PAGE_OVERFLOW_MENU);
                 return true;
             case R.id.menu_page_remove_from_list:
-                //Toast.makeText(getContext(), "" + model.getPage().getTitle().getText(), Toast.LENGTH_SHORT).show();
                 if (noteReferenceService.articleCannotDelete(getContext(), model.getPage().getTitle().getText())) {
-                    //Toast.makeText(getContext(), "The article contains note(s), cannot be deleted.", Toast.LENGTH_LONG).show();
+                    deleteOption = "menu";
                     deleteArticleWithNotesDialog();
                 } else {
                     showRemoveFromListsDialog();
@@ -1476,13 +1481,25 @@ public class PageFragment extends Fragment implements BackPressedHandler {
     private void deleteArticleWithNotesDialog() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
         dialog.setMessage("Are you sure to delete the article? The notes in this article will be deleted at the same time.");
-        dialog.setCancelable(true);
+        dialog.setCancelable(false);
         dialog.setPositiveButton(
                 "Yes",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        switch(deleteOption){
+                            case "menu":
+                                showRemoveFromListsDialog();
+                                break;
+                            case "button":
+                                if (callback() != null) {
+                                    callback().onPageRemoveFromReadingLists(getTitle());
+                                }
+                                break;
+                            default:
+                                break;
+                        }
                         noteReferenceService.deleteAllNotes(model.getTitle().getText());
-                        showRemoveFromListsDialog();
+                        deleteOption = "";
                         return;
                     }
                 });
@@ -1491,7 +1508,8 @@ public class PageFragment extends Fragment implements BackPressedHandler {
                 "No",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
+                        deleteOption = "";
+                        dialog.dismiss();
                     }
                 });
 

@@ -255,6 +255,7 @@ public class ShareHandler {
                 addNote();
                 ReadingListDbHelper readingListDbHelper = new ReadingListDbHelper();
                 if (!readingListDbHelper.articleExistInList(fragment.getTitle())) {
+                    Toast.makeText(fragment.getContext(), "Save your page so that you can find your notes afterward", Toast.LENGTH_LONG).show();
                     addNotedArticleToList();
                 }
                 return true;

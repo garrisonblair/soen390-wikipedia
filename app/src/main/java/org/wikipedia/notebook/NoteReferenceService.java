@@ -131,20 +131,13 @@ public class NoteReferenceService {
     }
 
     public boolean articleCannotDelete(Context context, String currentTitle) {
-        //NoteReferenceService noteReferenceService = new NoteReferenceService(getContext().getApplicationContext());
-        //List<String> articleTitles = noteReferenceService.getAllNotedArticles();
-        Toast.makeText(context, "Title: " + currentTitle, Toast.LENGTH_SHORT).show();
-
         List<String> articleTitles = getAllNotedArticles();
         boolean cannotDelete = false;
         for (String title : articleTitles) {
-            //if (model.getPage().getTitle().getText() == title) {
-            if (title == currentTitle) {
-                //Toast.makeText(getContext(), "The article contains note(s), cannot be deleted.", Toast.LENGTH_LONG).show();
+            if (title.equals(currentTitle)) {
                 cannotDelete = true;
             }
         }
-        Toast.makeText(context, "Title: " + cannotDelete, Toast.LENGTH_SHORT).show();
         return cannotDelete;
     }
 }
