@@ -43,4 +43,13 @@ public class FeaturesOnBoarding {
         onView(withId(R.id.inflate_features_onboarding_page_one)).perform(swipeLeft());
         onView(withId(R.id.inflate_features_onboarding_page_two)).check(matches(isDisplayed()));
     }
+
+    @Test
+    public void onBoardingPageThree() {
+        activityRule.getActivity();
+        onView(withId(R.id.inflate_features_onboarding_page_zero)).perform(swipeLeft());
+        onView(withId(R.id.inflate_features_onboarding_page_one)).perform(swipeLeft());
+        onView(withId(R.id.inflate_features_onboarding_page_two)).perform(swipeLeft());
+        onView(withId(R.id.inflate_features_onboarding_page_three)).check(matches(isDisplayed()));
+    }
 }
