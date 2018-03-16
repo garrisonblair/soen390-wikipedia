@@ -25,9 +25,12 @@ import org.wikipedia.notebook.Note;
 import org.wikipedia.notebook.NoteReferenceService;
 import org.wikipedia.notebook.Reference;
 import org.wikipedia.texttospeech.TTSWrapper;
+import org.wikipedia.util.ShareUtil;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class NotesFragment extends Fragment {
 
@@ -81,9 +84,47 @@ public class NotesFragment extends Fragment {
                 // Setting Title in the TextView
                 TextView titleView = view.findViewById(R.id.note_title);
                 titleView.setText(title);
+
                 // Creating the ListView of notes
                 ListView noteList = view.findViewById(R.id.notes_list);
                 noteList.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.simple_row, notesText));
+
+                //Listener for the share notes button
+                ImageButton shareButton = view.findViewById(R.id.notes_share_button);
+                shareButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (notes != null && notes.size() != 0) {
+                            StringBuilder notesToShare = new StringBuilder();
+                            Set<Reference> referencesToShare = new HashSet<>();
+                            int indexNote = 0;
+
+                            notesToShare.append("Notes for Wikipedia article: " + title);
+                            for (Note noteItem:notes) {
+                                indexNote++;
+                                notesToShare.append("\n\n- Note " + indexNote + ":\n\n");
+                                notesToShare.append(noteItem.getText() + "\n\n");
+                                List<Reference> noteRefs = noteItem.getAllReferences();
+                                if (noteRefs.size() > 0) {
+                                    for (Reference ref : noteRefs) {
+                                        notesToShare.append("[" + ref.getNumber() + "] ");
+                                        referencesToShare.add(ref);
+                                    }
+                                }
+                            }
+
+                            notesToShare.append("\n\nReferences:\n\n");
+                            if (referencesToShare == null) {
+                                notesToShare.append("None.");
+                            } else {
+                                for (Reference referenceItem : referencesToShare) {
+                                    notesToShare.append("[" + referenceItem.getNumber() + "] " + referenceItem.getText() + "\n");
+                                }
+                            }
+                            ShareUtil.shareText(getContext(), title, notesToShare.toString());
+                        }
+                    }
+                });
 
                 // Setting listener to the items in the ListView to open individual notes in dialog
                 noteList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
