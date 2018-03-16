@@ -144,7 +144,7 @@ public class NotesFragment extends Fragment {
                             }
 
                             notesToShare.append("\n\nReferences:\n\n");
-                            if (referencesToShare == null) {
+                            if (referencesToShare == null || referencesToShare.size() == 0) {
                                 notesToShare.append("None.");
                             } else {
                                 for (Reference referenceItem : referencesToShare) {
@@ -179,7 +179,7 @@ public class NotesFragment extends Fragment {
                         TextView dialogTitle = dialog.findViewById(R.id.note_dialog_title);
                         dialogTitle.setText(title);
 
-                        // TextView for Body
+                        // TextView for Bodyl
                         TextView dialogBody = dialog.findViewById(R.id.note_dialog_body);
                         dialogBody.setText(notesText.get(position));
 
