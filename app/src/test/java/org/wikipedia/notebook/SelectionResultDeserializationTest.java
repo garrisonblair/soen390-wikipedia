@@ -32,4 +32,16 @@ public class SelectionResultDeserializationTest {
         assertEquals("reference2", ref2.getText());
 
     }
+
+    @Test
+    public void testDeserializingSelectionResultNoReferences() {
+        String json = "{\"selectionText\": \"This is a note\", \"references\": []}";
+
+        Gson gson = new Gson();
+
+        SelectionResult result = gson.fromJson(json, SelectionResult.class);
+
+        assertEquals("This is a note", result.getSelectionText());
+        assertEquals( 0, result.getReferences().size());
+    }
 }
