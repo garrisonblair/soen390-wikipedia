@@ -36,6 +36,12 @@ public class NotesFragment extends Fragment {
 
     private List<Reference> references;
 
+    private View view;
+    private View rootView;
+
+    private View.OnTouchListener swipeListener;
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,20 +60,15 @@ public class NotesFragment extends Fragment {
             @Override
             public void onError(String utteranceId) { }
         });
-    }
 
-    @Override
-    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_notes, container, false);
-
-        view.setOnTouchListener(new OnSwipeTouchListener(getContext()){
+        swipeListener = new OnSwipeTouchListener(getContext()){
             public void onSwipeRight() {
                 Log.d("DEV_DEBUG", "Swipe Right");
+                Log.d("DEV_DEBUG", "Should close notes activity and go back to article");
+                getActivity().onBackPressed();
             }
             public void onSwipeLeft() {
                 Log.d("DEV_DEBUG", "Swipe Left");
-                Log.d("DEV_DEBUG", "Should close notes activity and go back to article");
-                getActivity().onBackPressed();
             }
             public void onSwipeTop() {
                 Log.d("DEV_DEBUG", "Swipe Up");
@@ -75,11 +76,20 @@ public class NotesFragment extends Fragment {
             public void onSwipeBottom() {
                 Log.d("DEV_DEBUG", "Swipe Down");
             }
-        });
+        };
 
+    }
+
+    @Override
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        //View view = inflater.inflate(R.layout.fragment_notes, container, false);
+        view = inflater.inflate(R.layout.fragment_notes, container, false);
+        rootView = view.getRootView();
+        rootView.setOnTouchListener(swipeListener);
 
         NoteReferenceService service = new NoteReferenceService(getContext());
         service.getAllArticleNotes(pageId, new NoteReferenceService.GetNotesCallback() {
+
             @Override
             public void afterGetNotes(List<Note> notes) {
 
@@ -98,6 +108,8 @@ public class NotesFragment extends Fragment {
                 // Creating the ListView of notes
                 ListView noteList = view.findViewById(R.id.notes_list);
                 noteList.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.simple_row, notesText));
+
+                noteList.setOnTouchListener(swipeListener);
 
                 // Setting listener to the items in the ListView to open individual notes in dialog
                 noteList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -145,6 +157,9 @@ public class NotesFragment extends Fragment {
 
                         // Creating ListView for references
                         ListView dialogRefs = dialog.findViewById(R.id.reference_list);
+
+                        dialogRefs.setOnTouchListener(swipeListener);
+
                         dialogRefs.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.reference_row, refsText));
 
                         dialog.show();

@@ -484,6 +484,9 @@ public class PageFragment extends Fragment implements BackPressedHandler {
         webView.setOnTouchListener(new OnSwipeTouchListener(getContext()){
             public void onSwipeRight() {
                 Log.d("DEV_DEBUG", "Swipe Right");
+            }
+            public void onSwipeLeft() {
+                Log.d("DEV_DEBUG", "Swipe Left");
                 Log.d("DEV_DEBUG", "Should open notes activity");
                 //int pageId = pageFragment.getPage().getPageProperties().getPageId();
                 //String pageTitle = pageFragment.getPage().getDisplayTitle();
@@ -495,9 +498,6 @@ public class PageFragment extends Fragment implements BackPressedHandler {
                 intent.putExtra("pageTitle", pageTitle);
                 startActivity(intent);
                 //finish();
-            }
-            public void onSwipeLeft() {
-                Log.d("DEV_DEBUG", "Swipe Left");
             }
             public void onSwipeTop() {
                 Log.d("DEV_DEBUG", "Swipe Up");
