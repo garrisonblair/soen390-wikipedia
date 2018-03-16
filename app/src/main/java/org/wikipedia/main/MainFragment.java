@@ -176,6 +176,7 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
             Bitmap photo = GalleryUtil.getSelectedPicture(resultCode, data, getActivity());
             if (photo != null) {
                 getKeywordsFromPhoto(photo);
+
             }
         } else if (requestCode == Constants.ACTIVITY_REQUEST_LOGIN
                 && resultCode == LoginActivity.RESULT_LOGIN_SUCCESS) {
@@ -184,7 +185,9 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
             if (resultCode == Activity.RESULT_OK && currentPhotoPath != null) {
                 Bitmap photo = BitmapFactory.decodeFile(currentPhotoPath);
 
-                getKeywordsFromPhoto(photo);
+                if (photo != null) {
+                    getKeywordsFromPhoto(photo);
+                }
 
                 //Destroy or save the temporary image file after using it.
                 File tempFile = new File(currentPhotoPath);

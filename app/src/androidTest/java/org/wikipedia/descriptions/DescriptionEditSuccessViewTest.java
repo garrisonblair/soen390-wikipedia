@@ -3,6 +3,7 @@ package org.wikipedia.descriptions;
 
 import android.support.annotation.NonNull;
 
+import org.junit.Ignore;
 import org.junit.experimental.theories.Theory;
 import org.junit.experimental.theories.suppliers.TestedOn;
 import org.wikipedia.test.theories.TestedOnBool;
@@ -14,6 +15,7 @@ import org.wikipedia.theme.Theme;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+@Ignore
 public class DescriptionEditSuccessViewTest extends ViewTest {
     private DescriptionEditSuccessView subject;
 

@@ -2,6 +2,7 @@ package org.wikipedia.descriptions;
 
 import android.support.annotation.NonNull;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.theories.Theory;
 import org.junit.experimental.theories.suppliers.TestedOn;
@@ -23,6 +24,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.wikipedia.descriptions.DescriptionEditView.Callback;
 
+@Ignore
 public class DescriptionEditViewTest extends ViewTest {
     private DescriptionEditView subject;
 

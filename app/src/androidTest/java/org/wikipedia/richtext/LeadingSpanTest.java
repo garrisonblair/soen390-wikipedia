@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import org.apache.commons.lang3.StringUtils;
+import org.junit.Ignore;
 import org.junit.experimental.theories.Theory;
 import org.junit.experimental.theories.suppliers.TestedOn;
 import org.wikipedia.test.view.FontScale;
@@ -21,6 +22,7 @@ import org.wikipedia.views.AppTextView;
 
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
+@Ignore
 public class LeadingSpanTest extends ViewTest {
     private TextView textView;
 

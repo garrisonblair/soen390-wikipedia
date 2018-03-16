@@ -13,6 +13,7 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.hamcrest.core.IsInstanceOf;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,6 +38,7 @@ public class TTSSettingsUITests {
     @Rule
     public ActivityTestRule<SettingsActivity> mActivityTestRule = new ActivityTestRule<>(SettingsActivity.class);
 
+    @Ignore
     @Test
     public void tTSSettingsUITests() {
         // Added a sleep statement to match the app's execution delay.

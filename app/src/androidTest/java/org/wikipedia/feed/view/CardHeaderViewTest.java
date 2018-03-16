@@ -6,6 +6,7 @@ import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.AppCompatImageView;
 import android.widget.ImageView;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.theories.Theory;
 import org.junit.experimental.theories.suppliers.TestedOn;
@@ -28,6 +29,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 
+@Ignore
 public class CardHeaderViewTest extends ViewTest {
     @ColorRes private static final int BLUE = R.color.accent50;
     private CardHeaderView subject;

@@ -2,6 +2,7 @@ package org.wikipedia.feed.view;
 
 import android.support.annotation.NonNull;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.theories.Theory;
 import org.junit.experimental.theories.suppliers.TestedOn;
@@ -25,6 +26,7 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.mock;
 import static org.wikipedia.feed.view.ListCardItemView.Callback;
 
+@Ignore
 public class ListCardItemViewTest extends ViewTest {
     private ListCardItemView subject;
 
