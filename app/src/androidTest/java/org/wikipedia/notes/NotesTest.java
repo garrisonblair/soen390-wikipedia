@@ -2,6 +2,7 @@ package org.wikipedia.notes;
 
 import android.support.test.rule.ActivityTestRule;
 
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.wikipedia.R;
@@ -16,6 +17,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.Matchers.anything;
 
+@Ignore
 public class NotesTest {
 
     private static final String TEST_INPUT = "foobar";
