@@ -639,5 +639,16 @@ public final class Prefs {
     public static boolean getSavePhoto() {
         return getBoolean("savePhoto", false);
     }
+
+
+    public static void setAskSavePhoto(boolean askSavePhoto) {
+        setBoolean("askSavePhoto", askSavePhoto);
+    }
+
+    @NonNull
+    public static boolean getAskSavePhoto() {
+        return getBoolean("askSavePhoto", true);
+    }
+
     private Prefs() { }
 }

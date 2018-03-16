@@ -132,6 +132,7 @@ class SettingsPreferenceLoader extends BasePreferenceLoader {
             }
         });
 
+        updateSavePhoto();
         if (!PermissionUtil.hasWriteExternalStoragePermission(getActivity()) && Prefs.getSavePhoto()) {
             ((SwitchPreferenceCompat)findPreference("savePhoto")).setChecked(false);
         }
@@ -169,6 +170,12 @@ class SettingsPreferenceLoader extends BasePreferenceLoader {
         Preference languagePref = findPreference(R.string.preference_key_language);
         languagePref.setSummary(WikipediaApp.getInstance().getAppOrSystemLanguageLocalizedName());
     }
+
+    private void updateSavePhoto() {
+        Preference savePhoto = findPreference("savePhoto");
+        savePhoto.setDefaultValue(Prefs.getSavePhoto());
+    }
+
 
     private static class ShowZeroInterstitialListener implements Preference.OnPreferenceChangeListener {
         @Override public boolean onPreferenceChange(Preference preference, Object newValue) {
