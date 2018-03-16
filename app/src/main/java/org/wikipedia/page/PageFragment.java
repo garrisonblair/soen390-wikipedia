@@ -1,7 +1,9 @@
 package org.wikipedia.page;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -52,12 +54,15 @@ import org.wikipedia.gallery.GalleryActivity;
 import org.wikipedia.history.HistoryEntry;
 import org.wikipedia.history.UpdateHistoryTask;
 import org.wikipedia.language.LangLinksActivity;
+import org.wikipedia.notebook.NoteReferenceService;
+import org.wikipedia.notes.NotesActivity;
 import org.wikipedia.offline.OfflineManager;
 import org.wikipedia.onboarding.PrefsOnboardingStateMachine;
 import org.wikipedia.page.action.PageActionTab;
 import org.wikipedia.page.action.PageActionToolbarHideHandler;
 import org.wikipedia.page.bottomcontent.BottomContentView;
 import org.wikipedia.page.leadimages.LeadImagesHandler;
+import org.wikipedia.page.listeners.OnSwipeTouchListener;
 import org.wikipedia.page.shareafact.ShareHandler;
 import org.wikipedia.page.tabs.Tab;
 import org.wikipedia.page.tabs.TabsProvider;
@@ -103,6 +108,7 @@ import static org.wikipedia.util.UriUtil.decodeURL;
 import static org.wikipedia.util.UriUtil.visitInExternalBrowser;
 
 public class PageFragment extends Fragment implements BackPressedHandler {
+
     public interface Callback {
         void onPageShowBottomSheet(@NonNull BottomSheetDialog dialog);
         void onPageShowBottomSheet(@NonNull BottomSheetDialogFragment dialog);
@@ -140,6 +146,10 @@ public class PageFragment extends Fragment implements BackPressedHandler {
     private PageFragmentLoadState pageFragmentLoadState;
     private PageViewModel model;
     private PageInfo pageInfo;
+    private NoteReferenceService noteReferenceService;
+    private String deleteOption;
+
+    private static final String DEBUG_TAG = "Gestures";
 
     /**
      * List of tabs, each of which contains a backstack of page titles.
@@ -211,8 +221,13 @@ public class PageFragment extends Fragment implements BackPressedHandler {
 
                     @Override
                     public void onDeleted(@Nullable ReadingListPage page) {
-                        if (callback() != null) {
-                            callback().onPageRemoveFromReadingLists(getTitle());
+                        if (noteReferenceService.articleCannotDelete(getContext(), model.getPage().getTitle().getText())) {
+                            deleteOption = "button";
+                            deleteArticleWithNotesDialog();
+                        } else {
+                            if (callback() != null) {
+                                callback().onPageRemoveFromReadingLists(getTitle());
+                            }
                         }
                     }
                 }).show(getTitle());
@@ -220,7 +235,6 @@ public class PageFragment extends Fragment implements BackPressedHandler {
                 addToReadingList(getTitle(), AddToReadingListDialog.InvokeSource.BOOKMARK_BUTTON);
             }
         }
-
         @Override
         public void onSharePageTabSelected() {
             sharePageLink();
@@ -294,6 +308,8 @@ public class PageFragment extends Fragment implements BackPressedHandler {
         model = new PageViewModel();
 
         pageFragmentLoadState = new PageFragmentLoadState();
+        noteReferenceService = new NoteReferenceService(getContext());
+
 
         initTabs();
     }
@@ -304,6 +320,7 @@ public class PageFragment extends Fragment implements BackPressedHandler {
         View rootView = inflater.inflate(R.layout.fragment_page, container, false);
 
         webView = rootView.findViewById(R.id.page_web_view);
+
         initWebViewListeners();
 
         tocDrawer = rootView.findViewById(R.id.page_toc_drawer);
@@ -454,6 +471,7 @@ public class PageFragment extends Fragment implements BackPressedHandler {
                 && ACTION_SHOW_TAB_LIST.equals(activity.getIntent().getAction());
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void initWebViewListeners() {
         webView.addOnUpOrCancelMotionEventListener(new ObservableWebView.OnUpOrCancelMotionEventListener() {
             @Override
@@ -471,6 +489,33 @@ public class PageFragment extends Fragment implements BackPressedHandler {
                 }
             }
         });
+
+        webView.setOnTouchListener(new OnSwipeTouchListener(getContext()){
+            public void onSwipeRight() {
+                Log.d("DEV_DEBUG", "Swipe Right");
+            }
+            public void onSwipeLeft() {
+                Log.d("DEV_DEBUG", "Swipe Left");
+                Log.d("DEV_DEBUG", "Should open notes activity");
+                //int pageId = pageFragment.getPage().getPageProperties().getPageId();
+                //String pageTitle = pageFragment.getPage().getDisplayTitle();
+                //Intent intent = new Intent(pageFragment.getContext(), NotesActivity.class);
+                int pageId = getPage().getPageProperties().getPageId();
+                String pageTitle = getPage().getDisplayTitle();
+                Intent intent = new Intent(getContext(), NotesActivity.class);
+                intent.putExtra("pageId", pageId);
+                intent.putExtra("pageTitle", pageTitle);
+                startActivity(intent);
+                //finish();
+            }
+            public void onSwipeTop() {
+                Log.d("DEV_DEBUG", "Swipe Up");
+            }
+            public void onSwipeBottom() {
+                Log.d("DEV_DEBUG", "Swipe Down");
+            }
+        });
+
         webView.setWebViewClient(new OkHttpWebViewClient() {
             @NonNull @Override public WikiSite getWikiSite() {
                 return model.getTitle().getWikiSite();
@@ -825,7 +870,12 @@ public class PageFragment extends Fragment implements BackPressedHandler {
                 addToReadingList(getTitle(), AddToReadingListDialog.InvokeSource.PAGE_OVERFLOW_MENU);
                 return true;
             case R.id.menu_page_remove_from_list:
-                showRemoveFromListsDialog();
+                if (noteReferenceService.articleCannotDelete(getContext(), model.getPage().getTitle().getText())) {
+                    deleteOption = "menu";
+                    deleteArticleWithNotesDialog();
+                } else {
+                    showRemoveFromListsDialog();
+                }
                 return true;
             case R.id.menu_page_find_in_page:
                 showFindInPage();
@@ -1408,6 +1458,7 @@ public class PageFragment extends Fragment implements BackPressedHandler {
         Callback callback = callback();
         if (callback != null) {
             callback.onPageAddToReadingList(title, source);
+            source.setHasNote(false);
         }
     }
 
@@ -1460,5 +1511,44 @@ public class PageFragment extends Fragment implements BackPressedHandler {
     @Nullable
     public Callback callback() {
         return FragmentUtil.getCallback(this, Callback.class);
+    }
+
+    private void deleteArticleWithNotesDialog() {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
+        dialog.setMessage("Are you sure to delete the article? The notes in this article will be deleted at the same time.");
+        dialog.setCancelable(false);
+        dialog.setPositiveButton(
+                "Yes",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        switch(deleteOption){
+                            case "menu":
+                                showRemoveFromListsDialog();
+                                break;
+                            case "button":
+                                if (callback() != null) {
+                                    callback().onPageRemoveFromReadingLists(getTitle());
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                        noteReferenceService.deleteAllNotes(model.getTitle().getText());
+                        deleteOption = "";
+                        return;
+                    }
+                });
+
+        dialog.setNegativeButton(
+                "No",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        deleteOption = "";
+                        dialog.dismiss();
+                    }
+                });
+
+        AlertDialog alert = dialog.create();
+        alert.show();
     }
 }

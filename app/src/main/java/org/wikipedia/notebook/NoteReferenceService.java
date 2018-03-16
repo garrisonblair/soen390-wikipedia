@@ -68,14 +68,13 @@ public class NoteReferenceService {
                 }
                 for (int i = 0; i < referenceEntities.size(); i++) {
                     if (!mapReference.containsKey(referenceEntities.get(i).getReferenceNum())) {
-                        mapReference.put(referenceEntities.get(i).getNoteId(),
+                        mapReference.put(referenceEntities.get(i).getReferenceNum(),
                                 new Reference(referenceEntities.get(i).getReferenceNum(), referenceEntities.get(i).getText()));
                     }
                 }
 
                 for (int i = 0; i < referenceEntities.size(); i++) {
                     mapNote.get(referenceEntities.get(i).getNoteId()).addReference(mapReference.get(referenceEntities.get(i).getReferenceNum()));
-                    mapReference.get(referenceEntities.get(i).getReferenceNum()).addNote(mapNote.get(referenceEntities.get(i).getNoteId()));
                 }
 
                 return new ArrayList<Note>(mapNote.values());
@@ -119,5 +118,24 @@ public class NoteReferenceService {
                 return null;
             }
         }.execute(new Object());
+    }
+
+    public List<String> getAllNotedArticles() {
+        return noteDao.getAllArticles();
+    }
+
+    public void deleteAllNotes(String title) {
+        noteDao.deleteAllNotes(title);
+    }
+
+    public boolean articleCannotDelete(Context context, String currentTitle) {
+        List<String> articleTitles = getAllNotedArticles();
+        boolean cannotDelete = false;
+        for (String title : articleTitles) {
+            if (title.equals(currentTitle)) {
+                cannotDelete = true;
+            }
+        }
+        return cannotDelete;
     }
 }

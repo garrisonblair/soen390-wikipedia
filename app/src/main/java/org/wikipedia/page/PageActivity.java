@@ -24,6 +24,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -53,6 +54,8 @@ import org.wikipedia.feed.mainpage.MainPageClient;
 import org.wikipedia.gallery.GalleryActivity;
 import org.wikipedia.history.HistoryEntry;
 import org.wikipedia.language.LangLinksActivity;
+import org.wikipedia.notes.NotesActivity;
+import org.wikipedia.notes.NotesFragment;
 import org.wikipedia.page.linkpreview.LinkPreviewDialog;
 import org.wikipedia.page.listeners.HideStopButtonOnDoneListener;
 import org.wikipedia.page.tabs.TabsProvider;
@@ -72,6 +75,9 @@ import org.wikipedia.util.log.L;
 import org.wikipedia.views.ObservableWebView;
 import org.wikipedia.widgets.WidgetProviderFeaturedPage;
 import org.wikipedia.wiktionary.WiktionaryDialog;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -112,7 +118,7 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
     private EventBusMethods busMethods;
     private ActionMode currentActionMode;
 
-    private static TTSWrapper textToSpeech;
+    private static TTSWrapper TEXTTOSPEECH;
 
     private PageToolbarHideHandler toolbarHideHandler;
 
@@ -127,6 +133,7 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         app = (WikipediaApp) getApplicationContext();
         MetricsManager.register(app);
@@ -192,6 +199,7 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
             // then we must have been launched with an Intent, so... handle it!
             handleIntent(getIntent());
         }
+
     }
 
     @Override
@@ -218,6 +226,7 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
         MenuItem contentIssues = menu.findItem(R.id.menu_page_content_issues);
         MenuItem similarTitles = menu.findItem(R.id.menu_page_similar_titles);
         MenuItem themeChooserItem = menu.findItem(R.id.menu_page_font_and_theme);
+        MenuItem addNoteItem = menu.findItem(R.id.menu_text_add_note);
 
         if (pageFragment.isLoading() || pageFragment.getErrorState()) {
             otherLangItem.setEnabled(false);
@@ -243,6 +252,11 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
         return true;
     }
 
+    @OnClick(R.id.page_toolbar_button_notes)
+    public void onNotesButtonClicked() {
+        openNotesPage();
+    }
+
     @OnClick(R.id.page_toolbar_button_search)
     public void onSearchButtonClicked() {
         openSearchFragment(SearchInvokeSource.TOOLBAR, null);
@@ -254,8 +268,8 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
     }
 
     @OnClick(R.id.page_stop_button)
-    public void onStopButtonClicked(){
-        textToSpeech.stop();
+    public void onStopButtonClicked() {
+        TEXTTOSPEECH.stop();
         stopButton.setVisibility(View.INVISIBLE);
     }
 
@@ -735,7 +749,7 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
         app.resetWikiSite();
         app.getSessionFunnel().touchSession();
 
-        textToSpeech = TTSWrapper.getInstance(this, new HideStopButtonOnDoneListener(this));
+        TEXTTOSPEECH = TTSWrapper.getInstance(this, new HideStopButtonOnDoneListener(this));
     }
 
     @Override
@@ -744,7 +758,7 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
             // Explicitly close any current ActionMode (see T147191)
             finishActionMode();
         }
-        textToSpeech.shutdown();
+        TEXTTOSPEECH.shutdown();
         super.onPause();
     }
 
@@ -917,6 +931,11 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
         getSupportFragmentManager().beginTransaction().remove(fragment).commitNowAllowingStateLoss();
     }
 
+    @Nullable private NotesFragment notesFragment() {
+        return (NotesFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.activity_page_container);
+    }
+
     @Nullable private SearchFragment searchFragment() {
         return (SearchFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.activity_page_container);
@@ -925,6 +944,7 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
     @NonNull public TabLayout getTabLayout() {
         return pageFragment.getTabLayout();
     }
+
 
     private class EventBusMethods {
         @Subscribe public void on(ChangeTextSizeEvent event) {
@@ -967,5 +987,17 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
                 break;
         }
         return volumnOff;
+    }
+
+    // Method call to open notes page activity. This is used by the button and eventually swipe feature if possible
+    private void openNotesPage() {
+        Log.d("DEV_DEBUG", "Should open notes activity");
+        int pageId = pageFragment.getPage().getPageProperties().getPageId();
+        String pageTitle = pageFragment.getPage().getDisplayTitle();
+        Intent intent = new Intent(pageFragment.getContext(), NotesActivity.class);
+        intent.putExtra("pageId", pageId);
+        intent.putExtra("pageTitle", pageTitle);
+        startActivity(intent);
+        //finish();
     }
 }
