@@ -25,6 +25,13 @@ before_install:
 
 jobs:
   include:
+
+  - stage: Checkstyle
+    script: ./gradlew checkstyle
+  - stage: Build
+    script: ./gradlew -q clean assembleDevDebug
+  - stage: UnitTests
+    script: ./gradlew testDevDebug
   - stage: Android Tests
     before_script:
     - echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a
@@ -35,10 +42,5 @@ jobs:
     - adb shell input keyevent 82 &
     script: ./gradlew connectedDevDebugAndroidTest
     if: branch = master
-  - stage: Checkstyle
-    script: ./gradlew checkstyle
-  - stage: UnitTests
-    script: ./gradlew testDevDebug
-
 
 
