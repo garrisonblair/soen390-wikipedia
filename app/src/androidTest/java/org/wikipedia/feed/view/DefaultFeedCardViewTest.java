@@ -3,6 +3,7 @@ package org.wikipedia.feed.view;
 import android.content.Context;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.theories.Theory;
 import org.wikipedia.feed.model.Card;
@@ -17,6 +18,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
 
+@Ignore
 public class DefaultFeedCardViewTest extends ViewTest {
     private DefaultFeedCardView<Card> subject;
 

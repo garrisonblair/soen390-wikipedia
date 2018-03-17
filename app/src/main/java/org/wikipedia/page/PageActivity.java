@@ -226,6 +226,7 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
         MenuItem contentIssues = menu.findItem(R.id.menu_page_content_issues);
         MenuItem similarTitles = menu.findItem(R.id.menu_page_similar_titles);
         MenuItem themeChooserItem = menu.findItem(R.id.menu_page_font_and_theme);
+        MenuItem addNoteItem = menu.findItem(R.id.menu_text_add_note);
 
         if (pageFragment.isLoading() || pageFragment.getErrorState()) {
             otherLangItem.setEnabled(false);

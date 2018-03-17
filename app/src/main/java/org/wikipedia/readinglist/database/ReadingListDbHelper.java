@@ -470,6 +470,29 @@ public class ReadingListDbHelper {
         return false;
     }
 
+    public boolean pageExistsInAnyLists(SQLiteDatabase db, @NonNull PageTitle title) {
+        List<ReadingList> readingLists = getAllListsWithoutContents();
+        for (ReadingList list : readingLists) {
+            try (Cursor cursor = db.query(ReadingListPageContract.TABLE, null,
+                    ReadingListPageContract.Col.SITE.getName() + " = ? AND "
+                            + ReadingListPageContract.Col.LANG.getName() + " = ? AND "
+                            + ReadingListPageContract.Col.NAMESPACE.getName() + " = ? AND "
+                            + ReadingListPageContract.Col.TITLE.getName() + " = ? AND "
+                            + ReadingListPageContract.Col.LISTID.getName() + " = ? AND "
+                            + ReadingListPageContract.Col.STATUS.getName() + " != ?",
+                    new String[]{title.getWikiSite().authority(), title.getWikiSite().languageCode(),
+                            Integer.toString(title.namespace().code()), title.getDisplayText(),
+                            Long.toString(list.id()),
+                            Integer.toString(ReadingListPage.STATUS_QUEUE_FOR_DELETE)},
+                    null, null, null)) {
+                if (cursor.getCount() > 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     private void addPageToList(SQLiteDatabase db, @NonNull ReadingList list, @NonNull PageTitle title) {
         ReadingListPage protoPage = new ReadingListPage(title);
         insertPageInDb(db, list, protoPage);
@@ -482,5 +505,8 @@ public class ReadingListDbHelper {
 
     private SQLiteDatabase getWritableDatabase() {
         return WikipediaApp.getInstance().getDatabase().getWritableDatabase();
+    }
+    public boolean articleExistInList(PageTitle title) {
+        return pageExistsInAnyLists(getReadableDatabase(), title);
     }
 }

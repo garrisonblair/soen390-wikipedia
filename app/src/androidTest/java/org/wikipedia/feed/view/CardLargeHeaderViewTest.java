@@ -3,6 +3,7 @@ package org.wikipedia.feed.view;
 import android.support.annotation.NonNull;
 import android.view.View;
 
+import org.junit.Ignore;
 import org.junit.experimental.theories.Theory;
 import org.junit.experimental.theories.suppliers.TestedOn;
 import org.wikipedia.R;
@@ -24,6 +25,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+@Ignore
 public class CardLargeHeaderViewTest extends ViewTest {
     private CardLargeHeaderView subject;
 

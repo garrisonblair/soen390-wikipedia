@@ -44,6 +44,7 @@ public class AddToReadingListDialog extends ExtendedBottomSheetDialogFragment {
         ON_THIS_DAY_ACTIVITY(9);
 
         private static final EnumCodeMap<InvokeSource> MAP = new EnumCodeMap<>(InvokeSource.class);
+        private boolean hasNote;
 
         private final int code;
 
@@ -57,6 +58,13 @@ public class AddToReadingListDialog extends ExtendedBottomSheetDialogFragment {
 
         InvokeSource(int code) {
             this.code = code;
+            this.hasNote = false;
+        }
+        public void setHasNote(boolean hasNote) {
+            this.hasNote = hasNote;
+        }
+        public boolean getHasNote() {
+            return this.hasNote;
         }
     }
 
@@ -194,6 +202,9 @@ public class AddToReadingListDialog extends ExtendedBottomSheetDialogFragment {
 
     private void showCreateListDialog() {
         String title = getString(R.string.reading_list_name_sample);
+        if (invokeSource.hasNote) {
+            title = "My Notes";
+        }
         List<String> existingTitles = new ArrayList<>();
         for (ReadingList tempList : readingLists) {
             existingTitles.add(tempList.title());

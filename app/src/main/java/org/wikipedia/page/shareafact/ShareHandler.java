@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.view.ActionMode;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,6 +26,7 @@ import org.json.JSONObject;
 import org.wikipedia.R;
 import org.wikipedia.WikipediaApp;
 import org.wikipedia.activity.ActivityUtil;
+import org.wikipedia.activity.FragmentUtil;
 import org.wikipedia.analytics.ShareAFactFunnel;
 import org.wikipedia.bridge.CommunicationBridge;
 import org.wikipedia.dataclient.mwapi.MwQueryResponse;
@@ -35,6 +37,7 @@ import org.wikipedia.notebook.Note;
 import org.wikipedia.notebook.NoteReferenceService;
 import org.wikipedia.notebook.SelectionResult;
 import org.wikipedia.onboarding.PrefsOnboardingStateMachine;
+import org.wikipedia.page.ExclusiveBottomSheetPresenter;
 import org.wikipedia.page.Namespace;
 import org.wikipedia.page.NoDimBottomSheetDialog;
 import org.wikipedia.page.Page;
@@ -43,6 +46,8 @@ import org.wikipedia.page.PageFragment;
 import org.wikipedia.page.PageProperties;
 import org.wikipedia.page.PageTitle;
 import org.wikipedia.page.listeners.HideStopButtonOnDoneListener;
+import org.wikipedia.readinglist.AddToReadingListDialog;
+import org.wikipedia.readinglist.database.ReadingListDbHelper;
 import org.wikipedia.settings.Prefs;
 import org.wikipedia.texttospeech.TTSWrapper;
 import org.wikipedia.util.FeedbackUtil;
@@ -86,6 +91,7 @@ public class ShareHandler {
     @Nullable private Locale selectedLocale;
     @Nullable private final ReentrantLock lock = new ReentrantLock();
 
+    private ExclusiveBottomSheetPresenter bottomSheetPresenter = new ExclusiveBottomSheetPresenter();
 
     private void createFunnel() {
         final Page page = fragment.getPage();
@@ -230,7 +236,9 @@ public class ShareHandler {
                 } else {
                     boolean isSetLanguage = textToSpeech.setTTSLanguage(textToSpeech.getLocaleForTTS(pageLanguage));
                     if (isSetLanguage) {
-                        Toast.makeText(fragment.getActivity(), "Text to speech language has set to : " + textToSpeech.getTTSLanguage(), Toast.LENGTH_SHORT).show();
+                        Toast toast = Toast.makeText(fragment.getActivity(), "Text to speech language has set to : " + textToSpeech.getTTSLanguage(), Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.TOP, 0, 0);
+                        toast.show();
                         selectedTextToSpeech();
                         setStopButtonVisibility(View.VISIBLE);
                         leaveActionMode();
@@ -248,6 +256,11 @@ public class ShareHandler {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 addNote();
+                ReadingListDbHelper readingListDbHelper = new ReadingListDbHelper();
+                if (!readingListDbHelper.articleExistInList(fragment.getTitle())) {
+                    Toast.makeText(fragment.getContext(), "Save your page so that you can find your notes afterward", Toast.LENGTH_LONG).show();
+                    addNotedArticleToList();
+                }
                 return true;
             }
         });
@@ -523,5 +536,19 @@ public class ShareHandler {
             }
         });
         builderSingle.show();
+    }
+    public void addNotedArticleToList() {
+        addToReadingList(fragment.getTitle(), AddToReadingListDialog.InvokeSource.BOOKMARK_BUTTON);
+    }
+    public void addToReadingList(@NonNull PageTitle title, @NonNull AddToReadingListDialog.InvokeSource source) {
+        source.setHasNote(true);
+        PageFragment.Callback callback = callback();
+        if (callback != null) {
+            callback.onPageAddToReadingList(title, source);
+        }
+    }
+    @Nullable
+    public PageFragment.Callback callback() {
+        return FragmentUtil.getCallback(fragment, PageFragment.Callback.class);
     }
 }

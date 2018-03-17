@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.text.SpannableStringBuilder;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.experimental.theories.Theory;
 import org.wikipedia.test.view.FontScale;
 import org.wikipedia.test.view.LayoutDirection;
@@ -19,6 +20,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 
+@Ignore
 public class OnThisDayCardViewTest extends ViewTest {
     private static final String NEXT_YEAR_STR = "Last year";
     private static final int YEAR = 2000;

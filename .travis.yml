@@ -1,4 +1,5 @@
 language: android
+
 android:
   components:
     # Uncomment the lines below if you want to
@@ -10,48 +11,36 @@ android:
     - build-tools-26.0.1
 
     # The SDK version used to compile your project
-    - android-26
+    # Uncomment corresponding emulator
+    - android-22
+#    - android-24
 
-script: ./gradlew testDevDebug
+    - sys-img-armeabi-v7a-android-22
+
+#    - sys-img-x86-android-24
 
 before_install:
   - yes | sdkmanager "platforms;android-27"
 
 
-#language: android
-#android:
-#  components:
-#    # Uncomment the lines below if you want to
-#    # use the latest revision of Android SDK Tools
-##    - tools
-##    - platform-tools
-#
-#    # The BuildTools version used by your project
-#    - build-tools-26.0.1
-#
-#    # The SDK version used to compile your project
-#    - android-26
-#
-##script: ./gradlew testDevDebug
-#
-#before_install:
-#  - yes | sdkmanager "platforms;android-27"
-#
-#jobs:
-#  include:
-#    # pre-build stage
-#    - stage: pre-build
-#      script: ./gradlew preDevDebugBuild
-#    # checkstyle stage
-#    - stage: checkstyle
-#      script: ./gradlew checkstyle
-#    # lint stage
-#    - stage: lint
-#      script: ./gradlew lintDevDebug
-#    # test stage
-#    # build stage
-#    - stage: build
-#      script: ./gradlew -q clean assembleDevDebug
-#    # test stage
-#    - stage: test #testDevDebug
-#      script: ./gradlew testDevDebugUnitTest
+jobs:
+  include:
+
+  - stage: Checkstyle
+    script: ./gradlew checkstyle
+  - stage: Build
+    script: ./gradlew -q clean assembleDevDebug
+  - stage: UnitTests
+    script: ./gradlew testDevDebug
+  - stage: Android Tests
+    before_script:
+    - echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a
+#    - echo no | android create avd --force -n test -t android-24 --abi x86
+
+    - emulator -avd test -no-window &
+    - android-wait-for-emulator
+    - adb shell input keyevent 82 &
+    script: ./gradlew connectedDevDebugAndroidTest
+    if: branch = master
+
+

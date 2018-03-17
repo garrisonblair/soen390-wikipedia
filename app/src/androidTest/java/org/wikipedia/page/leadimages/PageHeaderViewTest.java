@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.facebook.testing.screenshot.ViewHelpers;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.theories.Theory;
 import org.junit.experimental.theories.suppliers.TestedOn;
@@ -37,6 +38,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.wikipedia.test.TestUtil.runOnMainSync;
 
+@Ignore
 public class PageHeaderViewTest extends ViewTest {
     private PageHeaderView subject;
 

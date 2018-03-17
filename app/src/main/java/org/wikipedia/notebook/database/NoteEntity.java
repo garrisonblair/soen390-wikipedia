@@ -33,9 +33,13 @@ public class NoteEntity {
         return this.text;
     }
 
-    public String getArticleTitle() { return this.articleTitle; }
+    public String getArticleTitle() {
+        return this.articleTitle;
+    }
 
-    public void setArticleTitle(String articleTitle) { this.articleTitle = articleTitle; }
+    public void setArticleTitle(String articleTitle) {
+        this.articleTitle = articleTitle;
+    }
 
     public void setArticleId(int articleId) {
         this.articleId = articleId;
@@ -48,4 +52,5 @@ public class NoteEntity {
     public void setText(String text) {
         this.text = text;
     }
+
 }
