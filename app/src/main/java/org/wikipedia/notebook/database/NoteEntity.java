@@ -14,6 +14,7 @@ public class NoteEntity {
     private int articleId;
     private String articleTitle;
     private String text;
+    private String updatedText;
 
     public NoteEntity(int articleId, String articleTitle,  String text) {
         this.articleId = articleId;
@@ -37,6 +38,8 @@ public class NoteEntity {
         return this.articleTitle;
     }
 
+    public String getUpdatedText() { return this.updatedText; }
+
     public void setArticleTitle(String articleTitle) {
         this.articleTitle = articleTitle;
     }
@@ -52,5 +55,7 @@ public class NoteEntity {
     public void setText(String text) {
         this.text = text;
     }
+
+    public void setUpdatedText(String newText) { this.updatedText = newText; }
 
 }
