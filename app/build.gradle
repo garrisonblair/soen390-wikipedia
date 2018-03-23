@@ -171,6 +171,10 @@ apply from: '../gradle/src/test.gradle'
 apply from: '../gradle/src/checkstyle.gradle'
 apply from: '../gradle/src/screenshot.gradle'
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
 
     // To keep the Maven Central dependencies up-to-date
@@ -234,6 +238,9 @@ dependencies {
     compile 'com.google.apis:google-api-services-vision:v1-rev2-1.21.0'
     // End of what may be needed for google vision based on examples in good app
 
+    // Added YouTube Data API Client Library in order to search and play YouTube videos
+    compile 'com.google.api-client:google-api-client:1.23.0'
+    compile 'com.google.apis:google-api-services-youtube:v3-rev193-1.23.0'
 
     annotationProcessor "com.jakewharton:butterknife-compiler:$butterKnifeVersion"
 
