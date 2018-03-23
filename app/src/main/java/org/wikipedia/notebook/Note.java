@@ -9,14 +9,15 @@ import java.util.List;
 
 public class Note{
 
-    private String text;
+    private String originalText;
+    private String updatedText;
     private List<Reference> references;
     private String articleTitle;
     private int articleid;
     private int id;
 
     public Note(int articleid, String articleTitle, String text) {
-        this.text = text;
+        this.originalText = text;
         this.articleTitle = articleTitle;
         this.articleid = articleid;
         this.references = new ArrayList<Reference>();
@@ -26,7 +27,7 @@ public class Note{
         this.id = id;
         this.articleid = articleid;
         this.articleTitle = articleTitle;
-        this.text = text;
+        this.originalText = text;
         this.references = new ArrayList<Reference>();
     }
 
@@ -39,7 +40,9 @@ public class Note{
     }
 
     public String getText() {
-        return this.text;
+        if (updatedText != null)
+            return this.updatedText;
+        return this.originalText;
     }
 
     public int getId() {
@@ -52,6 +55,28 @@ public class Note{
 
     public String getArticleTitle() {
         return articleTitle;
+    }
+
+    public void updateText(String newText) {
+        this.updatedText = newText;
+    }
+
+    public String getOriginalText() {
+        return this.originalText;
+    }
+
+    public String getUpdatedText() {
+        return this.updatedText;
+    }
+
+    public void resetToOriginalText(){
+        this.updatedText = null;
+    }
+
+    public boolean isTextUpdated() {
+        if (this.updatedText == null)
+            return true;
+        return false;
     }
     public List<Reference> getAllReferences() { return this.references; }
 }
