@@ -975,7 +975,7 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
     }
 
     public void openRelatedVideos() {
-        pageFragment.showBottomSheet(new RelatedVideosDialog());
+        pageFragment.showBottomSheet(RelatedVideosDialog.newInstance(pageFragment.getTitle().getText()));
     }
 
     //detect if the device's volmue is off

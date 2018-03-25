@@ -24,6 +24,12 @@
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:background="?attr/material_theme_border_color"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/video_list"
+            android:layout_width="match_parent"
+            android:layout_height="248dp"
+            android:scrollbars="horizontal" />
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
 
