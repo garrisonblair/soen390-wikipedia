@@ -200,7 +200,7 @@ public class NotesFragment extends Fragment {
                             }
                         });
 
-                        // Button for text-to-speech of the note
+                        // Button for deleting of the note
                         ImageButton deleteNote = dialog.findViewById(R.id.note_delete);
                         deleteNote.setOnClickListener(new View.OnClickListener() {
                             @Override
