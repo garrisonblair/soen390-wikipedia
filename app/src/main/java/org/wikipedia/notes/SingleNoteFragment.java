@@ -113,7 +113,13 @@ public class SingleNoteFragment extends Fragment {
             }
         });
 
-
+        ImageButton back = view.findViewById(R.id.single_note_back_button);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO: handle going back to note activity
+            }
+        });
 
         // Creating ListView for references
         ListView dialogRefs = view.findViewById(R.id.reference_list);
