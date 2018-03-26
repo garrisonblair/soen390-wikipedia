@@ -1,14 +1,17 @@
 package org.wikipedia.notes;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.text.SpannableString;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import org.wikipedia.R;
 import org.wikipedia.notebook.NoteReferenceService;
@@ -34,6 +37,8 @@ public class NotesEditFragment extends Fragment {
         if (getArguments() != null) {
             note = new SpannableString(getArguments().getString("note"));
         }
+
+//        note.setSpan(new StyleSpan(Typeface.BOLD), 0, 20, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
     @Override
@@ -48,7 +53,6 @@ public class NotesEditFragment extends Fragment {
         TextView editBody = view.findViewById(R.id.note_edit_body);
         editBody.setText(note);
 
-        Log.i("DEBUG", "VIEW CREATED");
 
         return view;
     }

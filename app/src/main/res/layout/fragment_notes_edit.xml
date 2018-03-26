@@ -1,19 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/fragment_notes_edit"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="10dp">
-    <TextView android:id="@+id/note_edit_title"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp">
+        <TextView android:id="@+id/note_edit_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:textSize="24sp"/>
+        <TextView android:id="@+id/note_edit_body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <Toolbar android:id="@+id/toolbar_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:textAllCaps="true"
-        android:textStyle="bold"
-        android:textSize="24sp"/>
-    <TextView android:id="@+id/note_edit_body"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-</LinearLayout>
+        android:background="@color/accent50"
+        android:layout_alignParentBottom="true">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <ImageButton android:id="@+id/icon_bold"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/icon_bold"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"/>
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <ImageButton android:id="@+id/icon_italics"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/icon_italics"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"/>
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <ImageButton android:id="@+id/icon_underline"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/icon_underline"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"/>
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <ImageButton android:id="@+id/icon_undo"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/icon_undo"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"/>
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <ImageButton android:id="@+id/icon_backspace"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/icon_backspace"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"/>
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <ImageButton android:id="@+id/icon_reset"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/icon_reset"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"/>
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </LinearLayout>
+    </Toolbar>
+</RelativeLayout>
