@@ -9,8 +9,6 @@ import org.wikipedia.WikipediaApp;
 import org.wikipedia.activity.BaseActivity;
 import org.wikipedia.util.ResourceUtil;
 
-import butterknife.OnClick;
-
 public class NotesActivity extends BaseActivity {
 
     private WikipediaApp app;
@@ -23,18 +21,6 @@ public class NotesActivity extends BaseActivity {
 
         setContentView(R.layout.activity_note);
         openNotesFragment();
-    }
-
-    private void openNotesFragment(@NonNull String pageId, @NonNull String pageTitle) {
-        NotesFragment fragment = notesFragment();
-
-        if (fragment == null) {
-            fragment = NotesFragment.newInstance(pageTitle, pageId);
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .add(R.id.activity_note_container, fragment)
-                    .commit();
-        }
     }
 
     private void openNotesFragment() {
