@@ -10,7 +10,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.Toolbar;
 
 import org.wikipedia.R;
@@ -38,7 +40,7 @@ public class NotesEditFragment extends Fragment {
             note = new SpannableString(getArguments().getString("note"));
         }
 
-//        note.setSpan(new StyleSpan(Typeface.BOLD), 0, 20, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
+//
     }
 
     @Override
@@ -53,6 +55,23 @@ public class NotesEditFragment extends Fragment {
         TextView editBody = view.findViewById(R.id.note_edit_body);
         editBody.setText(note);
 
+        // Setting text to bold button
+        ImageButton bold = view.findViewById(R.id.icon_bold);
+        bold.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("SELECTION START", Integer.toString(editBody.getSelectionStart()));
+                Log.i("SELECTION END", Integer.toString(editBody.getSelectionEnd()));
+                if (editBody.getSelectionStart() != editBody.getSelectionEnd()) {
+                    int start = editBody.getSelectionStart();
+                    int end = editBody.getSelectionEnd();
+                    note.setSpan(new StyleSpan(Typeface.BOLD), start, end, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    editBody.setText(note);
+                } else {
+                    Toast.makeText(getContext(), "Select text to make bold first ", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         return view;
     }
