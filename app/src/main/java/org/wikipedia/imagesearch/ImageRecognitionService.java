@@ -121,7 +121,6 @@ public class ImageRecognitionService{
         }
     }
 
-
     // call the cloud vision API
     @SuppressLint("StaticFieldLeak")
     private void callCloudVisionAPI(final Bitmap bitmap) throws IOException {

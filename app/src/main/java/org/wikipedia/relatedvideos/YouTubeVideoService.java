@@ -1,6 +1,7 @@
 package org.wikipedia.relatedvideos;
 
-import android.util.Log;
+import android.annotation.SuppressLint;
+import android.os.AsyncTask;
 
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpRequest;
@@ -9,12 +10,11 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.YouTubeRequestInitializer;
-import com.google.api.services.youtube.model.ResourceId;
 import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.model.SearchResult;
-import com.google.api.services.youtube.model.Thumbnail;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,9 +22,12 @@ import java.util.List;
  */
 
 public class YouTubeVideoService {
+    public interface Callback{
+        void onYouTubeAPIResult(List<Video> list);
+    }
     private YouTube youtube;
-    // System maximum to show is 50
     private final long maxVideos = 25;
+    private Callback callback;
 
     private final String apiKey = "AIzaSyC97eTu0rdwGuoJg0hv1r8No_55iaaeBp4";
 
@@ -36,58 +39,69 @@ public class YouTubeVideoService {
         }).setYouTubeRequestInitializer(new YouTubeRequestInitializer(apiKey)).setApplicationName("Wikipedia-YouTube").build();
     }
 
-    public List<SearchResult> searchVideos(String keyword) {
-        Log.d("list", "keyword : " + keyword);
-        try {
-            // define the request for searching videos from YouTube using YouTube Data API
-            YouTube.Search.List search = youtube.search().list("id,snippet");
-            search.setQ(keyword);
-            search.setType("video");
-            // To increase efficiency, only retrieve the fields that the application uses.
-            search.setFields("items(id/kind,id/videoId,snippet/title,snippet/thumbnails/default/url)");
-            search.setMaxResults(maxVideos);
-            // Call the API
-            SearchListResponse searchResponse = search.execute();
-            return searchResponse.getItems();
-        } catch (GoogleJsonResponseException e) {
-            System.err.println("There was a service error: " + e.getDetails().getCode() + " : "
-                    + e.getDetails().getMessage());
-        } catch (IOException e) {
-            System.err.println("There was an IO error: " + e.getCause() + " : " + e.getMessage());
-        } catch (Throwable t) {
-            t.printStackTrace();
-        }
-        return null;
+
+    public void setCallback(Callback callback) {
+        this.callback = callback;
     }
 
-    /*public List<String> listVideoTitles(List<SearchResult> searchResults) {
-        int num = 0;
-        System.out.println(searchResults.size());
+    public Callback getCallback() {
+        return callback;
+    }
+
+    public void startExecution(String pageTitle, Callback callback) {
+        if (!pageTitle.equals("")) {
+            setCallback(callback);
+            callYouTubeAPI(pageTitle);
+        }
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    private void callYouTubeAPI(String pageTitle) {
+        new AsyncTask<Object, Void, List<Video>>() {
+            @Override
+            protected List<Video> doInBackground(Object... params) {
+                try {
+                    // define the request for searching videos from YouTube using YouTube Data API
+                    YouTube.Search.List search = youtube.search().list("id,snippet");
+                    search.setQ(pageTitle);
+                    search.setType("video");
+                    // To increase efficiency, only retrieve the fields that the application uses.
+                    search.setFields("items(id/kind,id/videoId,snippet/title,snippet/thumbnails/default/url,snippet/description)");
+                    search.setMaxResults(maxVideos);
+                    // Execute the API
+                    SearchListResponse searchResponse = search.execute();
+                    List<SearchResult> searchResults = searchResponse.getItems();
+                    return getAllVideoInfo(searchResults);
+                } catch (GoogleJsonResponseException e) {
+                    System.err.println("Service error: " + e.getDetails().getCode() + " : "
+                            + e.getDetails().getMessage());
+                } catch (IOException e) {
+                    System.err.println("IO error: " + e.getCause() + " : " + e.getMessage());
+                } catch (Throwable t) {
+                    t.printStackTrace();
+                }
+                return null;
+            }
+
+            protected void onPostExecute(List<Video> results) {
+                callback.onYouTubeAPIResult(results);
+            }
+        }.execute();
+    }
+
+    public List<Video> getAllVideoInfo(List<SearchResult> searchResults) {
+        List<Video> videos = new ArrayList<>();
+        Video video = new Video();
         if (searchResults != null) {
-            for (SearchResult sr : searchResults) {
-                System.out.println(num);
-                System.out.println(sr.getId());
-                System.out.println(sr.getSnippet().getThumbnails().getDefault().getUrl());
-                System.out.println(sr.getSnippet().getTitle());
-                //SearchResult singleVideo = searchResult.next();
-                //resourceId = sr.getId();
-                // Confirm that the result represents a video. Otherwise, the title will not be showed
-                //if (resourceId.getKind().equals("youtube#video")) {
-                titles.add(sr.getSnippet().getTitle());
-                    //titles.add(singleVideo.getSnippet().getDescription());
-                //}
-                num++;
+            for (SearchResult result : searchResults) {
+                if (result.getKind().equals("youtube#video")) {
+                    video.setVideo(result.getSnippet().getTitle(),
+                            result.getId().getVideoId(), result.getSnippet().getDescription(),
+                            result.getSnippet().getThumbnails().getDefault().getUrl());
+                    videos.add(video);
+                }
             }
         }
-        return titles;
+        return videos;
     }
-
-    public ResourceId getResourceId(SearchResult selectedResult) {
-        return selectedResult.getId();
-    }
-
-    public String getThumbnail(SearchResult selectedResult) {
-        Thumbnail thumbnail = selectedResult.getSnippet().getThumbnails().getDefault();
-        return thumbnail.getUrl();
-    }*/
 }
