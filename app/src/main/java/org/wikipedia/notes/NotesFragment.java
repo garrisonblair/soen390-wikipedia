@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.speech.tts.UtteranceProgressListener;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -200,6 +201,21 @@ public class NotesFragment extends Fragment {
                             }
                         });
 
+                        // Button for commenting on the note
+                        // TODO: implement action for adding comment
+
+                        // Button for editing the note
+                        ImageButton edit = dialog.findViewById(R.id.note_edit);
+                        edit.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Log.i("DEBUG", "EDIT NOTE CLICK");
+                                getActivity().getIntent().putExtra("noteText", dialogBody.getText());
+                                openNotesEditFragment();
+                                dialog.dismiss();
+                            }
+                        });
+
                         // Button for deleting of the note
                         ImageButton deleteNote = dialog.findViewById(R.id.note_delete);
                         deleteNote.setOnClickListener(new View.OnClickListener() {
@@ -299,5 +315,23 @@ public class NotesFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         tts.shutdown();
+    }
+
+    private void openNotesEditFragment() {
+        NotesEditFragment fragment = notesEditFragment();
+
+        if (fragment == null) {
+            fragment = NotesEditFragment.newInstance();
+            getActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.activity_note_container, fragment)
+                    .commit();
+        }
+    }
+
+    @Nullable
+    private NotesEditFragment notesEditFragment() {
+        return (NotesEditFragment) getActivity().getSupportFragmentManager()
+                .findFragmentById(R.id.fragment_notes_edit);
     }
 }
