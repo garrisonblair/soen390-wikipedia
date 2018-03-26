@@ -7,10 +7,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.wikipedia.R;
 import org.wikipedia.page.ExtendedBottomSheetDialogFragment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Fred on 2018-03-23.
@@ -21,14 +25,14 @@ import org.wikipedia.page.ExtendedBottomSheetDialogFragment;
 public class RelatedVideosDialog extends ExtendedBottomSheetDialogFragment {
 
     public static final String TITLE_ARGUMENT = "title_argument_related_videos_dialog";
+    public static final String THUMBNAIL_URL = "https://img.youtube.com/vi/";
 
     private View rootView;
     private RecyclerView videoRecyclerView;
 
     private String title;
 
-    private String[] sample = {"Video 1", "Video 2", "Video 3", "Video 4"};
-
+    private List<VideoInfo> videos;
 
 
     //Instance getter because Fragments cant have non-default constructors
@@ -42,6 +46,15 @@ public class RelatedVideosDialog extends ExtendedBottomSheetDialogFragment {
         return dialog;
     }
 
+    private void retrieveVideos() {
+        videos = new ArrayList<VideoInfo>();
+        videos.add(new VideoInfoTestImpl("DaOJv-fMlmA", "THOR RAGNAROK Grandmaster Moves To Earth EXTENDED - Team Darryl Short Film (2017) Jeff Goldblum HD", ""));
+        videos.add(new VideoInfoTestImpl("jI8Im6RoPWo", "10 Playstation Fails Sony Wants You To Forget", ""));
+        videos.add(new VideoInfoTestImpl("j-W6ccHY6-Q", "Fallout 4 - 25 Behemoths VS 25 Sentry Bots - Battles #1", ""));
+
+    }
+
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -49,12 +62,14 @@ public class RelatedVideosDialog extends ExtendedBottomSheetDialogFragment {
 
         title = this.getArguments().getString(TITLE_ARGUMENT);
 
+        retrieveVideos();
+
         videoRecyclerView = (RecyclerView) rootView.findViewById(R.id.video_list);
         videoRecyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         videoRecyclerView.setLayoutManager(layoutManager);
 
-        videoRecyclerView.setAdapter(new VideoRecyclerAdapter(sample));
+        videoRecyclerView.setAdapter(new VideoRecyclerAdapter(videos));
 
         return rootView;
     }
@@ -76,9 +91,9 @@ public class RelatedVideosDialog extends ExtendedBottomSheetDialogFragment {
             }
         }
 
-        private String[] videos;
+        private List<VideoInfo> videos;
 
-        VideoRecyclerAdapter(String[] videos) {
+        VideoRecyclerAdapter(List<VideoInfo> videos) {
             this.videos = videos;
         }
 
@@ -92,15 +107,18 @@ public class RelatedVideosDialog extends ExtendedBottomSheetDialogFragment {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            String video = videos[position];
+            VideoInfo video = videos.get(position);
 
             TextView videoNameView = (TextView) holder.getRootView().findViewById(R.id.video_name_view);
-            videoNameView.setText(video);
+            videoNameView.setText(video.getTitle());
+
+            ImageView thumbnailView = (ImageView) holder.getRootView().findViewById(R.id.video_thumbnail);
+
         }
 
         @Override
         public int getItemCount() {
-            return videos.length;
+            return videos.size();
         }
 
 
