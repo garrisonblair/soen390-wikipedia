@@ -23,12 +23,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,7 +35,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.google.api.services.youtube.model.SearchResult;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -64,7 +61,6 @@ import org.wikipedia.page.listeners.HideStopButtonOnDoneListener;
 import org.wikipedia.page.tabs.TabsProvider;
 import org.wikipedia.page.tabs.TabsProvider.TabPosition;
 import org.wikipedia.readinglist.AddToReadingListDialog;
-import org.wikipedia.relatedvideos.YouTubeVideoService;
 import org.wikipedia.search.SearchFragment;
 import org.wikipedia.search.SearchInvokeSource;
 import org.wikipedia.settings.SettingsActivity;
@@ -79,9 +75,6 @@ import org.wikipedia.util.log.L;
 import org.wikipedia.views.ObservableWebView;
 import org.wikipedia.widgets.WidgetProviderFeaturedPage;
 import org.wikipedia.wiktionary.WiktionaryDialog;
-
-import java.util.Iterator;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -254,11 +247,6 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
             updateMenuPageInfo(menu);
         }
         return true;
-    }
-
-    @OnClick(R.id.page_toolbar_button_youtube)
-    public void onYoutubeButtonClicked() {
-        displayRelatedDialog();
     }
 
     @OnClick(R.id.page_toolbar_button_notes)
@@ -1008,31 +996,5 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
         intent.putExtra("pageTitle", pageTitle);
         startActivity(intent);
         //finish();
-    }
-
-    private void displayRelatedVideos() {
-        YouTubeVideoService youTubeVideoService = new YouTubeVideoService();
-        List<SearchResult> results =  youTubeVideoService.searchVideos("cat");
-        //List<String> strings = youTubeVideoService.listVideoTitles(results.iterator());
-        //Toast.makeText(this, ""+ strings.get(0), Toast.LENGTH_SHORT).show();
-    }
-    private void displayRelatedDialog() {
-        AlertDialog.Builder adb = new AlertDialog.Builder(this);
-        adb.setTitle("Data usage warning");
-        adb.setMessage(Html.fromHtml("Are you sure to find related videos? Data usage may be used."));
-        adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                YouTubeVideoService youTubeVideoService = new YouTubeVideoService();
-                List<SearchResult> results =  youTubeVideoService.searchVideos("cat");
-                //Toast.makeText(getApplication(), "Title: "+ results.get(0).getSnippet().getTitle(), Toast.LENGTH_SHORT).show();
-                return;
-            } });
-        adb.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        adb.show();
     }
 }
