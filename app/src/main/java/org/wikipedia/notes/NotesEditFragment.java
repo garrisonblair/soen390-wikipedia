@@ -26,12 +26,13 @@ public class NotesEditFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.i("DEBUG", "FRAGMENT CREATED");
         if (getActivity().getIntent().getExtras() != null) {
             Bundle bundleRead = getActivity().getIntent().getExtras();
             title = bundleRead.getString("pageTitle");
             pageId = bundleRead.getInt("pageId");
-            note = new SpannableString(bundleRead.getString("noteText"));
+        }
+        if (getArguments() != null) {
+            note = new SpannableString(getArguments().getString("note"));
         }
     }
 
@@ -53,8 +54,13 @@ public class NotesEditFragment extends Fragment {
     }
 
     @NonNull
-    public static NotesEditFragment newInstance() {
+    public static NotesEditFragment newInstance(String note) {
         NotesEditFragment fragment = new NotesEditFragment();
+
+        Bundle args = new Bundle();
+        args.putString("note", note);
+
+        fragment.setArguments(args);
         return fragment;
     }
 }
