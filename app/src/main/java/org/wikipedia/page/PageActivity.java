@@ -61,6 +61,7 @@ import org.wikipedia.page.listeners.HideStopButtonOnDoneListener;
 import org.wikipedia.page.tabs.TabsProvider;
 import org.wikipedia.page.tabs.TabsProvider.TabPosition;
 import org.wikipedia.readinglist.AddToReadingListDialog;
+import org.wikipedia.relatedvideos.RelatedVideosDialog;
 import org.wikipedia.search.SearchFragment;
 import org.wikipedia.search.SearchInvokeSource;
 import org.wikipedia.settings.SettingsActivity;
@@ -247,6 +248,11 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
             updateMenuPageInfo(menu);
         }
         return true;
+    }
+
+    @OnClick(R.id.page_toolbar_button_videos)
+    public void onRelatedVideosClicked() {
+        openRelatedVideos();
     }
 
     @OnClick(R.id.page_toolbar_button_notes)
@@ -966,6 +972,10 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
             Toast.makeText(app, "Device volmue is off. Please turn it on.", Toast.LENGTH_SHORT).show();
         }
         return this.stopButton;
+    }
+
+    public void openRelatedVideos() {
+        pageFragment.showBottomSheet(RelatedVideosDialog.newInstance(pageFragment.getTitle().getText()));
     }
 
     //detect if the device's volmue is off
