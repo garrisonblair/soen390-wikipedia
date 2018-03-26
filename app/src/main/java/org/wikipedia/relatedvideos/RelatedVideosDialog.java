@@ -1,6 +1,8 @@
 package org.wikipedia.relatedvideos;
 
+
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,7 +27,6 @@ import java.util.List;
 public class RelatedVideosDialog extends ExtendedBottomSheetDialogFragment {
 
     public static final String TITLE_ARGUMENT = "title_argument_related_videos_dialog";
-    public static final String THUMBNAIL_URL = "https://img.youtube.com/vi/";
 
     private View rootView;
     private RecyclerView videoRecyclerView;
@@ -33,6 +34,7 @@ public class RelatedVideosDialog extends ExtendedBottomSheetDialogFragment {
     private String title;
 
     private List<VideoInfo> videos;
+    private Vibrator vibrator;
 
 
     //Instance getter because Fragments cant have non-default constructors
@@ -53,6 +55,13 @@ public class RelatedVideosDialog extends ExtendedBottomSheetDialogFragment {
         videos.add(new VideoInfoTestImpl("j-W6ccHY6-Q", "Fallout 4 - 25 Behemoths VS 25 Sentry Bots - Battles #1", ""));
 
     }
+
+//    @Override
+//    public void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//
+//        vibrator = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
+//    }
 
 
     @Override
@@ -113,6 +122,19 @@ public class RelatedVideosDialog extends ExtendedBottomSheetDialogFragment {
             videoNameView.setText(video.getTitle());
 
             ImageView thumbnailView = (ImageView) holder.getRootView().findViewById(R.id.video_thumbnail);
+
+            thumbnailView.setOnClickListener(new View.OnClickListener(){
+
+                @Override
+                public void onClick(View view) {
+                    //TODO: Open Video
+                    return;
+                }
+            });
+
+            //set the ontouch listener
+
+            new ThumbnailLoadTask(thumbnailView, video.getID()).execute();
 
         }
 

@@ -686,4 +686,5 @@
     <!-- Notes List -->
     <string name="note_remove_from_list">Remove from notes list</string>
     <string name="related_videos_title">Related Videos</string>
+    <string name="video_thumbnail_placeholder">Video Thumbnail</string>
 </resources>
