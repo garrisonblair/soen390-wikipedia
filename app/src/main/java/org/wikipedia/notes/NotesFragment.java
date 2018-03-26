@@ -39,10 +39,11 @@ public class NotesFragment extends Fragment {
     private String title;
     private int pageId;
     private TTSWrapper tts;
-    private boolean speaking = false;
+
     private NoteReferenceService noteReferenceService;
 
     private List<Note> notesList;
+    private ArrayList<String> notesText;
     private List<Reference> references;
 
     private View view;
@@ -60,15 +61,6 @@ public class NotesFragment extends Fragment {
             title = bundleRead.getString("pageTitle");
             pageId = bundleRead.getInt("pageId");
         }
-
-        tts = TTSWrapper.getInstance(getContext(), new UtteranceProgressListener() {
-            @Override
-            public void onStart(String utteranceId) { }
-            @Override
-            public void onDone(String utteranceId) { }
-            @Override
-            public void onError(String utteranceId) { }
-        });
 
         swipeListener = new OnSwipeTouchListener(getContext()){
             public void onSwipeRight() {
@@ -103,8 +95,7 @@ public class NotesFragment extends Fragment {
             public void afterGetNotes(List<Note> notes) {
                 notesList = notes;
                 // Creating ArrayList with text notes
-                ArrayList<String> notesText = new ArrayList();
-
+                notesText = new ArrayList();
                 if (notes != null) {
                     for (Note note: notes) {
                         notesText.add(note.getText());
@@ -157,7 +148,6 @@ public class NotesFragment extends Fragment {
                 });
                 
                 noteList.setOnTouchListener(swipeListener);
-
                 // Button for text-to-speech of the note
                 ImageButton backButton = view.findViewById(R.id.notes_back_button);
                 backButton.setOnClickListener(new View.OnClickListener() {
@@ -172,86 +162,6 @@ public class NotesFragment extends Fragment {
                 noteList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        final Dialog dialog = new Dialog(getContext());
-                        dialog.setContentView(R.layout.single_note_dialog);
-
-                        // TextView for Title
-                        TextView dialogTitle = dialog.findViewById(R.id.note_dialog_title);
-                        dialogTitle.setText(title);
-
-                        // TextView for Body
-                        TextView dialogBody = dialog.findViewById(R.id.note_dialog_body);
-                        dialogBody.setText(notesText.get(position));
-
-                        // Button for text-to-speech of the note
-                        ImageButton speak = dialog.findViewById(R.id.note_speak);
-                        speak.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                int colorId = speak.getSolidColor();
-                                if (speaking) {
-                                    tts.stop();
-                                    speaking = false;
-                                    speak.setColorFilter(colorId);
-                                } else {
-                                    tts.speak(notesText.get(position));
-                                    speaking = true;
-                                    speak.setColorFilter(Color.BLUE);
-                                }
-                            }
-                        });
-
-                        // Button for commenting on the note
-                        // TODO: implement action for adding comment
-
-                        // Button for editing the note
-                        ImageButton edit = dialog.findViewById(R.id.note_edit);
-                        edit.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Log.i("DEBUG", "EDIT NOTE CLICK");
-                                getActivity().getIntent().putExtra("noteText", dialogBody.getText());
-                                openNotesEditFragment();
-                                dialog.dismiss();
-                            }
-                        });
-
-                        // Button for deleting of the note
-                        ImageButton deleteNote = dialog.findViewById(R.id.note_delete);
-                        deleteNote.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Note test = notesList.get(position);
-                                Dialog currentNoteDialog = dialog;
-
-                                new AlertDialog.Builder(getContext())
-                                        .setTitle("Delete Note")
-                                        .setMessage("Do you really want to delete this note?")
-                                        .setIcon(android.R.drawable.ic_dialog_alert)
-                                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-
-                                            public void onClick(DialogInterface dialog, int whichButton) {
-                                                Note noteToDelete = notesList.get(position);
-                                                notesText.remove(position);
-                                                notesList.remove(position);
-                                                noteReferenceService = new NoteReferenceService(getContext().getApplicationContext());
-                                                noteReferenceService.deleteNote(noteToDelete, new NoteReferenceService.DeleteNoteCallBack() {
-                                                    @Override
-                                                    public void afterDeleteNote() {
-                                                        getActivity().runOnUiThread(new Runnable() {
-                                                            @Override
-                                                            public void run() {
-                                                                ((BaseAdapter)noteList.getAdapter()).notifyDataSetChanged();
-                                                                currentNoteDialog.dismiss();
-                                                            }
-                                                        });
-                                                    }
-                                                });
-                                                Toast.makeText(getContext(), "Note successfully deleted", Toast.LENGTH_SHORT).show();
-                                            }})
-                                        .setNegativeButton(android.R.string.no, null).show();
-                            }
-                        });
 
                         // Getting the references for the selected note and creating strings with them
                         if (notes.get(position).getAllReferences() != null) {
@@ -264,21 +174,7 @@ public class NotesFragment extends Fragment {
                             refsText.add(ref);
                         }
 
-                        // Creating ListView for references
-                        ListView dialogRefs = dialog.findViewById(R.id.reference_list);
-
-                        dialogRefs.setOnTouchListener(swipeListener);
-
-                        dialogRefs.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.reference_row, refsText));
-
-                        dialog.show();
-
-                        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                            @Override
-                            public void onDismiss(DialogInterface dialog) {
-                                tts.stop();
-                            }
-                        });
+                        openSingleNoteFragment(notesText.get(position), refsText, position);
                     }
                 });
             }
@@ -307,21 +203,19 @@ public class NotesFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
-        tts.shutdown();
         super.onDestroyView();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        tts.shutdown();
     }
 
-    private void openNotesEditFragment() {
-        NotesEditFragment fragment = notesEditFragment();
+    private void openSingleNoteFragment(String note, ArrayList<String> references, int position) {
+        SingleNoteFragment fragment = singleNoteFragment();
 
         if (fragment == null) {
-            fragment = NotesEditFragment.newInstance();
+            fragment = SingleNoteFragment.newInstance(note, references, position);
             getActivity().getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.activity_note_container, fragment)
@@ -330,8 +224,41 @@ public class NotesFragment extends Fragment {
     }
 
     @Nullable
-    private NotesEditFragment notesEditFragment() {
-        return (NotesEditFragment) getActivity().getSupportFragmentManager()
-                .findFragmentById(R.id.fragment_notes_edit);
+    private SingleNoteFragment singleNoteFragment() {
+        return (SingleNoteFragment) getActivity().getSupportFragmentManager()
+                .findFragmentById(R.id.fragment_single_note);
+    }
+
+    public void deleteNote(int position) {
+        Note test = notesList.get(position);
+//        Dialog currentNoteDialog = dialog;
+
+        new AlertDialog.Builder(getContext())
+                .setTitle("Delete Note")
+                .setMessage("Do you really want to delete this note?")
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        Note noteToDelete = notesList.get(position);
+                        notesText.remove(position);
+                        notesList.remove(position);
+                        noteReferenceService = new NoteReferenceService(getContext().getApplicationContext());
+                        noteReferenceService.deleteNote(noteToDelete, new NoteReferenceService.DeleteNoteCallBack() {
+                            @Override
+                            public void afterDeleteNote() {
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ListView noteList = view.findViewById(R.id.notes_list);
+                                        ((BaseAdapter)noteList.getAdapter()).notifyDataSetChanged();
+//                                        currentNoteDialog.dismiss();
+                                    }
+                                });
+                            }
+                        });
+                        Toast.makeText(getContext(), "Note successfully deleted", Toast.LENGTH_SHORT).show();
+                    }})
+                .setNegativeButton(android.R.string.no, null).show();
     }
 }
