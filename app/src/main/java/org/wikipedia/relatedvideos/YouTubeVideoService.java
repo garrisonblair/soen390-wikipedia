@@ -66,7 +66,7 @@ public class YouTubeVideoService {
                     search.setQ(pageTitle);
                     search.setType("video");
                     // To increase efficiency, only retrieve the fields that the application uses.
-                    search.setFields("items(id/kind,id/videoId,snippet/title,snippet/thumbnails/default/url,snippet/description)");
+                    search.setFields("items(id/kind,id/videoId,snippet/title,snippet/thumbnails/high/url,snippet/description)");
                     search.setMaxResults(maxVideos);
                     // Execute the API
                     SearchListResponse searchResponse = search.execute();
