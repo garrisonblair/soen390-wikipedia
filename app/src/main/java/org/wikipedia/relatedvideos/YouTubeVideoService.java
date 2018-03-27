@@ -29,7 +29,6 @@ public class YouTubeVideoService {
     private final long maxVideos = 25;
     private Callback callback;
     private List<SearchResult> searchResults = new ArrayList<>();
-    private List<VideoInfo> videos = new ArrayList<>();
 
     private final String apiKey = "AIzaSyC97eTu0rdwGuoJg0hv1r8No_55iaaeBp4";
 
@@ -76,8 +75,7 @@ public class YouTubeVideoService {
                     for (SearchResult result : searchResults) {
                         System.out.println(result.getSnippet().getTitle());
                     }
-                    videos = getAllVideoInfo(searchResults);
-                    return videos;
+                    return getAllVideoInfo(searchResults);
                 } catch (GoogleJsonResponseException e) {
                     System.err.println("Service error: " + e.getDetails().getCode() + " : "
                             + e.getDetails().getMessage());
@@ -89,17 +87,17 @@ public class YouTubeVideoService {
                 return null;
             }
 
-            protected void onPostExecute(List<YouTubeVideoAdapter> results) {
-                callback.onYouTubeAPIResult(videos);
+            protected void onPostExecute(List<VideoInfo> results) {
+                callback.onYouTubeAPIResult(results);
             }
         }.execute();
     }
 
     public List<VideoInfo> getAllVideoInfo(List<SearchResult> searchResults) {
-        //List<VideoInfo> video = new ArrayList<>();
+        List<VideoInfo> videos = new ArrayList<>();
         if (searchResults != null) {
             for (SearchResult result : searchResults) {
-                if (result.getKind().equals("youtube#video")) {
+                if (result.getId().getKind().equals("youtube#video")) {
                     YouTubeVideoAdapter youTubeVideoAdapter = new YouTubeVideoAdapter(result);
                     videos.add(youTubeVideoAdapter);
                 }
