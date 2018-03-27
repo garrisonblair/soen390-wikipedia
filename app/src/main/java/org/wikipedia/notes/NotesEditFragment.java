@@ -102,6 +102,22 @@ public class NotesEditFragment extends Fragment {
             }
         });
 
+        // Re-setting selected text button
+        ImageButton undo = view.findViewById(R.id.icon_undo);
+        undo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (editBody.getSelectionStart() != editBody.getSelectionEnd()) {
+                    int start = editBody.getSelectionStart();
+                    int end = editBody.getSelectionEnd();
+                    note.setSpan(new StyleSpan(Typeface.NORMAL), start, end, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    editBody.setText(note);
+                } else {
+                    Toast.makeText(getContext(), "Select text to reset to normal first", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         return view;
     }
 
