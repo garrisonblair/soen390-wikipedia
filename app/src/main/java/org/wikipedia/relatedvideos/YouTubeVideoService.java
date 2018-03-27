@@ -39,7 +39,6 @@ public class YouTubeVideoService {
         }).setYouTubeRequestInitializer(new YouTubeRequestInitializer(apiKey)).setApplicationName("Wikipedia-YouTube").build();
     }
 
-
     public void setCallback(Callback callback) {
         this.callback = callback;
     }
