@@ -215,7 +215,7 @@
   <string name="gallery_share_error">Tidak dapat membagikan gambar: %s</string>
   <string name="gallery_save_progress">Mengunduh berkas…</string>
   <string name="gallery_save_success">Berkas berhasil disimpan.</string>
-  <string name="gallery_error_video_failed">Tidak dapat memutar video.</string>
+  <string name="gallery_error_video_failed">Tidak dapat memutar youTubeVideoAdapter.</string>
   <string name="gallery_save_image_write_permission_rationale">Izin untuk menulis ke penyimpanan di perangkat Anda dibutuhkan untuk menyimpan gambar.</string>
   <string name="err_cannot_save_file">Tidak dapat menyimpan berkas</string>
   <string name="snippet_share_intro">\"%1$s\" di @Wikipedia: %2$s</string>

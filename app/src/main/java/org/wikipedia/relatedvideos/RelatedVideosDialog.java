@@ -27,7 +27,7 @@ public class RelatedVideosDialog extends ExtendedBottomSheetDialogFragment {
 
     private String title;
 
-    private String[] sample = {"Video 1", "Video 2", "Video 3", "Video 4"};
+    private String[] sample = {"YouTubeVideoAdapter 1", "YouTubeVideoAdapter 2", "YouTubeVideoAdapter 3", "YouTubeVideoAdapter 4"};
 
 
 
