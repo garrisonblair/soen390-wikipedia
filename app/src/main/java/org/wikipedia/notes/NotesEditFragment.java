@@ -6,14 +6,13 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
-import android.util.Log;
+import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import org.wikipedia.R;
 import org.wikipedia.notebook.NoteReferenceService;
@@ -60,15 +59,45 @@ public class NotesEditFragment extends Fragment {
         bold.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("SELECTION START", Integer.toString(editBody.getSelectionStart()));
-                Log.i("SELECTION END", Integer.toString(editBody.getSelectionEnd()));
                 if (editBody.getSelectionStart() != editBody.getSelectionEnd()) {
                     int start = editBody.getSelectionStart();
                     int end = editBody.getSelectionEnd();
                     note.setSpan(new StyleSpan(Typeface.BOLD), start, end, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
                     editBody.setText(note);
                 } else {
-                    Toast.makeText(getContext(), "Select text to make bold first ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Select text to make bold first", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        // Setting text to italics button
+        ImageButton italics = view.findViewById(R.id.icon_italics);
+        italics.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (editBody.getSelectionStart() != editBody.getSelectionEnd()) {
+                    int start = editBody.getSelectionStart();
+                    int end = editBody.getSelectionEnd();
+                    note.setSpan(new StyleSpan(Typeface.ITALIC), start, end, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    editBody.setText(note);
+                } else {
+                    Toast.makeText(getContext(), "Select text to italicize first", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        // Setting text to underlined button
+        ImageButton underline = view.findViewById(R.id.icon_underline);
+        underline.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (editBody.getSelectionStart() != editBody.getSelectionEnd()) {
+                    int start = editBody.getSelectionStart();
+                    int end = editBody.getSelectionEnd();
+                    note.setSpan(new UnderlineSpan(), start, end, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    editBody.setText(note);
+                } else {
+                    Toast.makeText(getContext(), "Select text to underline first", Toast.LENGTH_SHORT).show();
                 }
             }
         });
