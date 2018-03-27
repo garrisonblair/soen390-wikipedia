@@ -1,6 +1,5 @@
 package org.wikipedia.relatedvideos;
 
-
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -34,8 +33,6 @@ public class RelatedVideosDialog extends ExtendedBottomSheetDialogFragment {
 
     private View rootView;
     private RecyclerView videoRecyclerView;
-
-
 
 
     //Instance getter because Fragments cant have non-default constructors

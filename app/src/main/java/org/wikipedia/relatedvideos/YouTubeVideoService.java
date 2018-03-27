@@ -23,7 +23,7 @@ import java.util.List;
 
 public class YouTubeVideoService {
     public interface Callback{
-        void onYouTubeAPIResult(List<VideoInfo> list);
+        void onYouTubeAPIResult(List<YouTubeVideoAdapter> list);
     }
     private YouTube youtube;
     private final long maxVideos = 25;
@@ -72,6 +72,9 @@ public class YouTubeVideoService {
                     SearchListResponse searchResponse = search.execute();
                     //List<SearchResult> searchResults = searchResponse.getItems();
                     searchResults = searchResponse.getItems();
+                    for (SearchResult result : searchResults) {
+                        System.out.println(result.getSnippet().getTitle());
+                    }
                     return getAllVideoInfo(searchResults);
                 } catch (GoogleJsonResponseException e) {
                     System.err.println("Service error: " + e.getDetails().getCode() + " : "
@@ -84,7 +87,7 @@ public class YouTubeVideoService {
                 return null;
             }
 
-            protected void onPostExecute(List<VideoInfo> results) {
+            protected void onPostExecute(List<YouTubeVideoAdapter> results) {
                 callback.onYouTubeAPIResult(results);
             }
         }.execute();
@@ -92,15 +95,12 @@ public class YouTubeVideoService {
 
     public List<VideoInfo> getAllVideoInfo(List<SearchResult> searchResults) {
         List<VideoInfo> videos = new ArrayList<>();
-        Video video = new Video();
         if (searchResults != null) {
             for (SearchResult result : searchResults) {
-                //if (result.getKind().equals("youtube#video")) {
-                    video.setVideo(result.getSnippet().getTitle(),
-                            result.getId().getVideoId(), result.getSnippet().getDescription(),
-                            result.getSnippet().getThumbnails().getDefault().getUrl());
-                    videos.add(video);
-                //}
+                if (result.getKind().equals("youtube#video")) {
+                    YouTubeVideoAdapter youTubeVideoAdapter = new YouTubeVideoAdapter(result);
+                    videos.add(youTubeVideoAdapter);
+                }
             }
         }
         return videos;
