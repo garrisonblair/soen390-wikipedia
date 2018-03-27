@@ -42,9 +42,9 @@ public class YouTubeVideoServiceTest {
     @Test
     public void getAllVideoInfoTest() throws Exception {
         SearchResult result = new SearchResult();
-        result.setKind("youtube#video");
 
         ResourceId resourceId = new ResourceId();
+        resourceId.setKind("youtube#video");
         resourceId.setVideoId("123");
         result.setId(resourceId);
 
