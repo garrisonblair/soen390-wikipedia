@@ -70,10 +70,18 @@ public class NoteDaoTest {
         assertEquals(1, noteList.size());
         noteEntity = noteList.get(0);
         noteEntity.setUpdatedText("updated Text");
-        mNoteDao.updateNoteText(noteEntity);
+        noteEntity.setComment("new comment");
+        mNoteDao.updateNote(noteEntity);
         noteList = mNoteDao.getAllNotesForArticle(123);
         assertEquals(1, noteList.size());
         noteEntity = noteList.get(0);
         assertEquals("updated Text", noteEntity.getUpdatedText());
+        assertEquals("new comment", noteEntity.getComment());
+        noteEntity.setComment(null);
+        mNoteDao.updateNote(noteEntity);
+        noteList = mNoteDao.getAllNotesForArticle(123);
+        noteEntity = noteList.get(0);
+        assertEquals(null, noteEntity.getComment());
+
     }
 }
