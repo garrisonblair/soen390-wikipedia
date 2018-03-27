@@ -17,6 +17,7 @@ import org.wikipedia.page.ExtendedBottomSheetDialogFragment;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * Created by Fred on 2018-03-23.
  *
@@ -28,7 +29,7 @@ public class RelatedVideosDialog extends ExtendedBottomSheetDialogFragment {
     public static final String TITLE_ARGUMENT = "title_argument_related_videos_dialog";
 
     private String title;
-    private List<VideoInfo> videos;
+    private List<VideoInfo> videos = new ArrayList<VideoInfo>();
     private YouTubeVideoService videoService;
 
     private View rootView;
@@ -64,12 +65,17 @@ public class RelatedVideosDialog extends ExtendedBottomSheetDialogFragment {
 
     private void retrieveVideos(String searchTerm) {
 
-        videoService.searchVideos(searchTerm);
+        videos.add(new VideoInfoTestImpl("DaOJv-fMlmA", "Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1", ""));
+        videos.add(new VideoInfoTestImpl("jI8Im6RoPWo", "Video2", ""));
+        videos.add(new VideoInfoTestImpl("j-W6ccHY6-Q", "Video3", ""));
 
-        videos = new ArrayList<VideoInfo>();
-        videos.add(new VideoInfoTestImpl("DaOJv-fMlmA", "THOR RAGNAROK Grandmaster Moves To Earth EXTENDED - Team Darryl Short Film (2017) Jeff Goldblum HD", ""));
-        videos.add(new VideoInfoTestImpl("jI8Im6RoPWo", "10 Playstation Fails Sony Wants You To Forget", ""));
-        videos.add(new VideoInfoTestImpl("j-W6ccHY6-Q", "Fallout 4 - 25 Behemoths VS 25 Sentry Bots - Battles #1", ""));
+        videoService.searchVideos(searchTerm, new YouTubeVideoService.Callback() {
+            @Override
+            public void onYouTubeAPIResult(List<VideoInfo> list) {
+                videos.addAll(list);
+                videoRecyclerView.getAdapter().notifyDataSetChanged();
+            }
+        });
 
     }
 

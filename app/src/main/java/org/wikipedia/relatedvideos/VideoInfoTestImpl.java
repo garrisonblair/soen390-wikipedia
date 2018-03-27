@@ -9,11 +9,13 @@ public class VideoInfoTestImpl implements VideoInfo {
     private String id;
     private String title;
     private String description;
+    private String url;
 
     public VideoInfoTestImpl(String id, String title, String description) {
         this.id = id;
         this.title = title;
         this.description = description;
+        this.url = "";
     }
 
     public void setId(String id) {
@@ -43,4 +45,11 @@ public class VideoInfoTestImpl implements VideoInfo {
     public String getDescription() {
         return description;
     }
+
+    @Override
+    public String getURL() {
+        return url;
+    }
+
+
 }
