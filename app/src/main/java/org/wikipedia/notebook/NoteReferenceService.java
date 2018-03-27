@@ -30,6 +30,9 @@ public class NoteReferenceService {
     public interface DeleteNoteCallBack {
         void afterDeleteNote();
     }
+    public interface UpdateNoteTextCallBack {
+        void afterUpdateNoteText();
+    }
 
     private Context context;
     private AppDatabase db;
@@ -62,7 +65,7 @@ public class NoteReferenceService {
                 HashMap<Integer, Note> mapNote = new HashMap<Integer, Note>();
 
                 for (NoteEntity ne: noteEntities) {
-                    Note newNote = new Note(ne.getId(), ne.getArticleId(), ne.getArticleTitle(), ne.getText());
+                    Note newNote = noteEntityToNote(ne);
                     mapNote.put(newNote.getId(), newNote);
                     //notes.add(newNote);
                 }
@@ -137,5 +140,32 @@ public class NoteReferenceService {
             }
         }
         return cannotDelete;
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    public void updateNoteText(Note note, UpdateNoteTextCallBack callBack) {
+        new AsyncTask<Object, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Object... objects) {
+                NoteEntity noteEntity = new NoteEntity(note.getArticleid(), note.getArticleTitle(), note.getOriginalText());
+                noteEntity.setId(note.getId());
+                if (note.isTextUpdated()) {
+                    noteEntity.setUpdatedText(note.getUpdatedText());
+                }
+                noteDao.updateNoteText(noteEntity);
+                callBack.afterUpdateNoteText();
+                return null;
+            }
+        }.execute(new Object());
+    }
+
+    private Note noteEntityToNote(NoteEntity noteEntity) {
+        Note note = new Note(noteEntity.getId(), noteEntity.getArticleId(), noteEntity.getArticleTitle(), noteEntity.getText());
+        String updatedText = noteEntity.getUpdatedText();
+        if (updatedText != null) {
+           note.updateText(updatedText);
+        }
+        return note;
     }
 }
