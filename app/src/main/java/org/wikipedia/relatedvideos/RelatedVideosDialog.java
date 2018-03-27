@@ -65,15 +65,14 @@ public class RelatedVideosDialog extends ExtendedBottomSheetDialogFragment {
 
     private void retrieveVideos(String searchTerm) {
 
-        videos.add(new VideoInfoTestImpl("DaOJv-fMlmA", "Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1 Video1", ""));
-        videos.add(new VideoInfoTestImpl("jI8Im6RoPWo", "Video2", ""));
-        videos.add(new VideoInfoTestImpl("j-W6ccHY6-Q", "Video3", ""));
-
         videoService.searchVideos(searchTerm, new YouTubeVideoService.Callback() {
             @Override
             public void onYouTubeAPIResult(List<VideoInfo> list) {
                 videos.addAll(list);
-                videoRecyclerView.getAdapter().notifyDataSetChanged();
+                if (videoRecyclerView != null) {
+                    videoRecyclerView.getAdapter().notifyDataSetChanged();
+                }
+
             }
         });
 
