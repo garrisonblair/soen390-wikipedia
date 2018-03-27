@@ -38,7 +38,6 @@ public class NotesFragment extends Fragment {
 
     private String title;
     private int pageId;
-    private TTSWrapper tts;
 
     private NoteReferenceService noteReferenceService;
 
@@ -82,102 +81,89 @@ public class NotesFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //View view = inflater.inflate(R.layout.fragment_notes, container, false);
         view = inflater.inflate(R.layout.fragment_notes, container, false);
         rootView = view.getRootView();
         rootView.setOnTouchListener(swipeListener);
 
         NoteReferenceService service = new NoteReferenceService(getContext());
-        service.getAllArticleNotes(pageId, new NoteReferenceService.GetNotesCallback() {
+        service.getAllArticleNotes(pageId, notes -> {
+            notesList = notes;
+            // Creating ArrayList with text notes
+            notesText = new ArrayList();
+            if (notes != null) {
+                for (Note note: notes) {
+                    notesText.add(note.getText());
+                }
+            }
 
-            @Override
-            public void afterGetNotes(List<Note> notes) {
-                notesList = notes;
-                // Creating ArrayList with text notes
-                notesText = new ArrayList();
-                if (notes != null) {
-                    for (Note note: notes) {
-                        notesText.add(note.getText());
+            // Setting Title in the TextView
+            TextView titleView = view.findViewById(R.id.note_title);
+            titleView.setText(title);
+
+            // Creating the ListView of notes
+            ListView noteList = view.findViewById(R.id.notes_list);
+            noteList.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.simple_row, notesText));
+
+            //Listener for the share notes button
+            ImageButton shareButton = view.findViewById(R.id.notes_share_button);
+            shareButton.setOnClickListener(v -> {
+                if (notes != null && notes.size() != 0) {
+                    StringBuilder notesToShare = new StringBuilder();
+                    Set<Reference> referencesToShare = new HashSet<>();
+                    int indexNote = 0;
+
+                    notesToShare.append("Notes for Wikipedia article: " + title);
+                    for (Note noteItem:notes) {
+                        indexNote++;
+                        notesToShare.append("\n\n- Note " + indexNote + ":\n\n");
+                        notesToShare.append(noteItem.getText() + "\n\n");
+                        List<Reference> noteRefs = noteItem.getAllReferences();
+                        if (noteRefs.size() > 0) {
+                            for (Reference ref : noteRefs) {
+                                notesToShare.append("[" + ref.getNumber() + "] ");
+                                referencesToShare.add(ref);
+                            }
+                        }
                     }
+
+                    notesToShare.append("\n\nReferences:\n\n");
+                    if (referencesToShare == null || referencesToShare.size() == 0) {
+                        notesToShare.append("None.");
+                    } else {
+                        for (Reference referenceItem : referencesToShare) {
+                            notesToShare.append("[" + referenceItem.getNumber() + "] " + referenceItem.getText() + "\n");
+                        }
+                    }
+                    ShareUtil.shareText(getContext(), title, notesToShare.toString());
+                }
+            });
+
+            noteList.setOnTouchListener(swipeListener);
+            // Button for text-to-speech of the note
+            ImageButton backButton = view.findViewById(R.id.notes_back_button);
+            backButton.setOnClickListener(v -> {
+                Log.d("DEV_DEBUG", "Back button pressed");
+                getActivity().onBackPressed();
+            });
+
+            // Setting listener to the items in the ListView to open individual notes in dialog
+            noteList.setOnItemClickListener((parent, view, position, id) -> {
+
+                // Getting the references for the selected note and creating strings with them
+                if (notes.get(position).getAllReferences() != null) {
+                    references = notes.get(position).getAllReferences();
+                }
+                ArrayList<String> refsText = new ArrayList();
+                String ref;
+                for (Reference reference : references) {
+                    ref = "[" + reference.getNumber() + "] " + reference.getText();
+                    refsText.add(ref);
                 }
 
-                // Setting Title in the TextView
-                TextView titleView = view.findViewById(R.id.note_title);
-                titleView.setText(title);
-
-                // Creating the ListView of notes
-                ListView noteList = view.findViewById(R.id.notes_list);
-                noteList.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.simple_row, notesText));
-
-                //Listener for the share notes button
-                ImageButton shareButton = view.findViewById(R.id.notes_share_button);
-                shareButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (notes != null && notes.size() != 0) {
-                            StringBuilder notesToShare = new StringBuilder();
-                            Set<Reference> referencesToShare = new HashSet<>();
-                            int indexNote = 0;
-
-                            notesToShare.append("Notes for Wikipedia article: " + title);
-                            for (Note noteItem:notes) {
-                                indexNote++;
-                                notesToShare.append("\n\n- Note " + indexNote + ":\n\n");
-                                notesToShare.append(noteItem.getText() + "\n\n");
-                                List<Reference> noteRefs = noteItem.getAllReferences();
-                                if (noteRefs.size() > 0) {
-                                    for (Reference ref : noteRefs) {
-                                        notesToShare.append("[" + ref.getNumber() + "] ");
-                                        referencesToShare.add(ref);
-                                    }
-                                }
-                            }
-
-                            notesToShare.append("\n\nReferences:\n\n");
-                            if (referencesToShare == null || referencesToShare.size() == 0) {
-                                notesToShare.append("None.");
-                            } else {
-                                for (Reference referenceItem : referencesToShare) {
-                                    notesToShare.append("[" + referenceItem.getNumber() + "] " + referenceItem.getText() + "\n");
-                                }
-                            }
-                            ShareUtil.shareText(getContext(), title, notesToShare.toString());
-                        }
-                    }
-                });
-                
-                noteList.setOnTouchListener(swipeListener);
-                // Button for text-to-speech of the note
-                ImageButton backButton = view.findViewById(R.id.notes_back_button);
-                backButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Log.d("DEV_DEBUG", "Back button pressed");
-                        getActivity().onBackPressed();
-                    }
-                });
-
-                // Setting listener to the items in the ListView to open individual notes in dialog
-                noteList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                        // Getting the references for the selected note and creating strings with them
-                        if (notes.get(position).getAllReferences() != null) {
-                            references = notes.get(position).getAllReferences();
-                        }
-                        ArrayList<String> refsText = new ArrayList();
-                        String ref;
-                        for (Reference reference : references) {
-                            ref = "[" + reference.getNumber() + "] " + reference.getText();
-                            refsText.add(ref);
-                        }
-
-                        openSingleNoteFragment(notesText.get(position), refsText, position);
-                    }
-                });
-            }
+                openSingleNoteFragment(notesText.get(position), refsText, position);
+            });
         });
 
         return view;
@@ -219,6 +205,7 @@ public class NotesFragment extends Fragment {
             getActivity().getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.activity_note_container, fragment)
+                    .addToBackStack(null)
                     .commit();
         }
     }

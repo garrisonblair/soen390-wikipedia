@@ -60,7 +60,7 @@ public class SingleNoteFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
         view = inflater.inflate(R.layout.single_note_fragment, container, false);
@@ -75,19 +75,16 @@ public class SingleNoteFragment extends Fragment {
 
         // Button for text-to-speech of the note
         ImageButton speak = view.findViewById(R.id.note_speak);
-        speak.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int colorId = speak.getSolidColor();
-                if (speaking) {
-                    tts.stop();
-                    speaking = false;
-                    speak.setColorFilter(colorId);
-                } else {
-                    tts.speak(note);
-                    speaking = true;
-                    speak.setColorFilter(Color.BLUE);
-                }
+        speak.setOnClickListener(v -> {
+            int colorId = speak.getSolidColor();
+            if (speaking) {
+                tts.stop();
+                speaking = false;
+                speak.setColorFilter(colorId);
+            } else {
+                tts.speak(note);
+                speaking = true;
+                speak.setColorFilter(Color.BLUE);
             }
         });
 
@@ -96,30 +93,17 @@ public class SingleNoteFragment extends Fragment {
 
         // Button for editing the note
         ImageButton edit = view.findViewById(R.id.note_edit);
-        edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openNotesEditFragment(note);
-            }
-        });
+        edit.setOnClickListener(v -> openNotesEditFragment(note));
 
         // Button for deleting of the note
         ImageButton deleteNote = view.findViewById(R.id.note_delete);
-        deleteNote.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                NotesFragment fragment = (NotesFragment) getFragmentManager().findFragmentById(R.id.fragment_notes);
-                fragment.deleteNote(position);
-            }
+        deleteNote.setOnClickListener(v -> {
+            NotesFragment fragment = (NotesFragment) getFragmentManager().findFragmentById(R.id.fragment_notes);
+            fragment.deleteNote(position);
         });
 
         ImageButton back = view.findViewById(R.id.single_note_back_button);
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO: handle going back to note activity
-            }
-        });
+        back.setOnClickListener(v -> getFragmentManager().popBackStackImmediate());
 
         // Creating ListView for references
         ListView dialogRefs = view.findViewById(R.id.reference_list);
@@ -152,6 +136,7 @@ public class SingleNoteFragment extends Fragment {
             getActivity().getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.activity_note_container, fragment)
+                    .addToBackStack(null)
                     .commit();
         }
     }
