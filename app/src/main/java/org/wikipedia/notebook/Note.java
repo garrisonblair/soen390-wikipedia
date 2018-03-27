@@ -15,6 +15,7 @@ public class Note{
     private String articleTitle;
     private int articleid;
     private int id;
+    private String comment;
 
     public Note(int articleid, String articleTitle, String text) {
         this.originalText = text;
@@ -67,6 +68,18 @@ public class Note{
 
     public String getUpdatedText() {
         return this.updatedText;
+    }
+
+    public String getComment() {
+        return this.comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public void deleteComment() {
+        this.comment = null;
     }
 
     public void resetToOriginalText(){
