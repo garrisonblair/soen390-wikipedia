@@ -28,6 +28,7 @@ public class YouTubeVideoService {
     private YouTube youtube;
     private final long maxVideos = 25;
     private Callback callback;
+    private List<SearchResult> searchResults = new ArrayList<>();
 
     private final String apiKey = "AIzaSyC97eTu0rdwGuoJg0hv1r8No_55iaaeBp4";
 
@@ -69,7 +70,8 @@ public class YouTubeVideoService {
                     search.setMaxResults(maxVideos);
                     // Execute the API
                     SearchListResponse searchResponse = search.execute();
-                    List<SearchResult> searchResults = searchResponse.getItems();
+                    //List<SearchResult> searchResults = searchResponse.getItems();
+                    searchResults = searchResponse.getItems();
                     return getAllVideoInfo(searchResults);
                 } catch (GoogleJsonResponseException e) {
                     System.err.println("Service error: " + e.getDetails().getCode() + " : "
