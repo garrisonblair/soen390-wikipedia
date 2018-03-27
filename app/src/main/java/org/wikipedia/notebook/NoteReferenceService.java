@@ -150,7 +150,9 @@ public class NoteReferenceService {
             protected Void doInBackground(Object... objects) {
                 NoteEntity noteEntity = new NoteEntity(note.getArticleid(), note.getArticleTitle(), note.getOriginalText());
                 noteEntity.setId(note.getId());
-                noteEntity.setUpdatedText(note.getUpdatedText());
+                if (note.isTextUpdated()) {
+                    noteEntity.setUpdatedText(note.getUpdatedText());
+                }
                 noteDao.updateNoteText(noteEntity);
                 callBack.afterUpdateNoteText();
                 return null;
