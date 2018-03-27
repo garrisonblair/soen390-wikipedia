@@ -77,9 +77,6 @@ import org.wikipedia.views.ObservableWebView;
 import org.wikipedia.widgets.WidgetProviderFeaturedPage;
 import org.wikipedia.wiktionary.WiktionaryDialog;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
