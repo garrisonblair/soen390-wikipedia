@@ -152,9 +152,7 @@ public class RelatedVideosDialog extends ExtendedBottomSheetDialogFragment {
                 }
             });
 
-            //set the ontouch listener
-
-            new ThumbnailLoadTask(thumbnailView, video.getID()).execute();
+            new ThumbnailLoadTask(thumbnailView, video.getURL()).execute();
 
         }
 

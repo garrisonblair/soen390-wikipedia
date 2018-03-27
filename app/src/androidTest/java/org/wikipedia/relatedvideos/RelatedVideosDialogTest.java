@@ -73,9 +73,9 @@ public class RelatedVideosDialogTest {
             public Object answer(InvocationOnMock invocation) throws Throwable {
 
                 ArrayList<VideoInfo> videos = new ArrayList<VideoInfo>();
-                videos.add(new VideoInfoTestImpl("DaOJv-fMlmA", "Video1", ""));
-                videos.add(new VideoInfoTestImpl("jI8Im6RoPWo", "Video2", ""));
-                videos.add(new VideoInfoTestImpl("j-W6ccHY6-Q", "Video3", ""));
+                videos.add(new VideoInfoTestImpl("DaOJv-fMlmA", "Video1", "", "https://img.youtube.com/vi/DaOJv-fMlmA/0.jpg"));
+                videos.add(new VideoInfoTestImpl("jI8Im6RoPWo", "Video2", "", "https://img.youtube.com/vi/jI8Im6RoPWo/0.jpg"));
+                videos.add(new VideoInfoTestImpl("j-W6ccHY6-Q", "Video3", "", "https://img.youtube.com/vi/j-W6ccHY6-Q/0.jpg"));
 
                 ((YouTubeVideoService.Callback) invocation.getArguments()[1]).onYouTubeAPIResult(videos);
                 return null;

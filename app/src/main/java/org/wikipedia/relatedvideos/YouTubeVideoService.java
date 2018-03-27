@@ -23,7 +23,7 @@ import java.util.List;
 
 public class YouTubeVideoService {
     public interface Callback{
-        void onYouTubeAPIResult(List<Video> list);
+        void onYouTubeAPIResult(List<VideoInfo> list);
     }
     private YouTube youtube;
     private final long maxVideos = 25;
@@ -57,9 +57,9 @@ public class YouTubeVideoService {
 
     @SuppressLint("StaticFieldLeak")
     private void callYouTubeAPI(String pageTitle) {
-        new AsyncTask<Object, Void, List<Video>>() {
+        new AsyncTask<Object, Void, List<VideoInfo>>() {
             @Override
-            protected List<Video> doInBackground(Object... params) {
+            protected List<VideoInfo> doInBackground(Object... params) {
                 try {
                     // define the request for searching videos from YouTube using YouTube Data API
                     YouTube.Search.List search = youtube.search().list("id,snippet");
@@ -84,23 +84,23 @@ public class YouTubeVideoService {
                 return null;
             }
 
-            protected void onPostExecute(List<Video> results) {
+            protected void onPostExecute(List<VideoInfo> results) {
                 callback.onYouTubeAPIResult(results);
             }
         }.execute();
     }
 
-    public List<Video> getAllVideoInfo(List<SearchResult> searchResults) {
-        List<Video> videos = new ArrayList<>();
+    public List<VideoInfo> getAllVideoInfo(List<SearchResult> searchResults) {
+        List<VideoInfo> videos = new ArrayList<>();
         Video video = new Video();
         if (searchResults != null) {
             for (SearchResult result : searchResults) {
-                if (result.getKind().equals("youtube#video")) {
+                //if (result.getKind().equals("youtube#video")) {
                     video.setVideo(result.getSnippet().getTitle(),
                             result.getId().getVideoId(), result.getSnippet().getDescription(),
                             result.getSnippet().getThumbnails().getDefault().getUrl());
                     videos.add(video);
-                }
+                //}
             }
         }
         return videos;
