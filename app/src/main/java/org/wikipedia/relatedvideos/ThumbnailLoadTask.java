@@ -25,10 +25,13 @@ public class ThumbnailLoadTask extends AsyncTask<Void, Void, Bitmap> {
     @Override
     protected Bitmap doInBackground(Void... voids) {
         Bitmap logo = null;
+
         try {
             InputStream is = new URL(THUMBNAIL_URL + videoID + "/0.jpg").openStream();
 
             logo = BitmapFactory.decodeStream(is);
+
+            is.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

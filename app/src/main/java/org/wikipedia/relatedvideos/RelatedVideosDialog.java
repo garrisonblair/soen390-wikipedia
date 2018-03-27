@@ -2,7 +2,6 @@ package org.wikipedia.relatedvideos;
 
 
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,18 +27,33 @@ public class RelatedVideosDialog extends ExtendedBottomSheetDialogFragment {
 
     public static final String TITLE_ARGUMENT = "title_argument_related_videos_dialog";
 
+    private String title;
+    private List<VideoInfo> videos;
+    private YouTubeVideoService videoService;
+
     private View rootView;
     private RecyclerView videoRecyclerView;
 
-    private String title;
 
-    private List<VideoInfo> videos;
-    private Vibrator vibrator;
 
 
     //Instance getter because Fragments cant have non-default constructors
     public static RelatedVideosDialog newInstance(String title) {
         RelatedVideosDialog dialog = new RelatedVideosDialog();
+        Bundle args = new Bundle();
+
+        dialog.setVideoService(new YouTubeVideoService());
+
+        args.putString(TITLE_ARGUMENT, title);
+
+        dialog.setArguments(args);
+        return dialog;
+    }
+
+    static RelatedVideosDialog newInstance(String title, YouTubeVideoService videoService) {
+        RelatedVideosDialog dialog = new RelatedVideosDialog();
+        dialog.setVideoService(videoService);
+
         Bundle args = new Bundle();
 
         args.putString(TITLE_ARGUMENT, title);
@@ -48,7 +62,10 @@ public class RelatedVideosDialog extends ExtendedBottomSheetDialogFragment {
         return dialog;
     }
 
-    private void retrieveVideos() {
+    private void retrieveVideos(String searchTerm) {
+
+        videoService.searchVideos(searchTerm);
+
         videos = new ArrayList<VideoInfo>();
         videos.add(new VideoInfoTestImpl("DaOJv-fMlmA", "THOR RAGNAROK Grandmaster Moves To Earth EXTENDED - Team Darryl Short Film (2017) Jeff Goldblum HD", ""));
         videos.add(new VideoInfoTestImpl("jI8Im6RoPWo", "10 Playstation Fails Sony Wants You To Forget", ""));
@@ -56,12 +73,12 @@ public class RelatedVideosDialog extends ExtendedBottomSheetDialogFragment {
 
     }
 
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//
-//        vibrator = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
-//    }
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        title = this.getArguments().getString(TITLE_ARGUMENT);
+        retrieveVideos(title);
+    }
 
 
     @Override
@@ -69,9 +86,7 @@ public class RelatedVideosDialog extends ExtendedBottomSheetDialogFragment {
 
         rootView = inflater.inflate(R.layout.dialog_related_videos, container);
 
-        title = this.getArguments().getString(TITLE_ARGUMENT);
 
-        retrieveVideos();
 
         videoRecyclerView = (RecyclerView) rootView.findViewById(R.id.video_list);
         videoRecyclerView.setHasFixedSize(true);
@@ -145,5 +160,9 @@ public class RelatedVideosDialog extends ExtendedBottomSheetDialogFragment {
 
 
 
+    }
+
+    public void setVideoService(YouTubeVideoService videoService) {
+        this.videoService = videoService;
     }
 }

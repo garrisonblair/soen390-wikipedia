@@ -10,6 +10,7 @@
         android:orientation="vertical">
 
         <TextView
+            android:textColor="@color/base10"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:gravity="center_vertical"
@@ -18,12 +19,11 @@
             android:paddingRight="@dimen/list_item_horizontal_padding"
             android:paddingTop="8dp"
             android:text="@string/related_videos_title"
-            android:textColor="?attr/primary_text_color"
             android:textSize="16sp" />
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="?attr/material_theme_border_color"/>
+            android:background="@color/black12"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/video_list"
