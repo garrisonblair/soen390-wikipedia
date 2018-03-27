@@ -224,7 +224,9 @@ public class ImageRecognitionService{
         ArrayList<ArrayMap> entities = list.get("webEntities");
 
         for (ArrayMap entity: entities) {
-            result.add(new WebEntity((String) entity.get("description"), ((BigDecimal) entity.get("score")).doubleValue()));
+            if (entity.get("description") != null && entity.get("score") != null) {
+                result.add(new WebEntity((String) entity.get("description"), ((BigDecimal) entity.get("score")).doubleValue()));
+            }
         }
 
         return result;
