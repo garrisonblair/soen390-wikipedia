@@ -23,7 +23,6 @@ public class NoteReferenceService {
     public interface SaveCallback {
         void afterSave();
     }
-
     public interface GetNotesCallback {
         void afterGetNotes(List<Note> notes);
     }
@@ -32,6 +31,13 @@ public class NoteReferenceService {
     }
     public interface UpdateNoteTextCallBack {
         void afterUpdateNoteText();
+    }
+    public interface SetCommentCallBack {
+        void afterSetComment();
+    }
+
+    public interface DeleteCommentCallBack {
+        void afterDeleteComment();
     }
 
     private Context context;
@@ -153,8 +159,37 @@ public class NoteReferenceService {
                 if (note.isTextUpdated()) {
                     noteEntity.setUpdatedText(note.getUpdatedText());
                 }
-                noteDao.updateNoteText(noteEntity);
+                noteDao.updateNote(noteEntity);
                 callBack.afterUpdateNoteText();
+                return null;
+            }
+        }.execute(new Object());
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    public void setCommentOnNote(Note note, SetCommentCallBack callBack ) {
+        new AsyncTask<Object, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Object... objects) {
+                NoteEntity noteEntity = noteToNoteEntityWithId(note);
+                noteEntity.setComment(note.getComment());
+                noteDao.updateNote(noteEntity);
+                callBack.afterSetComment();;
+                return null;
+            }
+        }.execute(new Object());
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    public void deleteCommentOnNote(Note note, DeleteNoteCallBack callBack ) {
+        new AsyncTask<Object, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Object... objects) {
+                NoteEntity noteEntity = noteToNoteEntityWithId(note);
+                noteDao.updateNote(noteEntity);
+                callBack.afterDeleteNote();
                 return null;
             }
         }.execute(new Object());
@@ -167,5 +202,12 @@ public class NoteReferenceService {
            note.updateText(updatedText);
         }
         return note;
+    }
+
+    private NoteEntity noteToNoteEntityWithId(Note note) {
+        NoteEntity noteEntity = new NoteEntity(note.getArticleid(), note.getArticleTitle(), note.getOriginalText());
+        noteEntity.setId(note.getId());
+        noteEntity.setUpdatedText(note.getUpdatedText());
+        return noteEntity;
     }
 }
