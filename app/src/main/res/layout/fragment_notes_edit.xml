@@ -11,13 +11,16 @@
         <TextView android:id="@+id/note_edit_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
             android:textAlignment="center"
             android:textAllCaps="true"
             android:textStyle="bold"
             android:textSize="24sp"/>
         <TextView android:id="@+id/note_edit_body"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textIsSelectable="true"/>
     </LinearLayout>
     <Toolbar android:id="@+id/toolbar_edit"
         android:layout_width="match_parent"
@@ -34,77 +37,104 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
-            <ImageButton android:id="@+id/icon_bold"
+            <ImageButton
+                android:id="@+id/icon_bold"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:src="@drawable/icon_bold"
                 android:background="?attr/selectableItemBackground"
-                android:clickable="true"/>
+                android:clickable="true"
+                android:focusable="true"
+                android:src="@drawable/icon_bold" />
 
             <Space
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
-            <ImageButton android:id="@+id/icon_italics"
+            <ImageButton
+                android:id="@+id/icon_italics"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:src="@drawable/icon_italics"
                 android:background="?attr/selectableItemBackground"
-                android:clickable="true"/>
+                android:clickable="true"
+                android:focusable="true"
+                android:src="@drawable/icon_italics" />
 
             <Space
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
-            <ImageButton android:id="@+id/icon_underline"
+            <ImageButton
+                android:id="@+id/icon_underline"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:src="@drawable/icon_underline"
                 android:background="?attr/selectableItemBackground"
-                android:clickable="true"/>
+                android:clickable="true"
+                android:focusable="true"
+                android:src="@drawable/icon_underline" />
 
             <Space
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
-            <ImageButton android:id="@+id/icon_undo"
+            <ImageButton
+                android:id="@+id/icon_backspace"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:src="@drawable/icon_undo"
                 android:background="?attr/selectableItemBackground"
-                android:clickable="true"/>
+                android:clickable="true"
+                android:focusable="true"
+                android:src="@drawable/icon_backspace" />
 
             <Space
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
-            <ImageButton android:id="@+id/icon_backspace"
+            <ImageButton
+                android:id="@+id/icon_undo"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:src="@drawable/icon_backspace"
                 android:background="?attr/selectableItemBackground"
-                android:clickable="true"/>
+                android:clickable="true"
+                android:focusable="true"
+                android:src="@drawable/icon_undo" />
 
             <Space
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
-            <ImageButton android:id="@+id/icon_reset"
+            <ImageButton
+                android:id="@+id/icon_reset"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:src="@drawable/icon_reset"
                 android:background="?attr/selectableItemBackground"
-                android:clickable="true"/>
+                android:clickable="true"
+                android:focusable="true"
+                android:src="@drawable/icon_reset" />
 
             <Space
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
+
+            <ImageButton
+                android:id="@+id/icon_done"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:src="@drawable/icon_done" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
         </LinearLayout>
     </Toolbar>
 </RelativeLayout>
