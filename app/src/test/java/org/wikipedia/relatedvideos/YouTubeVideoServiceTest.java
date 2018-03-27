@@ -42,7 +42,7 @@ public class YouTubeVideoServiceTest {
     @Test
     public void getAllVideoInfoTest() throws Exception {
         SearchResult result = new SearchResult();
-        result.setKind("youtube#youTubeVideoAdapter");
+        result.setKind("youtube#video");
 
         ResourceId resourceId = new ResourceId();
         resourceId.setVideoId("123");
@@ -62,10 +62,13 @@ public class YouTubeVideoServiceTest {
 
         List<SearchResult> results = new ArrayList<>();
         results.add(result);
+        System.out.println(results.size());
 
         YouTubeVideoService service = new YouTubeVideoService();
         List<VideoInfo> videos = new ArrayList<>();
         videos = service.getAllVideoInfo(results);
+
+        assertEquals(1, videos.size());
         assertEquals("Loving cat", videos.get(0).getTitle());
         assertEquals("123", videos.get(0).getID());
     }
