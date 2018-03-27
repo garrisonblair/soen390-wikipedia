@@ -47,10 +47,10 @@ public class YouTubeVideoService {
         return callback;
     }
 
-    public void startExecution(String pageTitle, Callback callback) {
-        if (!pageTitle.equals("")) {
+    public void searchVideos(String keyword, Callback callback) {
+        if (!keyword.equals("")) {
             setCallback(callback);
-            callYouTubeAPI(pageTitle);
+            callYouTubeAPI(keyword);
         }
     }
 
