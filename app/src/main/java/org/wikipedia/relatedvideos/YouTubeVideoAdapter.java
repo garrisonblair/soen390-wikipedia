@@ -31,6 +31,6 @@ public class YouTubeVideoAdapter implements VideoInfo{
     }
     @Override
     public String getURL() {
-        return result.getSnippet().getThumbnails().getDefault().getUrl();
+        return result.getSnippet().getThumbnails().getHigh().getUrl();
     }
 }
