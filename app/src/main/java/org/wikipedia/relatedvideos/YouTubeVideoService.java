@@ -23,12 +23,13 @@ import java.util.List;
 
 public class YouTubeVideoService {
     public interface Callback{
-        void onYouTubeAPIResult(List<YouTubeVideoAdapter> list);
+        void onYouTubeAPIResult(List<VideoInfo> list);
     }
     private YouTube youtube;
     private final long maxVideos = 25;
     private Callback callback;
     private List<SearchResult> searchResults = new ArrayList<>();
+    private List<VideoInfo> videos = new ArrayList<>();
 
     private final String apiKey = "AIzaSyC97eTu0rdwGuoJg0hv1r8No_55iaaeBp4";
 
@@ -75,7 +76,8 @@ public class YouTubeVideoService {
                     for (SearchResult result : searchResults) {
                         System.out.println(result.getSnippet().getTitle());
                     }
-                    return getAllVideoInfo(searchResults);
+                    videos = getAllVideoInfo(searchResults);
+                    return videos;
                 } catch (GoogleJsonResponseException e) {
                     System.err.println("Service error: " + e.getDetails().getCode() + " : "
                             + e.getDetails().getMessage());
@@ -88,13 +90,13 @@ public class YouTubeVideoService {
             }
 
             protected void onPostExecute(List<YouTubeVideoAdapter> results) {
-                callback.onYouTubeAPIResult(results);
+                callback.onYouTubeAPIResult(videos);
             }
         }.execute();
     }
 
     public List<VideoInfo> getAllVideoInfo(List<SearchResult> searchResults) {
-        List<VideoInfo> videos = new ArrayList<>();
+        //List<VideoInfo> video = new ArrayList<>();
         if (searchResults != null) {
             for (SearchResult result : searchResults) {
                 if (result.getKind().equals("youtube#video")) {

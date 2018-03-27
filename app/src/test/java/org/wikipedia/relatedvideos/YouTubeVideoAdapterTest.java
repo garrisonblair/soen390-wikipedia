@@ -20,7 +20,7 @@ public class YouTubeVideoAdapterTest {
     @Before
     public void beforeTest(){
         SearchResult result = new SearchResult();
-        result.setKind("youtube#youTubeVideoAdapter");
+        result.setKind("youtube#video");
 
         ResourceId resourceId = new ResourceId();
         resourceId.setVideoId("123");
