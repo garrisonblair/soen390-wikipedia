@@ -15,6 +15,7 @@ public class NoteEntity {
     private String articleTitle;
     private String text;
     private String updatedText;
+    private String comment;
 
     public NoteEntity(int articleId, String articleTitle,  String text) {
         this.articleId = articleId;
@@ -28,6 +29,10 @@ public class NoteEntity {
 
     public int getId() {
         return this.id;
+    }
+
+    public String getComment() {
+        return this.comment;
     }
 
     public String getText() {
@@ -46,6 +51,10 @@ public class NoteEntity {
 
     public void setArticleId(int articleId) {
         this.articleId = articleId;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public void setId(int noteId) {
