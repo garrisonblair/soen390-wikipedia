@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +19,9 @@ import android.widget.Toast;
 import org.wikipedia.R;
 import org.wikipedia.notebook.NoteReferenceService;
 
-
 public class NotesEditFragment extends Fragment {
 
-    private SpannableString note;
+    private SpannableStringBuilder note;
     private String title;
     private int pageId;
     private NoteReferenceService noteReferenceService;
@@ -36,7 +37,7 @@ public class NotesEditFragment extends Fragment {
             pageId = bundleRead.getInt("pageId");
         }
         if (getArguments() != null) {
-            note = new SpannableString(getArguments().getString("note"));
+            note = new SpannableStringBuilder(getArguments().getString("note"));
         }
 
 //
@@ -98,6 +99,29 @@ public class NotesEditFragment extends Fragment {
                     editBody.setText(note);
                 } else {
                     Toast.makeText(getContext(), "Select text to underline first", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        // Trim text button
+        ImageButton backspace = view.findViewById(R.id.icon_backspace);
+        backspace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (editBody.getSelectionStart() != editBody.getSelectionEnd()) {
+                    int start = editBody.getSelectionStart();
+                    int end = editBody.getSelectionEnd();
+
+                    // TODO: Logic to remove extra space
+
+                    note.replace(start, end, "");
+                    editBody.setText(note);
+
+                    // TODO: Update Note in DB
+
+                    Toast.makeText(getContext(), Integer.toString(pageId), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "Select text to trim first", Toast.LENGTH_SHORT).show();
                 }
             }
         });
