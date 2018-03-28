@@ -163,7 +163,7 @@ public class NoteReferenceService {
     }
 
     @SuppressLint("StaticFieldLeak")
-    public void setCommentOnNote(Note note, SetCommentCallBack callBack ) {
+    public void setCommentOnNote(Note note, SetCommentCallBack callBack) {
         new AsyncTask<Object, Void, Void>() {
 
             @Override
@@ -171,14 +171,14 @@ public class NoteReferenceService {
                 NoteEntity noteEntity = noteToNoteEntityWithId(note);
                 noteEntity.setComment(note.getComment());
                 noteDao.updateNote(noteEntity);
-                callBack.afterSetComment();;
+                callBack.afterSetComment();
                 return null;
             }
         }.execute(new Object());
     }
 
     @SuppressLint("StaticFieldLeak")
-    public void deleteCommentOnNote(Note note, DeleteNoteCallBack callBack ) {
+    public void deleteCommentOnNote(Note note, DeleteNoteCallBack callBack) {
         new AsyncTask<Object, Void, Void>() {
 
             @Override
@@ -197,7 +197,7 @@ public class NoteReferenceService {
         if (updatedText != null) {
            note.updateText(updatedText);
         }
-        note.setSpam(noteEntity.getSpam());
+        note.setSpan(noteEntity.getSpan());
         return note;
     }
 
@@ -205,7 +205,7 @@ public class NoteReferenceService {
         NoteEntity noteEntity = new NoteEntity(note.getArticleid(), note.getArticleTitle(), note.getOriginalText());
         noteEntity.setId(note.getId());
         noteEntity.setUpdatedText(note.getUpdatedText());
-        noteEntity.setSpam(note.getSpam());
+        noteEntity.setSpan(note.getSpan());
         return noteEntity;
     }
 }

@@ -20,9 +20,6 @@ import org.wikipedia.R;
 import org.wikipedia.notebook.Note;
 import org.wikipedia.notebook.NoteReferenceService;
 
-
-
-
 public class NotesEditFragment extends Fragment {
 
     private SpannableStringBuilder note;
@@ -48,6 +45,7 @@ public class NotesEditFragment extends Fragment {
         if (getArguments() != null) {
             noteText = getArguments().getString("note");
             noteSpans = getArguments().getString("spans");
+            noteId = getArguments().getInt("noteId");
         }
         note = ((NotesActivity)getActivity()).annotate(noteText, noteSpans);
     }
@@ -121,7 +119,7 @@ public class NotesEditFragment extends Fragment {
             }
         });
 
-        // Re-setting selected text button
+        // Done commit button
         ImageButton done = view.findViewById(R.id.icon_done);
         done.setOnClickListener(v -> {
             String span = buildSpanKey(note).toString();
@@ -129,17 +127,17 @@ public class NotesEditFragment extends Fragment {
             NoteReferenceService service = new NoteReferenceService(getContext());
             service.getAllArticleNotes(pageId, notes -> {
                 if (notes != null) {
-                    for (Note noteInstance: notes) {
+                    for (Note noteInstance : notes) {
                         if (noteInstance.getId() == noteId) {
-                            // TODO: save note in db
+                            noteInstance.setSpan(span);
+                            Log.i("DEBUG", "NOTE EDITED AND SAVING");
+                            service.updateNoteText(noteInstance, () -> Log.i("DEBUG", "NOTE EDITED AND SAVED"));
                         }
                     }
                 }
             });
-
             getFragmentManager().popBackStackImmediate();
         });
-
         return view;
     }
 
@@ -169,7 +167,7 @@ public class NotesEditFragment extends Fragment {
 
             // find the next span transition
             next = note.nextSpanTransition(i, note.length(), CharacterStyle.class);
-            int spanEnd = next - 1;
+            int spanEnd = next;
 
             // get all spans in this range
             int numOfSpans = 0;

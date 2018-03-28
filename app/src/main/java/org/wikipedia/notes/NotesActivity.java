@@ -34,6 +34,11 @@ public class NotesActivity extends BaseActivity {
         String e;
         int numSpans;
         int i = 0;
+
+        if (spans == null) {
+            return annotatedNote;
+        }
+
         while (i < spans.length()) {
             i += 1; // Leave '['
             s = "";
