@@ -113,6 +113,7 @@ public class NotesEditFragment extends Fragment {
 
         // Trim text button
         ImageButton backspace = view.findViewById(R.id.icon_backspace);
+
         backspace.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,9 +123,6 @@ public class NotesEditFragment extends Fragment {
 
                     // TODO: Logic to remove extra space
 
-                    note.replace(start, end, "");
-                    editBody.setText(note);
-
                     NoteReferenceService service = new NoteReferenceService(getContext());
                     service.getAllArticleNotes(pageId, new NoteReferenceService.GetNotesCallback() {
 
@@ -132,15 +130,29 @@ public class NotesEditFragment extends Fragment {
                         public void afterGetNotes(List<Note> notes) {
                             if (notes != null) {
                                 // Find note instance
-                                for (Note note : notes) {
-                                    if (note.getId() == noteId) {
-                                        // TODO: Update Note in DB
+                                for (Note noteInstance : notes) {
+                                    if (noteInstance.getId() == noteId) {
+
+                                        // Update Note in DB
+                                        noteInstance.updateText(note.toString());
+                                        service.updateNoteText(noteInstance, new NoteReferenceService.UpdateNoteTextCallBack() {
+                                            @Override
+                                            public void afterUpdateNoteText() {
+                                                getActivity().runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        note.replace(start, end, "");
+                                                        editBody.setText(note);
+                                                        Toast.makeText(getContext(), "Note successfully updated", Toast.LENGTH_SHORT).show();;
+                                                    }
+                                                });
+                                            }
+                                        });
                                     }
                                 }
                             }
                         }
                     });
-
                 } else {
                     Toast.makeText(getContext(), "Select text to trim first", Toast.LENGTH_SHORT).show();
                 }
