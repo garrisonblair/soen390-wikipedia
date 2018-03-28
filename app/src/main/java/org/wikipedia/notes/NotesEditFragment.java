@@ -121,7 +121,7 @@ public class NotesEditFragment extends Fragment {
                     int start = editBody.getSelectionStart();
                     int end = editBody.getSelectionEnd();
 
-                    // TODO: Logic to remove extra space
+                    note.replace(start, end, "");
 
                     NoteReferenceService service = new NoteReferenceService(getContext());
                     service.getAllArticleNotes(pageId, new NoteReferenceService.GetNotesCallback() {
@@ -141,7 +141,8 @@ public class NotesEditFragment extends Fragment {
                                                 getActivity().runOnUiThread(new Runnable() {
                                                     @Override
                                                     public void run() {
-                                                        note.replace(start, end, "");
+
+                                                        // Update edit body
                                                         editBody.setText(note);
                                                         Toast.makeText(getContext(), "Note successfully updated", Toast.LENGTH_SHORT).show();;
                                                     }
