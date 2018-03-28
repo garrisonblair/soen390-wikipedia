@@ -19,6 +19,7 @@ public class NoteCommentsEntity {
 
     @PrimaryKey (autoGenerate = true)
     private int ncid;
+
     private int noteId;
     private String text;
 
@@ -27,7 +28,13 @@ public class NoteCommentsEntity {
         this.text = text;
     }
 
-    public int getNcid() { return this.ncid; }
+    public void setNcid(int ncid) {
+        this.ncid = ncid;
+    }
+
+    public int getNcid() {
+        return this.ncid;
+    }
 
     public int getNoteId() {
         return this.noteId;

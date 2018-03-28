@@ -5,6 +5,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import org.wikipedia.database.room.AppDatabase;
+import org.wikipedia.notebook.database.NoteCommentsDao;
+import org.wikipedia.notebook.database.NoteCommentsEntity;
 import org.wikipedia.notebook.database.NoteDao;
 import org.wikipedia.notebook.database.NoteEntity;
 import org.wikipedia.notebook.database.ReferenceDao;
@@ -35,12 +37,14 @@ public class NoteReferenceService {
     private AppDatabase db;
     private NoteDao noteDao;
     private ReferenceDao referenceDao;
+    private NoteCommentsDao noteCommentsDao;
 
     public NoteReferenceService(Context context) {
         this.context = context;
         this.db = AppDatabase.getInstance(context);
         this.noteDao = db.noteDao();
         this.referenceDao = db.referenceDao();
+        this.noteCommentsDao = db.noteCommentsDao();
     }
 
     public NoteReferenceService(Context context, AppDatabase db) {
@@ -48,6 +52,7 @@ public class NoteReferenceService {
         this.db = db;
         this.noteDao = db.noteDao();
         this.referenceDao = db.referenceDao();
+        this.noteCommentsDao = db.noteCommentsDao();
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -58,11 +63,20 @@ public class NoteReferenceService {
             protected List<Note> doInBackground(Object... objects) {
                 List<NoteEntity> noteEntities = noteDao.getAllNotesForArticle(articleId);
                 List<ReferenceEntity> referenceEntities = referenceDao.getAllArticleReferences(articleId);
+                List<NoteCommentsEntity> noteCommentsEntities;
+
                 HashMap<Integer, Reference> mapReference = new HashMap<Integer, Reference>();
                 HashMap<Integer, Note> mapNote = new HashMap<Integer, Note>();
 
                 for (NoteEntity ne: noteEntities) {
                     Note newNote = new Note(ne.getId(), ne.getArticleId(), ne.getArticleTitle(), ne.getText());
+
+                    //Getting all comments for the note
+                    noteCommentsEntities = noteCommentsDao.getAllNoteComments(ne.getId());
+                    for (NoteCommentsEntity nce: noteCommentsEntities) {
+                        newNote.addNoteComment(new NoteComments(nce.getText()));
+                    }
+
                     mapNote.put(newNote.getId(), newNote);
                     //notes.add(newNote);
                 }
