@@ -27,6 +27,7 @@ public class SingleNoteFragment extends Fragment {
     private String title;
     private int pageId;
     private int position;
+    private int noteId;
     private String note;
     private ArrayList<String> references;
     private NoteReferenceService noteReferenceService;
@@ -42,13 +43,18 @@ public class SingleNoteFragment extends Fragment {
             Bundle bundleRead = getActivity().getIntent().getExtras();
             title = bundleRead.getString("pageTitle");
             pageId = bundleRead.getInt("pageId");
+            position = bundleRead.getInt("position");
+            noteId = getArguments().getInt("noteId");
+
             //note = new SpannableString(bundleRead.getString("noteText"));
         }
         if (getArguments() != null) {
             note = getArguments().getString("note");
             position = getArguments().getInt("position");
             references = getArguments().getStringArrayList("references");
+            noteId = getArguments().getInt("noteId");
         }
+
         tts = TTSWrapper.getInstance(getContext(), new UtteranceProgressListener() {
             @Override
             public void onStart(String utteranceId) { }
@@ -99,7 +105,7 @@ public class SingleNoteFragment extends Fragment {
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openNotesEditFragment(note);
+                openNotesEditFragment(note, noteId);
             }
         });
 
@@ -132,23 +138,24 @@ public class SingleNoteFragment extends Fragment {
     }
 
     @NonNull
-    public static SingleNoteFragment newInstance(String note, ArrayList<String> references, int position) {
+    public static SingleNoteFragment newInstance(String note, ArrayList<String> references, int position, int noteId) {
         SingleNoteFragment fragment = new SingleNoteFragment();
 
         Bundle args = new Bundle();
         args.putString("note", note);
         args.putStringArrayList("references", references);
         args.putInt("position", position);
+        args.putInt("noteId", noteId);
 
         fragment.setArguments(args);
         return fragment;
     }
 
-    private void openNotesEditFragment(String note) {
+    private void openNotesEditFragment(String note, int noteId) {
         NotesEditFragment fragment = notesEditFragment();
 
         if (fragment == null) {
-            fragment = NotesEditFragment.newInstance(note);
+            fragment = NotesEditFragment.newInstance(note, noteId);
             getActivity().getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.activity_note_container, fragment)
@@ -158,6 +165,7 @@ public class SingleNoteFragment extends Fragment {
 
     @Nullable
     private NotesEditFragment notesEditFragment() {
+
         return (NotesEditFragment) getActivity().getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_notes_edit);
     }

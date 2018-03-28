@@ -174,7 +174,9 @@ public class NotesFragment extends Fragment {
                             refsText.add(ref);
                         }
 
-                        openSingleNoteFragment(notesText.get(position), refsText, position);
+//                        Toast.makeText(getContext(), Integer.toString(notes.get(position).getId()), Toast.LENGTH_SHORT).show();
+
+                        openSingleNoteFragment(notesText.get(position), refsText, position, notes.get(position).getId());
                     }
                 });
             }
@@ -211,11 +213,11 @@ public class NotesFragment extends Fragment {
         super.onDestroy();
     }
 
-    private void openSingleNoteFragment(String note, ArrayList<String> references, int position) {
+    private void openSingleNoteFragment(String note, ArrayList<String> references, int position, int noteId) {
         SingleNoteFragment fragment = singleNoteFragment();
 
         if (fragment == null) {
-            fragment = SingleNoteFragment.newInstance(note, references, position);
+            fragment = SingleNoteFragment.newInstance(note, references, position, noteId);
             getActivity().getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.activity_note_container, fragment)

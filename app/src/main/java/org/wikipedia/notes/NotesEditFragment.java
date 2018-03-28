@@ -8,7 +8,6 @@ import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +23,7 @@ public class NotesEditFragment extends Fragment {
     private SpannableStringBuilder note;
     private String title;
     private int pageId;
+    private int noteId;
     private NoteReferenceService noteReferenceService;
     private View view;
 
@@ -35,9 +35,18 @@ public class NotesEditFragment extends Fragment {
             Bundle bundleRead = getActivity().getIntent().getExtras();
             title = bundleRead.getString("pageTitle");
             pageId = bundleRead.getInt("pageId");
+            noteId = bundleRead.getInt("noteId");
+
         }
+
+        // Get data passed from SingleNoteFragment
         if (getArguments() != null) {
+            title = getArguments().getString("pageTitle");
+            pageId = getArguments().getInt("pageId");
+            noteId = getArguments().getInt("noteId");
             note = new SpannableStringBuilder(getArguments().getString("note"));
+
+            Toast.makeText(getContext(), Integer.toString(noteId), Toast.LENGTH_SHORT).show();
         }
 
 //
@@ -119,7 +128,6 @@ public class NotesEditFragment extends Fragment {
 
                     // TODO: Update Note in DB
 
-                    Toast.makeText(getContext(), Integer.toString(pageId), Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getContext(), "Select text to trim first", Toast.LENGTH_SHORT).show();
                 }
@@ -130,11 +138,12 @@ public class NotesEditFragment extends Fragment {
     }
 
     @NonNull
-    public static NotesEditFragment newInstance(String note) {
+    public static NotesEditFragment newInstance(String note, int noteId) {
         NotesEditFragment fragment = new NotesEditFragment();
 
         Bundle args = new Bundle();
         args.putString("note", note);
+        args.putInt("noteId", noteId);
 
         fragment.setArguments(args);
         return fragment;
