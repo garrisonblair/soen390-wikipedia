@@ -88,8 +88,8 @@ public class Note{
 
     public boolean isTextUpdated() {
         if (this.updatedText == null)
-            return true;
-        return false;
+            return false;
+        return true;
     }
     public List<Reference> getAllReferences() { return this.references; }
 }
