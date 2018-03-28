@@ -43,11 +43,10 @@ public class SingleNoteFragment extends Fragment {
             Bundle bundleRead = getActivity().getIntent().getExtras();
             title = bundleRead.getString("pageTitle");
             pageId = bundleRead.getInt("pageId");
-            position = bundleRead.getInt("position");
-            noteId = getArguments().getInt("noteId");
 
             //note = new SpannableString(bundleRead.getString("noteText"));
         }
+
         if (getArguments() != null) {
             note = getArguments().getString("note");
             position = getArguments().getInt("position");

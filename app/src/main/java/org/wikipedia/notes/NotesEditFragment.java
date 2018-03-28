@@ -16,7 +16,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.wikipedia.R;
+import org.wikipedia.notebook.Note;
 import org.wikipedia.notebook.NoteReferenceService;
+
+import java.util.List;
 
 public class NotesEditFragment extends Fragment {
 
@@ -35,16 +38,12 @@ public class NotesEditFragment extends Fragment {
             Bundle bundleRead = getActivity().getIntent().getExtras();
             title = bundleRead.getString("pageTitle");
             pageId = bundleRead.getInt("pageId");
-            noteId = bundleRead.getInt("noteId");
-
         }
 
         // Get data passed from SingleNoteFragment
         if (getArguments() != null) {
-            title = getArguments().getString("pageTitle");
-            pageId = getArguments().getInt("pageId");
-            noteId = getArguments().getInt("noteId");
             note = new SpannableStringBuilder(getArguments().getString("note"));
+            noteId = getArguments().getInt("noteId");
 
             Toast.makeText(getContext(), Integer.toString(noteId), Toast.LENGTH_SHORT).show();
         }
@@ -126,7 +125,21 @@ public class NotesEditFragment extends Fragment {
                     note.replace(start, end, "");
                     editBody.setText(note);
 
-                    // TODO: Update Note in DB
+                    NoteReferenceService service = new NoteReferenceService(getContext());
+                    service.getAllArticleNotes(pageId, new NoteReferenceService.GetNotesCallback() {
+
+                        @Override
+                        public void afterGetNotes(List<Note> notes) {
+                            if (notes != null) {
+                                // Find note instance
+                                for (Note note : notes) {
+                                    if (note.getId() == noteId) {
+                                        // TODO: Update Note in DB
+                                    }
+                                }
+                            }
+                        }
+                    });
 
                 } else {
                     Toast.makeText(getContext(), "Select text to trim first", Toast.LENGTH_SHORT).show();
