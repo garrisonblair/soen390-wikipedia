@@ -33,6 +33,10 @@ public class NoteReferenceService {
         void afterDeleteNote();
     }
 
+    public interface UpdateNoteCallBack {
+        void afterUpdateNote();
+    }
+
     private Context context;
     private AppDatabase db;
     private NoteDao noteDao;
@@ -165,6 +169,18 @@ public class NoteReferenceService {
         }.execute(new Object());
     }
 
+    @SuppressLint("StaticFieldLeak")
+    public void updateNoteComment(String text, int ncId, UpdateNoteCallBack callBack) {
+        new AsyncTask<Object, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Object... objects) {
+                noteCommentsDao.updateNoteComments(ncId, text);
+                callBack.afterUpdateNote();
+                return null;
+            }
+        }.execute(new Object());
+    }
 
     public List<String> getAllNotedArticles() {
         return noteDao.getAllArticles();

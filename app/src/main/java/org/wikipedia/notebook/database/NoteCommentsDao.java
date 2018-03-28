@@ -16,6 +16,9 @@ public interface NoteCommentsDao {
     @Query("SELECT * FROM `noteComments` WHERE noteId = :noteId ORDER BY ncid ASC")
     List<NoteCommentsEntity> getAllNoteComments(int noteId);
 
+    @Query("UPDATE `noteComments` SET text = :text WHERE ncid = :ncid")
+    void updateNoteComments(int ncid, String text);
+
     @Insert
     void addNoteComments(NoteCommentsEntity noteComment);
 
