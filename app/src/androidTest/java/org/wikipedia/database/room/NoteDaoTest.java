@@ -71,6 +71,7 @@ public class NoteDaoTest {
         noteEntity = noteList.get(0);
         noteEntity.setUpdatedText("updated Text");
         noteEntity.setComment("new comment");
+        noteEntity.setSpam("new spam");
         mNoteDao.updateNote(noteEntity);
         noteList = mNoteDao.getAllNotesForArticle(123);
         assertEquals(1, noteList.size());
@@ -82,6 +83,6 @@ public class NoteDaoTest {
         noteList = mNoteDao.getAllNotesForArticle(123);
         noteEntity = noteList.get(0);
         assertEquals(null, noteEntity.getComment());
-
+        assertEquals("new spam", noteEntity.getSpam());
     }
 }
