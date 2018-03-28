@@ -44,11 +44,7 @@ public class NotesEditFragment extends Fragment {
         if (getArguments() != null) {
             note = new SpannableStringBuilder(getArguments().getString("note"));
             noteId = getArguments().getInt("noteId");
-
-            Toast.makeText(getContext(), Integer.toString(noteId), Toast.LENGTH_SHORT).show();
         }
-
-//
     }
 
     @Override
