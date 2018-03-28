@@ -24,6 +24,7 @@ public class NotesEditFragment extends Fragment {
 
     private SpannableStringBuilder note;
     private String title;
+    private String noteSpans;
     private int pageId;
     private NoteReferenceService noteReferenceService;
     private View view;
@@ -31,6 +32,7 @@ public class NotesEditFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        String noteText = "";
 
         if (getActivity().getIntent() != null) {
             if (getActivity().getIntent().getExtras() != null) {
@@ -40,8 +42,10 @@ public class NotesEditFragment extends Fragment {
             }
         }
         if (getArguments() != null) {
-            note = new SpannableStringBuilder(getArguments().getString("note"));
+            noteText = getArguments().getString("note");
+            noteSpans = getArguments().getString("spans");
         }
+        note = ((NotesActivity)getActivity()).annotate(noteText, noteSpans);
     }
 
     @Override
@@ -133,21 +137,24 @@ public class NotesEditFragment extends Fragment {
                     if (span1 instanceof StyleSpan) {
                         StyleSpan span = (StyleSpan) span1;
                         if (span.getStyle() == 1) {
-                            spanTypes.append(",b");
+                            spanTypes.append("b");
                         }
                         if (span.getStyle() == 2) {
-                            spanTypes.append(",i");
+                            spanTypes.append("i");
                         }
                     }
                     if (span1 instanceof UnderlineSpan) {
-                        spanTypes.append(",u");
+                        spanTypes.append("u");
                     }
                     numOfSpans++;
                 }
 
-                saved.append("[").append(i).append(",").append(spanEnd).append(",").append(numOfSpans).append(spanTypes).append("]");
+                saved.append(i).append(".").append(spanEnd).append(".").append(numOfSpans).append(spanTypes);
             }
             Log.i("DEBUG SPANS", saved.toString());
+
+            // TODO: update & save edited note state
+
             getFragmentManager().popBackStackImmediate();
         });
 
@@ -155,11 +162,12 @@ public class NotesEditFragment extends Fragment {
     }
 
     @NonNull
-    public static NotesEditFragment newInstance(String note) {
+    public static NotesEditFragment newInstance(String note, String spans) {
         NotesEditFragment fragment = new NotesEditFragment();
 
         Bundle args = new Bundle();
         args.putString("note", note);
+        args.putString("spans", spans);
 
         fragment.setArguments(args);
         return fragment;

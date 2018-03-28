@@ -6,6 +6,7 @@ import android.speech.tts.UtteranceProgressListener;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.SpannableStringBuilder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,11 +24,11 @@ import java.util.ArrayList;
 
 public class SingleNoteFragment extends Fragment {
 
-    //private SpannableString note;
+    private SpannableStringBuilder note;
     private String title;
+    private String noteSpans;
     private int pageId;
     private int position;
-    private String note;
     private ArrayList<String> references;
     private NoteReferenceService noteReferenceService;
     private TTSWrapper tts;
@@ -37,6 +38,7 @@ public class SingleNoteFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        String noteText = "";
 
         if (getActivity().getIntent().getExtras() != null) {
             Bundle bundleRead = getActivity().getIntent().getExtras();
@@ -45,9 +47,10 @@ public class SingleNoteFragment extends Fragment {
             //note = new SpannableString(bundleRead.getString("noteText"));
         }
         if (getArguments() != null) {
-            note = getArguments().getString("note");
+            noteText = getArguments().getString("note");
             position = getArguments().getInt("position");
             references = getArguments().getStringArrayList("references");
+            noteSpans = getArguments().getString("spans");
         }
         tts = TTSWrapper.getInstance(getContext(), new UtteranceProgressListener() {
             @Override
@@ -57,6 +60,8 @@ public class SingleNoteFragment extends Fragment {
             @Override
             public void onError(String utteranceId) { }
         });
+
+        note = ((NotesActivity)getActivity()).annotate(noteText, noteSpans);
     }
 
     @Override
@@ -82,7 +87,7 @@ public class SingleNoteFragment extends Fragment {
                 speaking = false;
                 speak.setColorFilter(colorId);
             } else {
-                tts.speak(note);
+                tts.speak(note.toString());
                 speaking = true;
                 speak.setColorFilter(Color.BLUE);
             }
@@ -93,7 +98,7 @@ public class SingleNoteFragment extends Fragment {
 
         // Button for editing the note
         ImageButton edit = view.findViewById(R.id.note_edit);
-        edit.setOnClickListener(v -> openNotesEditFragment(note));
+        edit.setOnClickListener(v -> openNotesEditFragment(note.toString(), noteSpans));
 
         // Button for deleting of the note
         ImageButton deleteNote = view.findViewById(R.id.note_delete);
@@ -116,11 +121,12 @@ public class SingleNoteFragment extends Fragment {
     }
 
     @NonNull
-    public static SingleNoteFragment newInstance(String note, ArrayList<String> references, int position) {
+    public static SingleNoteFragment newInstance(String note, String spans, ArrayList<String> references, int position) {
         SingleNoteFragment fragment = new SingleNoteFragment();
 
         Bundle args = new Bundle();
         args.putString("note", note);
+        args.putString("spans", spans);
         args.putStringArrayList("references", references);
         args.putInt("position", position);
 
@@ -128,11 +134,11 @@ public class SingleNoteFragment extends Fragment {
         return fragment;
     }
 
-    private void openNotesEditFragment(String note) {
+    private void openNotesEditFragment(String note, String spans) {
         NotesEditFragment fragment = notesEditFragment();
 
         if (fragment == null) {
-            fragment = NotesEditFragment.newInstance(note);
+            fragment = NotesEditFragment.newInstance(note, spans);
             getActivity().getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.activity_note_container, fragment)

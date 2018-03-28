@@ -1,19 +1,16 @@
 package org.wikipedia.notes;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.speech.tts.UtteranceProgressListener;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.SpannableStringBuilder;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
@@ -26,7 +23,6 @@ import org.wikipedia.notebook.Note;
 import org.wikipedia.notebook.NoteReferenceService;
 import org.wikipedia.notebook.Reference;
 import org.wikipedia.page.listeners.OnSwipeTouchListener;
-import org.wikipedia.texttospeech.TTSWrapper;
 import org.wikipedia.util.ShareUtil;
 
 import java.util.ArrayList;
@@ -42,7 +38,7 @@ public class NotesFragment extends Fragment {
     private NoteReferenceService noteReferenceService;
 
     private List<Note> notesList;
-    private ArrayList<String> notesText;
+    private ArrayList<SpannableStringBuilder> notesText;
     private List<Reference> references;
 
     private View view;
@@ -94,7 +90,7 @@ public class NotesFragment extends Fragment {
             notesText = new ArrayList();
             if (notes != null) {
                 for (Note note: notes) {
-                    notesText.add(note.getText());
+                    notesText.add(((NotesActivity) getActivity()).annotate(note.getText(), note.getSpan()));
                 }
             }
 
@@ -104,7 +100,7 @@ public class NotesFragment extends Fragment {
 
             // Creating the ListView of notes
             ListView noteList = view.findViewById(R.id.notes_list);
-            noteList.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.simple_row, notesText));
+            noteList.setAdapter(new ArrayAdapter<SpannableStringBuilder>(getContext(), R.layout.simple_row, notesText));
 
             //Listener for the share notes button
             ImageButton shareButton = view.findViewById(R.id.notes_share_button);
@@ -162,7 +158,11 @@ public class NotesFragment extends Fragment {
                     refsText.add(ref);
                 }
 
-                openSingleNoteFragment(notesText.get(position), refsText, position);
+                openSingleNoteFragment(
+                        notesList.get(position).getText(),
+                        notesList.get(position).getSpan(),
+                        refsText,
+                        position);
             });
         });
 
@@ -197,11 +197,11 @@ public class NotesFragment extends Fragment {
         super.onDestroy();
     }
 
-    private void openSingleNoteFragment(String note, ArrayList<String> references, int position) {
+    private void openSingleNoteFragment(String note, String spans, ArrayList<String> references, int position) {
         SingleNoteFragment fragment = singleNoteFragment();
 
         if (fragment == null) {
-            fragment = SingleNoteFragment.newInstance(note, references, position);
+            fragment = SingleNoteFragment.newInstance(note, spans, references, position);
             getActivity().getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.activity_note_container, fragment)
