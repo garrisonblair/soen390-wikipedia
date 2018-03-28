@@ -119,6 +119,7 @@ public class NoteReferenceService {
             }
         }.execute(new Object());
     }
+
     @SuppressLint("StaticFieldLeak")
     public void deleteNote(Note note, DeleteNoteCallBack callBack) {
         new AsyncTask<Object, Void, Void>() {
@@ -133,6 +134,37 @@ public class NoteReferenceService {
             }
         }.execute(new Object());
     }
+
+    @SuppressLint("StaticFieldLeak")
+    public void addNoteComment(int noteId, String text, SaveCallback callback) {
+        new AsyncTask<Object, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Object... objects) {
+                NoteCommentsEntity ncEntity = new NoteCommentsEntity(noteId, text);
+                noteCommentsDao.addNoteComments(ncEntity);
+
+                callback.afterSave();
+                return null;
+            }
+        }.execute(new Object());
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    public void deleteNoteComment(NoteComments nc, int noteId, int ncId, DeleteNoteCallBack callBack) {
+        new AsyncTask<Object, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Object... objects) {
+                NoteCommentsEntity ncEntity = new NoteCommentsEntity(noteId, nc.getText());
+                ncEntity.setNcid(ncId);
+                noteCommentsDao.delete(ncEntity);
+                callBack.afterDeleteNote();
+                return null;
+            }
+        }.execute(new Object());
+    }
+
 
     public List<String> getAllNotedArticles() {
         return noteDao.getAllArticles();
