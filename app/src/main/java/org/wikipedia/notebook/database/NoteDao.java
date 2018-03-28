@@ -28,7 +28,7 @@ public interface NoteDao {
     void deleteNote(NoteEntity note);
 
     @Update
-    void updateNoteText(NoteEntity note);
+    void updateNote(NoteEntity note);
 
     @Query("DELETE FROM notes WHERE articleTitle = :articleTitle")
     void deleteAllNotes(String articleTitle);
