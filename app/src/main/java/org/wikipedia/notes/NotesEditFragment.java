@@ -4,6 +4,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.text.SpannableStringBuilder;
 import android.text.style.CharacterStyle;
 import android.text.style.StyleSpan;
@@ -122,21 +123,31 @@ public class NotesEditFragment extends Fragment {
         // Done commit button
         ImageButton done = view.findViewById(R.id.icon_done);
         done.setOnClickListener(v -> {
-            String span = buildSpanKey(note).toString();
+            AlertDialog dialog = new AlertDialog.Builder(getContext())
+                    .setTitle("Would you like to save changes?")
+                    .setPositiveButton("Yes", (dialog12, which) -> {
+                        String span = buildSpanKey(note).toString();
 
-            NoteReferenceService service = new NoteReferenceService(getContext());
-            service.getAllArticleNotes(pageId, notes -> {
-                if (notes != null) {
-                    for (Note noteInstance : notes) {
-                        if (noteInstance.getId() == noteId) {
-                            noteInstance.setSpan(span);
-                            Log.i("DEBUG", "NOTE EDITED AND SAVING");
-                            service.updateNoteText(noteInstance, () -> Log.i("DEBUG", "NOTE EDITED AND SAVED"));
-                        }
-                    }
-                }
-            });
-            getFragmentManager().popBackStackImmediate();
+                        NoteReferenceService service = new NoteReferenceService(getContext());
+                        service.getAllArticleNotes(pageId, notes -> {
+                            if (notes != null) {
+                                for (Note noteInstance : notes) {
+                                    if (noteInstance.getId() == noteId) {
+                                        noteInstance.setSpan(span);
+                                        Log.i("DEBUG", "NOTE EDITED AND SAVING");
+                                        service.updateNoteText(noteInstance, () -> Log.i("DEBUG", "NOTE EDITED AND SAVED"));
+                                    }
+                                }
+                            }
+                        });
+                        dialog12.dismiss();
+                        getFragmentManager().popBackStackImmediate();
+                    })
+                    .setNegativeButton("No", (dialog1, which) -> {
+                        dialog1.dismiss();
+                        getFragmentManager().popBackStackImmediate();
+                    })
+                    .show();
         });
         return view;
     }
