@@ -162,6 +162,7 @@ public class NoteReferenceServiceTest {
         when(noteMock.getId()).thenReturn(1);
         when(noteMock.getArticleTitle()).thenReturn("title");
         when(noteMock.getComment()).thenReturn("my comment");
+        when(noteMock.getSpam()).thenReturn("spam");
         when(noteMock.getOriginalText()).thenReturn("text");
         when(noteMock.getUpdatedText()).thenReturn("updated");
         when(noteMock.getArticleid()).thenReturn(123);
@@ -180,6 +181,7 @@ public class NoteReferenceServiceTest {
         when(noteMock.getId()).thenReturn(1);
         when(noteMock.getArticleTitle()).thenReturn("title");
         when(noteMock.getComment()).thenReturn("my comment");
+        when(noteMock.getSpam()).thenReturn("spam");
         when(noteMock.getOriginalText()).thenReturn("text");
         when(noteMock.getUpdatedText()).thenReturn("updated");
         when(noteMock.getArticleid()).thenReturn(123);

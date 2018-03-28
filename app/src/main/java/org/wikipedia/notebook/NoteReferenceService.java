@@ -201,6 +201,7 @@ public class NoteReferenceService {
         if (updatedText != null) {
            note.updateText(updatedText);
         }
+        note.setSpam(noteEntity.getSpam());
         return note;
     }
 
@@ -208,6 +209,7 @@ public class NoteReferenceService {
         NoteEntity noteEntity = new NoteEntity(note.getArticleid(), note.getArticleTitle(), note.getOriginalText());
         noteEntity.setId(note.getId());
         noteEntity.setUpdatedText(note.getUpdatedText());
+        noteEntity.setSpam(note.getSpam());
         return noteEntity;
     }
 }
