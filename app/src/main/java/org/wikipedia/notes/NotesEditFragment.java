@@ -126,7 +126,9 @@ public class NotesEditFragment extends Fragment {
             int next;
             for (int i = 0; i < note.length(); i = next) {
 
-                isBold = isItalics = isUnderlined = false;
+                isBold = false;
+                isItalics = false;
+                isUnderlined = false;
 
                 // find the next span transition
                 next = note.nextSpanTransition(i, note.length(), CharacterStyle.class);
@@ -159,7 +161,7 @@ public class NotesEditFragment extends Fragment {
                     if (span1 instanceof UnderlineSpan) {
                         if (!isUnderlined) {
                             spanTypes.append("u");
-                            isItalics = true;
+                            isUnderlined = true;
                         } else {
                             numOfSpans--;
                         }
