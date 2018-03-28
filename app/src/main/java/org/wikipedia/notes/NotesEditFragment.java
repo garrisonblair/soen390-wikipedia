@@ -135,6 +135,7 @@ public class NotesEditFragment extends Fragment {
 
                                         // Update Note in DB
                                         noteInstance.updateText(note.toString());
+
                                         service.updateNoteText(noteInstance, new NoteReferenceService.UpdateNoteTextCallBack() {
                                             @Override
                                             public void afterUpdateNoteText() {
@@ -157,6 +158,50 @@ public class NotesEditFragment extends Fragment {
                 } else {
                     Toast.makeText(getContext(), "Select text to trim first", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        // Reset to original note button
+        ImageButton resetButton = view.findViewById(R.id.icon_reset);
+
+        resetButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                NoteReferenceService service = new NoteReferenceService(getContext());
+
+                service.getAllArticleNotes(pageId, new NoteReferenceService.GetNotesCallback() {
+
+                    @Override
+                    public void afterGetNotes(List<Note> notes) {
+                        if (notes != null) {
+                            // Find note instance
+                            for (Note noteInstance : notes) {
+                                if (noteInstance.getId() == noteId) {
+
+                                    // Reset Note in DB
+                                    noteInstance.resetToOriginalText();
+
+                                    note.replace(0, note.length(), noteInstance.getText());
+
+                                    service.updateNoteText(noteInstance, new NoteReferenceService.UpdateNoteTextCallBack() {
+                                        @Override
+                                        public void afterUpdateNoteText() {
+                                            getActivity().runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    // Update edit body
+                                                    editBody.setText(note);
+                                                    Toast.makeText(getContext(), "Note successfully resetted", Toast.LENGTH_SHORT).show();;
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    }
+                });
             }
         });
 
