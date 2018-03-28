@@ -122,8 +122,11 @@ public class NotesEditFragment extends Fragment {
         done.setOnClickListener(v -> {
             StringBuilder saved = new StringBuilder();
 
+            boolean isBold, isItalics, isUnderlined;
             int next;
             for (int i = 0; i < note.length(); i = next) {
+
+                isBold = isItalics = isUnderlined = false;
 
                 // find the next span transition
                 next = note.nextSpanTransition(i, note.length(), CharacterStyle.class);
@@ -137,19 +140,42 @@ public class NotesEditFragment extends Fragment {
                     if (span1 instanceof StyleSpan) {
                         StyleSpan span = (StyleSpan) span1;
                         if (span.getStyle() == 1) {
-                            spanTypes.append("b");
+                            if (!isBold) {
+                                spanTypes.append("b");
+                                isBold = true;
+                            } else {
+                                numOfSpans--;
+                            }
                         }
                         if (span.getStyle() == 2) {
-                            spanTypes.append("i");
+                            if (!isItalics) {
+                                spanTypes.append("i");
+                                isItalics = true;
+                            } else {
+                                numOfSpans--;
+                            }
                         }
                     }
                     if (span1 instanceof UnderlineSpan) {
-                        spanTypes.append("u");
+                        if (!isUnderlined) {
+                            spanTypes.append("u");
+                            isItalics = true;
+                        } else {
+                            numOfSpans--;
+                        }
                     }
                     numOfSpans++;
                 }
 
-                saved.append(i).append(".").append(spanEnd).append(".").append(numOfSpans).append(spanTypes);
+                saved.
+                        append("[").
+                        append(i).
+                        append(".").
+                        append(spanEnd).
+                        append(".").
+                        append(numOfSpans).
+                        append(spanTypes).
+                        append("]");
             }
             Log.i("DEBUG SPANS", saved.toString());
 
