@@ -162,7 +162,9 @@ public class NotesFragment extends Fragment {
                         notesList.get(position).getText(),
                         notesList.get(position).getSpan(),
                         refsText,
-                        position);
+                        position,
+                        notes.get(position).getId()
+                );
             });
         });
 
@@ -197,11 +199,11 @@ public class NotesFragment extends Fragment {
         super.onDestroy();
     }
 
-    private void openSingleNoteFragment(String note, String spans, ArrayList<String> references, int position) {
+    private void openSingleNoteFragment(String note, String spans, ArrayList<String> references, int position, int noteId) {
         SingleNoteFragment fragment = singleNoteFragment();
 
         if (fragment == null) {
-            fragment = SingleNoteFragment.newInstance(note, spans, references, position);
+            fragment = SingleNoteFragment.newInstance(note, spans, references, position, noteId);
             getActivity().getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.activity_note_container, fragment)

@@ -17,7 +17,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.wikipedia.R;
+import org.wikipedia.notebook.Note;
 import org.wikipedia.notebook.NoteReferenceService;
+
+
 
 
 public class NotesEditFragment extends Fragment {
@@ -26,6 +29,7 @@ public class NotesEditFragment extends Fragment {
     private String title;
     private String noteSpans;
     private int pageId;
+    private int noteId;
     private NoteReferenceService noteReferenceService;
     private View view;
 
@@ -120,68 +124,18 @@ public class NotesEditFragment extends Fragment {
         // Re-setting selected text button
         ImageButton done = view.findViewById(R.id.icon_done);
         done.setOnClickListener(v -> {
-            StringBuilder saved = new StringBuilder();
+            String span = buildSpanKey(note).toString();
 
-            boolean isBold, isItalics, isUnderlined;
-            int next;
-            for (int i = 0; i < note.length(); i = next) {
-
-                isBold = false;
-                isItalics = false;
-                isUnderlined = false;
-
-                // find the next span transition
-                next = note.nextSpanTransition(i, note.length(), CharacterStyle.class);
-                int spanEnd = next - 1;
-
-                // get all spans in this range
-                int numOfSpans = 0;
-                StringBuilder spanTypes = new StringBuilder();
-                CharacterStyle[] spans = note.getSpans(i, next, CharacterStyle.class);
-                for (CharacterStyle span1 : spans) {
-                    if (span1 instanceof StyleSpan) {
-                        StyleSpan span = (StyleSpan) span1;
-                        if (span.getStyle() == 1) {
-                            if (!isBold) {
-                                spanTypes.append("b");
-                                isBold = true;
-                            } else {
-                                numOfSpans--;
-                            }
-                        }
-                        if (span.getStyle() == 2) {
-                            if (!isItalics) {
-                                spanTypes.append("i");
-                                isItalics = true;
-                            } else {
-                                numOfSpans--;
-                            }
+            NoteReferenceService service = new NoteReferenceService(getContext());
+            service.getAllArticleNotes(pageId, notes -> {
+                if (notes != null) {
+                    for (Note noteInstance: notes) {
+                        if (noteInstance.getId() == noteId) {
+                            // TODO: save note in db
                         }
                     }
-                    if (span1 instanceof UnderlineSpan) {
-                        if (!isUnderlined) {
-                            spanTypes.append("u");
-                            isUnderlined = true;
-                        } else {
-                            numOfSpans--;
-                        }
-                    }
-                    numOfSpans++;
                 }
-
-                saved.
-                        append("[").
-                        append(i).
-                        append(".").
-                        append(spanEnd).
-                        append(".").
-                        append(numOfSpans).
-                        append(spanTypes).
-                        append("]");
-            }
-            Log.i("DEBUG SPANS", saved.toString());
-
-            // TODO: update & save edited note state
+            });
 
             getFragmentManager().popBackStackImmediate();
         });
@@ -190,14 +144,80 @@ public class NotesEditFragment extends Fragment {
     }
 
     @NonNull
-    public static NotesEditFragment newInstance(String note, String spans) {
+    public static NotesEditFragment newInstance(String note, String spans, int noteId) {
         NotesEditFragment fragment = new NotesEditFragment();
 
         Bundle args = new Bundle();
         args.putString("note", note);
         args.putString("spans", spans);
+        args.putInt("noteId", noteId);
 
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public StringBuilder buildSpanKey(SpannableStringBuilder note) {
+        StringBuilder saved = new StringBuilder();
+
+        boolean isBold, isItalics, isUnderlined;
+        int next;
+        for (int i = 0; i < note.length(); i = next) {
+
+            isBold = false;
+            isItalics = false;
+            isUnderlined = false;
+
+            // find the next span transition
+            next = note.nextSpanTransition(i, note.length(), CharacterStyle.class);
+            int spanEnd = next - 1;
+
+            // get all spans in this range
+            int numOfSpans = 0;
+            StringBuilder spanTypes = new StringBuilder();
+            CharacterStyle[] spans = note.getSpans(i, next, CharacterStyle.class);
+            for (CharacterStyle span1 : spans) {
+                if (span1 instanceof StyleSpan) {
+                    StyleSpan span = (StyleSpan) span1;
+                    if (span.getStyle() == 1) {
+                        if (!isBold) {
+                            spanTypes.append("b");
+                            isBold = true;
+                        } else {
+                            numOfSpans--;
+                        }
+                    }
+                    if (span.getStyle() == 2) {
+                        if (!isItalics) {
+                            spanTypes.append("i");
+                            isItalics = true;
+                        } else {
+                            numOfSpans--;
+                        }
+                    }
+                }
+                if (span1 instanceof UnderlineSpan) {
+                    if (!isUnderlined) {
+                        spanTypes.append("u");
+                        isUnderlined = true;
+                    } else {
+                        numOfSpans--;
+                    }
+                }
+                numOfSpans++;
+            }
+
+            saved.
+                    append("[").
+                    append(i).
+                    append(".").
+                    append(spanEnd).
+                    append(".").
+                    append(numOfSpans).
+                    append(spanTypes).
+                    append("]");
+        }
+        Log.i("DEBUG SPANS", saved.toString());
+
+        return saved;
     }
 }

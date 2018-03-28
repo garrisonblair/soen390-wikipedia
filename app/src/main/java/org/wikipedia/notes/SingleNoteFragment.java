@@ -28,6 +28,7 @@ public class SingleNoteFragment extends Fragment {
     private String title;
     private String noteSpans;
     private int pageId;
+    private int noteId;
     private int position;
     private ArrayList<String> references;
     private NoteReferenceService noteReferenceService;
@@ -44,13 +45,13 @@ public class SingleNoteFragment extends Fragment {
             Bundle bundleRead = getActivity().getIntent().getExtras();
             title = bundleRead.getString("pageTitle");
             pageId = bundleRead.getInt("pageId");
-            //note = new SpannableString(bundleRead.getString("noteText"));
         }
         if (getArguments() != null) {
             noteText = getArguments().getString("note");
             position = getArguments().getInt("position");
             references = getArguments().getStringArrayList("references");
             noteSpans = getArguments().getString("spans");
+            noteId = getArguments().getInt("noteId");
         }
         tts = TTSWrapper.getInstance(getContext(), new UtteranceProgressListener() {
             @Override
@@ -98,7 +99,7 @@ public class SingleNoteFragment extends Fragment {
 
         // Button for editing the note
         ImageButton edit = view.findViewById(R.id.note_edit);
-        edit.setOnClickListener(v -> openNotesEditFragment(note.toString(), noteSpans));
+        edit.setOnClickListener(v -> openNotesEditFragment(note.toString(), noteSpans, noteId));
 
         // Button for deleting of the note
         ImageButton deleteNote = view.findViewById(R.id.note_delete);
@@ -121,7 +122,7 @@ public class SingleNoteFragment extends Fragment {
     }
 
     @NonNull
-    public static SingleNoteFragment newInstance(String note, String spans, ArrayList<String> references, int position) {
+    public static SingleNoteFragment newInstance(String note, String spans, ArrayList<String> references, int position, int noteId) {
         SingleNoteFragment fragment = new SingleNoteFragment();
 
         Bundle args = new Bundle();
@@ -129,16 +130,17 @@ public class SingleNoteFragment extends Fragment {
         args.putString("spans", spans);
         args.putStringArrayList("references", references);
         args.putInt("position", position);
+        args.putInt("noteId", noteId);
 
         fragment.setArguments(args);
         return fragment;
     }
 
-    private void openNotesEditFragment(String note, String spans) {
+    private void openNotesEditFragment(String note, String spans, int noteId) {
         NotesEditFragment fragment = notesEditFragment();
 
         if (fragment == null) {
-            fragment = NotesEditFragment.newInstance(note, spans);
+            fragment = NotesEditFragment.newInstance(note, spans, noteId);
             getActivity().getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.activity_note_container, fragment)
