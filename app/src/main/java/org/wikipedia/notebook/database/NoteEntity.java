@@ -16,6 +16,7 @@ public class NoteEntity {
     private String text;
     private String updatedText;
     private String comment;
+    private String spam;
 
     public NoteEntity(int articleId, String articleTitle,  String text) {
         this.articleId = articleId;
@@ -39,6 +40,10 @@ public class NoteEntity {
         return this.text;
     }
 
+    public String getSpam() {
+        return this.spam;
+    }
+
     public String getArticleTitle() {
         return this.articleTitle;
     }
@@ -55,6 +60,10 @@ public class NoteEntity {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public void setSpam(String spam) {
+        this.spam = spam;
     }
 
     public void setId(int noteId) {

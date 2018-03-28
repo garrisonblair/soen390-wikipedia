@@ -16,6 +16,7 @@ public class Note{
     private int articleid;
     private int id;
     private String comment;
+    private String spam;
 
     public Note(int articleid, String articleTitle, String text) {
         this.originalText = text;
@@ -50,6 +51,10 @@ public class Note{
         return id;
     }
 
+    public String getSpam() {
+        return this.spam;
+    }
+
     public int getArticleid() {
         return articleid;
     }
@@ -76,6 +81,10 @@ public class Note{
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public void setSpam(String spam) {
+        this.spam = spam;
     }
 
     public void deleteComment() {
