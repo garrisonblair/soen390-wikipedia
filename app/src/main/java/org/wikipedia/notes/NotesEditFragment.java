@@ -183,21 +183,13 @@ public class NotesEditFragment extends Fragment {
                     .setPositiveButton("Yes", (dialog12, which) -> {
                         String span = buildSpanKey(note).toString();
 
-                        noteReferenceService.getAllArticleNotes(pageId, notes -> {
-                            if (notes != null) {
-                                for (Note noteInstance : notes) {
-                                    if (noteInstance.getId() == noteId) {
+                        // Update Note in DB
+                        noteInstance.updateText(note.toString());
+                        noteInstance.setSpan(span);
 
-                                        // Update Note in DB
-                                        noteInstance.updateText(note.toString());
-                                        noteInstance.setSpan(span);
+                        Log.i("DEBUG", "NOTE EDITED AND SAVING");
+                        noteReferenceService.updateNoteText(noteInstance, () -> Log.i("DEBUG", "NOTE EDITED AND SAVED"));
 
-                                        Log.i("DEBUG", "NOTE EDITED AND SAVING");
-                                        noteReferenceService.updateNoteText(noteInstance, () -> Log.i("DEBUG", "NOTE EDITED AND SAVED"));
-                                    }
-                                }
-                            }
-                        });
                         dialog12.dismiss();
                         getFragmentManager().popBackStackImmediate();
                     })
