@@ -21,8 +21,6 @@ import org.wikipedia.R;
 import org.wikipedia.notebook.Note;
 import org.wikipedia.notebook.NoteReferenceService;
 
-import java.util.List;
-
 public class NotesEditFragment extends Fragment {
 
     private SpannableStringBuilder note;
