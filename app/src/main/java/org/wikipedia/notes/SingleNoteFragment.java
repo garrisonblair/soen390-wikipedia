@@ -46,6 +46,7 @@ public class SingleNoteFragment extends Fragment {
             title = bundleRead.getString("pageTitle");
             pageId = bundleRead.getInt("pageId");
         }
+
         if (getArguments() != null) {
             noteText = getArguments().getString("note");
             position = getArguments().getInt("position");
@@ -53,6 +54,7 @@ public class SingleNoteFragment extends Fragment {
             noteSpans = getArguments().getString("spans");
             noteId = getArguments().getInt("noteId");
         }
+
         tts = TTSWrapper.getInstance(getContext(), new UtteranceProgressListener() {
             @Override
             public void onStart(String utteranceId) { }
@@ -151,6 +153,7 @@ public class SingleNoteFragment extends Fragment {
 
     @Nullable
     private NotesEditFragment notesEditFragment() {
+
         return (NotesEditFragment) getActivity().getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_notes_edit);
     }

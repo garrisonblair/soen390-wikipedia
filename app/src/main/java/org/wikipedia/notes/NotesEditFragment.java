@@ -21,6 +21,8 @@ import org.wikipedia.R;
 import org.wikipedia.notebook.Note;
 import org.wikipedia.notebook.NoteReferenceService;
 
+import java.util.List;
+
 public class NotesEditFragment extends Fragment {
 
     private SpannableStringBuilder note;
@@ -29,6 +31,7 @@ public class NotesEditFragment extends Fragment {
     private int pageId;
     private int noteId;
     private NoteReferenceService noteReferenceService;
+    private Note noteInstance;
     private View view;
 
     @Override
@@ -43,6 +46,8 @@ public class NotesEditFragment extends Fragment {
                 pageId = bundleRead.getInt("pageId");
             }
         }
+
+        // Get data passed from SingleNoteFragment
         if (getArguments() != null) {
             noteText = getArguments().getString("note");
             noteSpans = getArguments().getString("spans");
@@ -62,6 +67,19 @@ public class NotesEditFragment extends Fragment {
 
         TextView editBody = view.findViewById(R.id.note_edit_body);
         editBody.setText(note);
+
+        noteReferenceService = new NoteReferenceService(getContext());
+
+        // Find note instance
+        noteReferenceService.getAllArticleNotes(pageId, notes -> {
+            if (notes != null) {
+                for (Note n : notes) {
+                    if (n.getId() == noteId) {
+                        noteInstance = n;
+                    }
+                }
+            }
+        });
 
         // Setting text to bold button
         ImageButton bold = view.findViewById(R.id.icon_bold);
@@ -120,6 +138,43 @@ public class NotesEditFragment extends Fragment {
             }
         });
 
+        // Trim text button
+        ImageButton backspace = view.findViewById(R.id.icon_backspace);
+
+        backspace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (editBody.getSelectionStart() != editBody.getSelectionEnd()) {
+                    int start = editBody.getSelectionStart();
+                    int end = editBody.getSelectionEnd();
+
+                    // Update view
+                    note.replace(start, end, "");
+                    editBody.setText(note);
+
+                } else {
+                    Toast.makeText(getContext(), "Select text to trim first", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        // Reset to original note button
+        ImageButton resetButton = view.findViewById(R.id.icon_reset);
+
+        resetButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                // Reset text
+                noteInstance.resetToOriginalText();
+
+                // Update view
+                note.replace(0, note.length(), noteInstance.getText());
+                editBody.setText(note);
+            }
+        });
+
         // Done commit button
         ImageButton done = view.findViewById(R.id.icon_done);
         done.setOnClickListener(v -> {
@@ -128,18 +183,13 @@ public class NotesEditFragment extends Fragment {
                     .setPositiveButton("Yes", (dialog12, which) -> {
                         String span = buildSpanKey(note).toString();
 
-                        NoteReferenceService service = new NoteReferenceService(getContext());
-                        service.getAllArticleNotes(pageId, notes -> {
-                            if (notes != null) {
-                                for (Note noteInstance : notes) {
-                                    if (noteInstance.getId() == noteId) {
-                                        noteInstance.setSpan(span);
-                                        Log.i("DEBUG", "NOTE EDITED AND SAVING");
-                                        service.updateNoteText(noteInstance, () -> Log.i("DEBUG", "NOTE EDITED AND SAVED"));
-                                    }
-                                }
-                            }
-                        });
+                        // Update Note in DB
+                        noteInstance.updateText(note.toString());
+                        noteInstance.setSpan(span);
+
+                        Log.i("DEBUG", "NOTE EDITED AND SAVING");
+                        noteReferenceService.updateNoteText(noteInstance, () -> Log.i("DEBUG", "NOTE EDITED AND SAVED"));
+
                         dialog12.dismiss();
                         getFragmentManager().popBackStackImmediate();
                     })
