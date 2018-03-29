@@ -31,6 +31,7 @@ public class NotesEditFragment extends Fragment {
     private int pageId;
     private int noteId;
     private NoteReferenceService noteReferenceService;
+    private Note noteInstance;
     private View view;
 
     @Override
@@ -66,6 +67,19 @@ public class NotesEditFragment extends Fragment {
 
         TextView editBody = view.findViewById(R.id.note_edit_body);
         editBody.setText(note);
+
+        noteReferenceService = new NoteReferenceService(getContext());
+
+        // Find note instance
+        noteReferenceService.getAllArticleNotes(pageId, notes -> {
+            if (notes != null) {
+                for (Note n : notes) {
+                    if (n.getId() == noteId) {
+                        noteInstance = n;
+                    }
+                }
+            }
+        });
 
         // Setting text to bold button
         ImageButton bold = view.findViewById(R.id.icon_bold);
@@ -134,9 +148,10 @@ public class NotesEditFragment extends Fragment {
                     int start = editBody.getSelectionStart();
                     int end = editBody.getSelectionEnd();
 
+                    // Update view
                     note.replace(start, end, "");
                     editBody.setText(note);
-                    
+
                 } else {
                     Toast.makeText(getContext(), "Select text to trim first", Toast.LENGTH_SHORT).show();
                 }
@@ -150,40 +165,13 @@ public class NotesEditFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                NoteReferenceService service = new NoteReferenceService(getContext());
 
-                service.getAllArticleNotes(pageId, new NoteReferenceService.GetNotesCallback() {
+                // Reset text
+                noteInstance.resetToOriginalText();
 
-                    @Override
-                    public void afterGetNotes(List<Note> notes) {
-                        if (notes != null) {
-                            // Find note instance
-                            for (Note noteInstance : notes) {
-                                if (noteInstance.getId() == noteId) {
-
-                                    // Reset Note in DB
-                                    noteInstance.resetToOriginalText();
-
-                                    note.replace(0, note.length(), noteInstance.getText());
-
-                                    service.updateNoteText(noteInstance, new NoteReferenceService.UpdateNoteTextCallBack() {
-                                        @Override
-                                        public void afterUpdateNoteText() {
-                                            getActivity().runOnUiThread(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    // Update edit body
-                                                    editBody.setText(note);
-                                                    Toast.makeText(getContext(), "Note successfully resetted", Toast.LENGTH_SHORT).show();;
-                                                }
-                                            });
-                                        }
-                                    });
-                                }
-                            }
-                        }
-                    }
-                });
+                // Update view
+                note.replace(0, note.length(), noteInstance.getText());
+                editBody.setText(note);
             }
         });
 
@@ -195,8 +183,7 @@ public class NotesEditFragment extends Fragment {
                     .setPositiveButton("Yes", (dialog12, which) -> {
                         String span = buildSpanKey(note).toString();
 
-                        NoteReferenceService service = new NoteReferenceService(getContext());
-                        service.getAllArticleNotes(pageId, notes -> {
+                        noteReferenceService.getAllArticleNotes(pageId, notes -> {
                             if (notes != null) {
                                 for (Note noteInstance : notes) {
                                     if (noteInstance.getId() == noteId) {
@@ -206,7 +193,7 @@ public class NotesEditFragment extends Fragment {
                                         noteInstance.setSpan(span);
 
                                         Log.i("DEBUG", "NOTE EDITED AND SAVING");
-                                        service.updateNoteText(noteInstance, () -> Log.i("DEBUG", "NOTE EDITED AND SAVED"));
+                                        noteReferenceService.updateNoteText(noteInstance, () -> Log.i("DEBUG", "NOTE EDITED AND SAVED"));
                                     }
                                 }
                             }
