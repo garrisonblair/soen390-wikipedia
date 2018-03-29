@@ -16,6 +16,7 @@ public class Note{
     private int articleid;
     private int id;
     private String comment;
+    private String span;
 
     public Note(int articleid, String articleTitle, String text) {
         this.originalText = text;
@@ -41,13 +42,18 @@ public class Note{
     }
 
     public String getText() {
-        if (updatedText != null)
+        if (updatedText != null) {
             return this.updatedText;
+        }
         return this.originalText;
     }
 
     public int getId() {
         return id;
+    }
+
+    public String getSpan() {
+        return this.span;
     }
 
     public int getArticleid() {
@@ -78,18 +84,25 @@ public class Note{
         this.comment = comment;
     }
 
+    public void setSpan(String span) {
+        this.span = span;
+    }
+
     public void deleteComment() {
         this.comment = null;
     }
 
-    public void resetToOriginalText(){
+    public void resetToOriginalText() {
         this.updatedText = null;
     }
 
     public boolean isTextUpdated() {
-        if (this.updatedText == null)
+        if (this.updatedText == null) {
             return false;
+        }
         return true;
     }
-    public List<Reference> getAllReferences() { return this.references; }
+    public List<Reference> getAllReferences() {
+        return this.references;
+    }
 }

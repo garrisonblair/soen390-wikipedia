@@ -16,6 +16,7 @@ public class NoteEntity {
     private String text;
     private String updatedText;
     private String comment;
+    private String span;
 
     public NoteEntity(int articleId, String articleTitle,  String text) {
         this.articleId = articleId;
@@ -39,11 +40,17 @@ public class NoteEntity {
         return this.text;
     }
 
+    public String getSpan() {
+        return this.span;
+    }
+
     public String getArticleTitle() {
         return this.articleTitle;
     }
 
-    public String getUpdatedText() { return this.updatedText; }
+    public String getUpdatedText() {
+        return this.updatedText;
+    }
 
     public void setArticleTitle(String articleTitle) {
         this.articleTitle = articleTitle;
@@ -57,6 +64,10 @@ public class NoteEntity {
         this.comment = comment;
     }
 
+    public void setSpan(String span) {
+        this.span = span;
+    }
+
     public void setId(int noteId) {
         this.id = noteId;
     }
@@ -65,6 +76,8 @@ public class NoteEntity {
         this.text = text;
     }
 
-    public void setUpdatedText(String newText) { this.updatedText = newText; }
+    public void setUpdatedText(String newText) {
+        this.updatedText = newText;
+    }
 
 }

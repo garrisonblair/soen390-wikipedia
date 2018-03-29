@@ -6,6 +6,7 @@ import android.speech.tts.UtteranceProgressListener;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.SpannableStringBuilder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,12 +24,12 @@ import java.util.ArrayList;
 
 public class SingleNoteFragment extends Fragment {
 
-    //private SpannableString note;
+    private SpannableStringBuilder note;
     private String title;
+    private String noteSpans;
     private int pageId;
-    private int position;
     private int noteId;
-    private String note;
+    private int position;
     private ArrayList<String> references;
     private NoteReferenceService noteReferenceService;
     private TTSWrapper tts;
@@ -38,19 +39,19 @@ public class SingleNoteFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        String noteText = "";
 
         if (getActivity().getIntent().getExtras() != null) {
             Bundle bundleRead = getActivity().getIntent().getExtras();
             title = bundleRead.getString("pageTitle");
             pageId = bundleRead.getInt("pageId");
-
-            //note = new SpannableString(bundleRead.getString("noteText"));
         }
 
         if (getArguments() != null) {
-            note = getArguments().getString("note");
+            noteText = getArguments().getString("note");
             position = getArguments().getInt("position");
             references = getArguments().getStringArrayList("references");
+            noteSpans = getArguments().getString("spans");
             noteId = getArguments().getInt("noteId");
         }
 
@@ -62,10 +63,12 @@ public class SingleNoteFragment extends Fragment {
             @Override
             public void onError(String utteranceId) { }
         });
+
+        note = ((NotesActivity)getActivity()).annotate(noteText, noteSpans);
     }
 
     @Override
-    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
         view = inflater.inflate(R.layout.single_note_fragment, container, false);
@@ -80,19 +83,16 @@ public class SingleNoteFragment extends Fragment {
 
         // Button for text-to-speech of the note
         ImageButton speak = view.findViewById(R.id.note_speak);
-        speak.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int colorId = speak.getSolidColor();
-                if (speaking) {
-                    tts.stop();
-                    speaking = false;
-                    speak.setColorFilter(colorId);
-                } else {
-                    tts.speak(note);
-                    speaking = true;
-                    speak.setColorFilter(Color.BLUE);
-                }
+        speak.setOnClickListener(v -> {
+            int colorId = speak.getSolidColor();
+            if (speaking) {
+                tts.stop();
+                speaking = false;
+                speak.setColorFilter(colorId);
+            } else {
+                tts.speak(note.toString());
+                speaking = true;
+                speak.setColorFilter(Color.BLUE);
             }
         });
 
@@ -101,30 +101,17 @@ public class SingleNoteFragment extends Fragment {
 
         // Button for editing the note
         ImageButton edit = view.findViewById(R.id.note_edit);
-        edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openNotesEditFragment(note, noteId);
-            }
-        });
+        edit.setOnClickListener(v -> openNotesEditFragment(note.toString(), noteSpans, noteId));
 
         // Button for deleting of the note
         ImageButton deleteNote = view.findViewById(R.id.note_delete);
-        deleteNote.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                NotesFragment fragment = (NotesFragment) getFragmentManager().findFragmentById(R.id.fragment_notes);
-                fragment.deleteNote(position);
-            }
+        deleteNote.setOnClickListener(v -> {
+            NotesFragment fragment = (NotesFragment) getFragmentManager().findFragmentById(R.id.fragment_notes);
+            fragment.deleteNote(position);
         });
 
         ImageButton back = view.findViewById(R.id.single_note_back_button);
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO: handle going back to note activity
-            }
-        });
+        back.setOnClickListener(v -> getFragmentManager().popBackStackImmediate());
 
         // Creating ListView for references
         ListView dialogRefs = view.findViewById(R.id.reference_list);
@@ -137,11 +124,12 @@ public class SingleNoteFragment extends Fragment {
     }
 
     @NonNull
-    public static SingleNoteFragment newInstance(String note, ArrayList<String> references, int position, int noteId) {
+    public static SingleNoteFragment newInstance(String note, String spans, ArrayList<String> references, int position, int noteId) {
         SingleNoteFragment fragment = new SingleNoteFragment();
 
         Bundle args = new Bundle();
         args.putString("note", note);
+        args.putString("spans", spans);
         args.putStringArrayList("references", references);
         args.putInt("position", position);
         args.putInt("noteId", noteId);
@@ -150,14 +138,15 @@ public class SingleNoteFragment extends Fragment {
         return fragment;
     }
 
-    private void openNotesEditFragment(String note, int noteId) {
+    private void openNotesEditFragment(String note, String spans, int noteId) {
         NotesEditFragment fragment = notesEditFragment();
 
         if (fragment == null) {
-            fragment = NotesEditFragment.newInstance(note, noteId);
+            fragment = NotesEditFragment.newInstance(note, spans, noteId);
             getActivity().getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.activity_note_container, fragment)
+                    .addToBackStack(null)
                     .commit();
         }
     }

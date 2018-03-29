@@ -154,11 +154,7 @@ public class NoteReferenceService {
 
             @Override
             protected Void doInBackground(Object... objects) {
-                NoteEntity noteEntity = new NoteEntity(note.getArticleid(), note.getArticleTitle(), note.getOriginalText());
-                noteEntity.setId(note.getId());
-                if (note.isTextUpdated()) {
-                    noteEntity.setUpdatedText(note.getUpdatedText());
-                }
+                NoteEntity noteEntity = noteToNoteEntityWithId(note);
                 noteDao.updateNote(noteEntity);
                 callBack.afterUpdateNoteText();
                 return null;
@@ -167,7 +163,7 @@ public class NoteReferenceService {
     }
 
     @SuppressLint("StaticFieldLeak")
-    public void setCommentOnNote(Note note, SetCommentCallBack callBack ) {
+    public void setCommentOnNote(Note note, SetCommentCallBack callBack) {
         new AsyncTask<Object, Void, Void>() {
 
             @Override
@@ -175,14 +171,14 @@ public class NoteReferenceService {
                 NoteEntity noteEntity = noteToNoteEntityWithId(note);
                 noteEntity.setComment(note.getComment());
                 noteDao.updateNote(noteEntity);
-                callBack.afterSetComment();;
+                callBack.afterSetComment();
                 return null;
             }
         }.execute(new Object());
     }
 
     @SuppressLint("StaticFieldLeak")
-    public void deleteCommentOnNote(Note note, DeleteNoteCallBack callBack ) {
+    public void deleteCommentOnNote(Note note, DeleteNoteCallBack callBack) {
         new AsyncTask<Object, Void, Void>() {
 
             @Override
@@ -201,6 +197,7 @@ public class NoteReferenceService {
         if (updatedText != null) {
            note.updateText(updatedText);
         }
+        note.setSpan(noteEntity.getSpan());
         return note;
     }
 
@@ -208,6 +205,7 @@ public class NoteReferenceService {
         NoteEntity noteEntity = new NoteEntity(note.getArticleid(), note.getArticleTitle(), note.getOriginalText());
         noteEntity.setId(note.getId());
         noteEntity.setUpdatedText(note.getUpdatedText());
+        noteEntity.setSpan(note.getSpan());
         return noteEntity;
     }
 }
