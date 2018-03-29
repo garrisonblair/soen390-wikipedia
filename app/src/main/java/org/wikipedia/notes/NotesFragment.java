@@ -54,6 +54,7 @@ public class NotesFragment extends Fragment {
         if (getActivity().getIntent().getExtras() != null) {
             Bundle bundleRead = getActivity().getIntent().getExtras();
             title = bundleRead.getString("pageTitle");
+            title = title.replaceAll("</?[biu]>", "");
             pageId = bundleRead.getInt("pageId");
         }
 
