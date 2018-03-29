@@ -175,6 +175,16 @@ public class SingleNoteFragment extends Fragment {
             @Override
             public void onError(String utteranceId) { }
         });
+
+        if (getActivity().getIntent().getExtras().getString("noteText") != null
+                && getActivity().getIntent().getExtras().getString("noteSpan") != null) {
+            note = ((NotesActivity) getActivity()).annotate(
+                    getActivity().getIntent().getExtras().getString("noteText"),
+                    getActivity().getIntent().getExtras().getString("noteSpan")
+            );
+            TextView noteBody = view.findViewById(R.id.single_note_body);
+            noteBody.setText(note);
+        }
     }
 
     @Override

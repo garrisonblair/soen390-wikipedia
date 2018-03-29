@@ -188,6 +188,9 @@ public class NotesEditFragment extends Fragment {
                         Log.i("DEBUG", "NOTE EDITED AND SAVING");
                         noteReferenceService.updateNoteText(noteInstance, () -> Log.i("DEBUG", "NOTE EDITED AND SAVED"));
 
+                        getActivity().getIntent().putExtra("noteText", note.toString());
+                        getActivity().getIntent().putExtra("noteSpan", span);
+
                         dialog12.dismiss();
                         getFragmentManager().popBackStackImmediate();
                     })
