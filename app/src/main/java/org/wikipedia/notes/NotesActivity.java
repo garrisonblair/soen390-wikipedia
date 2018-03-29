@@ -3,9 +3,11 @@ package org.wikipedia.notes;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
+import android.util.Log;
 
 import org.wikipedia.R;
 import org.wikipedia.WikipediaApp;
@@ -108,9 +110,15 @@ public class NotesActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
+        Fragment f = getSupportFragmentManager().findFragmentById(R.id.activity_note_container);
+
         app.getSessionFunnel().backPressed();
         super.onBackPressed();
-        finish();
+
+        if (f instanceof NotesFragment) {
+            Log.i("DEBUG: Finish", f.toString());
+            finish();
+        }
     }
 
     @Override
