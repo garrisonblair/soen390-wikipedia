@@ -17,7 +17,6 @@ public interface NoteDao {
     @Query("SELECT * FROM notes WHERE articleId = :articleId ORDER BY id ASC")
     List<NoteEntity> getAllNotesForArticle(int articleId);
 
-
     @Query("SELECT DISTINCT articleTitle FROM notes")
     List<String> getAllArticles();
 
@@ -32,5 +31,8 @@ public interface NoteDao {
 
     @Query("DELETE FROM notes WHERE articleTitle = :articleTitle")
     void deleteAllNotes(String articleTitle);
+
+    @Query("UPDATE notes SET comment = :comment WHERE id = :noteId")
+    void updateComment(String comment, int noteId);
 }
 
