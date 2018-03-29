@@ -135,39 +135,8 @@ public class NotesEditFragment extends Fragment {
                     int end = editBody.getSelectionEnd();
 
                     note.replace(start, end, "");
-
-                    NoteReferenceService service = new NoteReferenceService(getContext());
-                    service.getAllArticleNotes(pageId, new NoteReferenceService.GetNotesCallback() {
-
-                        @Override
-                        public void afterGetNotes(List<Note> notes) {
-                            if (notes != null) {
-                                // Find note instance
-                                for (Note noteInstance : notes) {
-                                    if (noteInstance.getId() == noteId) {
-
-                                        // Update Note in DB
-                                        noteInstance.updateText(note.toString());
-
-                                        service.updateNoteText(noteInstance, new NoteReferenceService.UpdateNoteTextCallBack() {
-                                            @Override
-                                            public void afterUpdateNoteText() {
-                                                getActivity().runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-
-                                                        // Update edit body
-                                                        editBody.setText(note);
-                                                        Toast.makeText(getContext(), "Note successfully updated", Toast.LENGTH_SHORT).show();;
-                                                    }
-                                                });
-                                            }
-                                        });
-                                    }
-                                }
-                            }
-                        }
-                    });
+                    editBody.setText(note);
+                    
                 } else {
                     Toast.makeText(getContext(), "Select text to trim first", Toast.LENGTH_SHORT).show();
                 }
@@ -231,7 +200,11 @@ public class NotesEditFragment extends Fragment {
                             if (notes != null) {
                                 for (Note noteInstance : notes) {
                                     if (noteInstance.getId() == noteId) {
+
+                                        // Update Note in DB
+                                        noteInstance.updateText(note.toString());
                                         noteInstance.setSpan(span);
+
                                         Log.i("DEBUG", "NOTE EDITED AND SAVING");
                                         service.updateNoteText(noteInstance, () -> Log.i("DEBUG", "NOTE EDITED AND SAVED"));
                                     }
