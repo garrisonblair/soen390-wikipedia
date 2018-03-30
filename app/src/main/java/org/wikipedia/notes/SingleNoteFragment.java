@@ -221,6 +221,11 @@ public class SingleNoteFragment extends Fragment {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public void onDestroyView() {
         tts.shutdown();
         super.onDestroyView();

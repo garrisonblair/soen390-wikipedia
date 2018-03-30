@@ -165,7 +165,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".notes.NotesActivity"
-            android:parentActivityName=".activity.BaseActivity"/>
+            android:parentActivityName=".activity.BaseActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".crash.CrashReportActivity"
             android:excludeFromRecents="true"

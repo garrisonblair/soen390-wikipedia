@@ -191,6 +191,11 @@ public class NotesFragment extends Fragment {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
     }

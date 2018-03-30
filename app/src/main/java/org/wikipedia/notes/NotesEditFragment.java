@@ -275,6 +275,11 @@ public class NotesEditFragment extends Fragment {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
     }
