@@ -1,18 +1,22 @@
 package org.wikipedia.relatedvideos;
 
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import org.wikipedia.R;
 import org.wikipedia.page.ExtendedBottomSheetDialogFragment;
+import org.wikipedia.relatedvideos.components.YouTubeVideoPlayerDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -142,7 +146,18 @@ public class RelatedVideosDialog extends ExtendedBottomSheetDialogFragment {
 
                 @Override
                 public void onClick(View view) {
-                    //TODO: Open Video
+
+                    LayoutInflater inflater = getLayoutInflater();
+                    View customView = inflater.inflate(R.layout.dialog_youtube_player_view, null);
+                    PopupWindow mPopupWindow = new PopupWindow(customView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
+                    );
+                    if (Build.VERSION.SDK_INT >= 21){
+                        mPopupWindow.setElevation(5.0f);
+                    }
+
+                    mPopupWindow.showAtLocation(rootView, Gravity.CENTER, 0, 0);
+
+
                     return;
                 }
             });

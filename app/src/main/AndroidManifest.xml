@@ -167,6 +167,12 @@
         <activity android:name=".notes.NotesActivity"
             android:parentActivityName=".activity.BaseActivity"/>
         <activity
+            android:label="@string/youtube_player_title"
+            android:name=".relatedvideos.YouTubeFragmentActivity"
+            android:parentActivityName=".page.PageActivity"
+            android:screenOrientation="nosensor"
+            android:configChanges="orientation|screenSize|keyboardHidden"/>
+        <activity
             android:name=".crash.CrashReportActivity"
             android:excludeFromRecents="true"
             android:label="@string/crash_report_activity_title"
@@ -384,6 +390,7 @@
         <activity
             android:name=".relatedvideos.FragmentUtilActivity"
             android:label="FragmentUtilActivity"></activity>
+
     </application>
 
 </manifest>
