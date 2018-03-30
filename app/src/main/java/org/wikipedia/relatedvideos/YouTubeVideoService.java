@@ -70,7 +70,6 @@ public class YouTubeVideoService {
                     search.setMaxResults(maxVideos);
                     // Execute the API
                     SearchListResponse searchResponse = search.execute();
-                    //List<SearchResult> searchResults = searchResponse.getItems();
                     searchResults = searchResponse.getItems();
                     for (SearchResult result : searchResults) {
                         System.out.println(result.getSnippet().getTitle());

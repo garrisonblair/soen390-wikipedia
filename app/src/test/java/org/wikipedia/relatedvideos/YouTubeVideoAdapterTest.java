@@ -33,7 +33,7 @@ public class YouTubeVideoAdapterTest {
         ThumbnailDetails thumbnailDetails = new ThumbnailDetails();
         Thumbnail thumbnail = new Thumbnail();
         thumbnail.setUrl("http://youtube.com/cat");
-        thumbnailDetails.setDefault(thumbnail);
+        thumbnailDetails.setHigh(thumbnail);
         snippet.setThumbnails(thumbnailDetails);
 
         result.setSnippet(snippet);
