@@ -208,7 +208,7 @@
   <string name="gallery_share_error">Kon afbeelding niet delen: %s</string>
   <string name="gallery_save_progress">Bestand downloaden…</string>
   <string name="gallery_save_success">Het bestand is opgeslagen.</string>
-  <string name="gallery_error_video_failed">De video kan niet afgespeeld worden.</string>
+  <string name="gallery_error_video_failed">De youTubeVideoAdapter kan niet afgespeeld worden.</string>
   <string name="gallery_save_image_write_permission_rationale" fuzzy="true">Er is toestemming vereist om naar de opslagmedia op uw apparaat te mogen schrijven. Probeer het nogmaals, en geefde vereiste toestemming.</string>
   <string name="err_cannot_save_file">Het bestand kan niet opgeslagen worden</string>
   <string name="snippet_share_intro">\"%1$s\" op @Wikipedia: %2$s</string>
