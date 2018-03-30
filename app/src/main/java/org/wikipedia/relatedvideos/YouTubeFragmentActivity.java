@@ -2,9 +2,7 @@ package org.wikipedia.relatedvideos;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -26,14 +24,11 @@ import org.wikipedia.util.ShareUtil;
 public class YouTubeFragmentActivity extends BaseActivity {
 
     private WikipediaApp app;
-
     private String videoId;
     private String videoTitle;
     private String videoDescription;
     private String pageTitle;
     private String pageId;
-
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,6 +51,8 @@ public class YouTubeFragmentActivity extends BaseActivity {
         videoId = getIntent().getExtras().getString("videoId");
         videoTitle = getIntent().getExtras().getString("videoTitle");
         videoDescription = getIntent().getExtras().getString("videoDescription");
+        pageTitle = getIntent().getExtras().getString("pageTitle");
+        pageId = getIntent().getExtras().getString("pageDescription");
 
         YouTubePlayerSupportFragment youTubePlayerSupportFragment = YouTubePlayerSupportFragment.newInstance();
         TextView titleView = findViewById(R.id.youtube_video_title);
@@ -64,23 +61,23 @@ public class YouTubeFragmentActivity extends BaseActivity {
         TextView descriptionView = findViewById(R.id.youtube_video_description);
         descriptionView.setText(videoDescription);
 
-        //Listener for the video share button
         ImageButton shareButton = findViewById(R.id.youtube_player_share_button);
 
+        //Listener for the video share button
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 StringBuilder videoShare = new StringBuilder();
                 videoShare.append(videoTitle);
-                videoShare.append("\nRelated to article: " + pageTitle);
-                videoShare.append("\nYouTube URL: " + "https://www.youtube.com/watch?v=" + videoId);
+                videoShare.append("\n\nRelated to article: " + pageTitle);
+                videoShare.append("\n\nYouTube URL: " + "https://www.youtube.com/watch?v=" + videoId);
                 ShareUtil.shareText(v.getContext(), videoTitle, videoShare.toString());
             }
         });
 
-        //Listener for the video back button
         ImageButton backButton = findViewById(R.id.youtube_player_back_button);
 
+        //Listener for the video back button
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,6 +110,4 @@ public class YouTubeFragmentActivity extends BaseActivity {
         super.onBackPressed();
         finish();
     }
-
-
 }

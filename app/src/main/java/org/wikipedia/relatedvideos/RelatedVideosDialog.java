@@ -1,25 +1,18 @@
 package org.wikipedia.relatedvideos;
 
-
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.TextView;
-
-import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 
 import org.wikipedia.R;
 import org.wikipedia.page.ExtendedBottomSheetDialogFragment;
 import org.wikipedia.page.PageActivity;
-import org.wikipedia.page.PageFragment;
 
 import java.util.ArrayList;
 import java.util.List;

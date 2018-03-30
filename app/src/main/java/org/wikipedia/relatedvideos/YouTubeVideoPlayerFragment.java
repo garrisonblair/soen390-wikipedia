@@ -8,31 +8,22 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayer.OnInitializedListener;
+import com.google.android.youtube.player.YouTubePlayer.Provider;
 import com.google.android.youtube.player.YouTubePlayerFragment;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 
 import org.wikipedia.R;
-import org.wikipedia.notebook.Note;
-import org.wikipedia.notebook.Reference;
 import org.wikipedia.util.ShareUtil;
 
-//import android.support.v4.app.Fragment;
-//import android.support.v4.app.FragmentTransaction;
-import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.youtube.player.YouTubePlayer.OnInitializedListener;
-import com.google.android.youtube.player.YouTubePlayer.Provider;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+
 
 /**
  * Created by steve on 28/03/18.
@@ -110,28 +101,6 @@ public class YouTubeVideoPlayerFragment extends Fragment {
         YouTubePlayerSupportFragment youTubePlayerSupportFragment = YouTubePlayerSupportFragment.newInstance();
 
         android.app.FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
-
-        /*
-        youTubePlayerSupportFragment.initialize(YouTubeAPIKey.API_KEY, new YouTubePlayer.OnInitializedListener() {
-
-            @Override
-            public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
-
-                player = youTubePlayer;
-                player.setFullscreen(true);
-                player.loadVideo("nCgQDjiotG0"); // need to set id of video
-                player.play();
-
-            }
-
-            @Override
-            public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
-                String errorMessage = youTubeInitializationResult.toString();
-                Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
-                Log.d("errorMessage:", errorMessage);
-            }
-        });
-        */
 
         // Setting Title in the TextView
         TextView titleView = view.findViewById(R.id.youtube_video_title);
