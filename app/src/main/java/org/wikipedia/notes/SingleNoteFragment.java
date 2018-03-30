@@ -100,7 +100,7 @@ public class SingleNoteFragment extends Fragment {
 
         // Button for commenting on the note
         ImageButton commentBtn = view.findViewById(R.id.note_comment);
-        commentBtn.setOnClickListener(v -> openNotesCommentFragment(comment, noteId, pageId));
+        commentBtn.setOnClickListener(v -> openNotesCommentFragment(noteId, pageId));
 
 
         // Button for editing the note
@@ -164,9 +164,10 @@ public class SingleNoteFragment extends Fragment {
                 .findFragmentById(R.id.fragment_notes_edit);
     }
 
-    private void openNotesCommentFragment(String comment, int noteId, int pageId) {
+    private void openNotesCommentFragment(int noteId, int pageId) {
         NotesCommentFragment fragment = notesCommentFragment();
-
+        noteReferenceService = new NoteReferenceService(getContext().getApplicationContext());
+        comment = noteReferenceService.getComment(noteId);
         if (fragment == null) {
             fragment = NotesCommentFragment.newInstance(comment, noteId, pageId);
             getActivity().getSupportFragmentManager()

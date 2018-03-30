@@ -64,12 +64,10 @@ public class NotesCommentFragment extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            editBody.setText(comment);
                             InputMethodManager imm = (InputMethodManager)v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                             if (imm != null) {
                                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                             }
-                            getActivity().getIntent().putExtra("noteCommentText", comment);
                             Toast.makeText(getContext(), "Comment successfully saved", Toast.LENGTH_SHORT).show();
                         }
                     });

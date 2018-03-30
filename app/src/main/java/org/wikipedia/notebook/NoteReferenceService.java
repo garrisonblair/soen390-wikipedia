@@ -207,6 +207,10 @@ public class NoteReferenceService {
         }.execute(new Object());
     }
 
+    public String getComment(int noteId) {
+        return noteDao.getComment(noteId);
+    }
+
     private Note noteEntityToNote(NoteEntity noteEntity) {
         Note note = new Note(noteEntity.getId(), noteEntity.getArticleId(), noteEntity.getArticleTitle(), noteEntity.getText(), noteEntity.getComment());
         String updatedText = noteEntity.getUpdatedText();

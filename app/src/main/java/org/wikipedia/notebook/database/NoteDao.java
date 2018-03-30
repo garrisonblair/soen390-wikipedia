@@ -34,5 +34,8 @@ public interface NoteDao {
 
     @Query("UPDATE notes SET comment = :comment WHERE id = :noteId")
     void updateComment(String comment, int noteId);
+
+    @Query("SELECT comment FROM notes WHERE id = :noteId")
+    String getComment(int noteId);
 }
 
