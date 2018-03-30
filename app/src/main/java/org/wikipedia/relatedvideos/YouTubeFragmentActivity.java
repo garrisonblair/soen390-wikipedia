@@ -56,7 +56,7 @@ public class YouTubeFragmentActivity extends BaseActivity {
 
         YouTubePlayerSupportFragment youTubePlayerSupportFragment = YouTubePlayerSupportFragment.newInstance();
         TextView titleView = findViewById(R.id.youtube_video_title);
-        titleView.setText(videoTitle);
+        titleView.setText(pageTitle);
 
         TextView descriptionView = findViewById(R.id.youtube_video_description);
         descriptionView.setText(videoDescription);
@@ -69,8 +69,8 @@ public class YouTubeFragmentActivity extends BaseActivity {
             public void onClick(View v) {
                 StringBuilder videoShare = new StringBuilder();
                 videoShare.append(videoTitle);
-                videoShare.append("\n\nRelated to article: " + pageTitle);
-                videoShare.append("\n\nYouTube URL: " + "https://www.youtube.com/watch?v=" + videoId);
+                videoShare.append("\n\nYouTube video related to " + pageTitle + "Wikipedia article:");
+                videoShare.append("\n\nYouTube video URL: " + "https://www.youtube.com/watch?v=" + videoId);
                 ShareUtil.shareText(v.getContext(), videoTitle, videoShare.toString());
             }
         });
