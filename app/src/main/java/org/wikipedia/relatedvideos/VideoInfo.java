@@ -6,6 +6,10 @@ package org.wikipedia.relatedvideos;
 
 public interface VideoInfo {
     String getTitle();
+
     String getID();
+
     String getDescription();
+
+    String getURL();
 }

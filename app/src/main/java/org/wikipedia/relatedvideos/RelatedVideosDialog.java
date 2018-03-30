@@ -34,6 +34,7 @@ public class RelatedVideosDialog extends ExtendedBottomSheetDialogFragment {
     private View rootView;
     private RecyclerView videoRecyclerView;
 
+    private String[] sample = {"YouTubeVideoAdapter 1", "YouTubeVideoAdapter 2", "YouTubeVideoAdapter 3", "YouTubeVideoAdapter 4"};
 
 
 
@@ -64,7 +65,8 @@ public class RelatedVideosDialog extends ExtendedBottomSheetDialogFragment {
 
     private void retrieveVideos(String searchTerm) {
 
-        videoService.searchVideos(searchTerm);
+        // TO DO: Add this back. currently making build fail
+        //videoService.searchVideos(searchTerm);
 
         videos = new ArrayList<VideoInfo>();
         videos.add(new VideoInfoTestImpl("DaOJv-fMlmA", "THOR RAGNAROK Grandmaster Moves To Earth EXTENDED - Team Darryl Short Film (2017) Jeff Goldblum HD", ""));
