@@ -206,7 +206,7 @@ public class NotesFragment extends Fragment {
             fragment = SingleNoteFragment.newInstance(note, spans, references, comment, noteId, position);
             getActivity().getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.activity_note_container, fragment)
+                    .replace(R.id.activity_note_container, fragment, "SingleNoteFragment")
                     .addToBackStack(null)
                     .commit();
         }
