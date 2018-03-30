@@ -192,7 +192,7 @@
   <string name="gallery_share_error">Ne povis montrar l\'imajo: %s</string>
   <string name="gallery_save_progress">Deskargo dil arkivo...</string>
   <string name="gallery_save_success">Sucesoza deskargo dil arkivo.</string>
-  <string name="gallery_error_video_failed">Ne povis montrar la video*.</string>
+  <string name="gallery_error_video_failed">Ne povis montrar la youTubeVideoAdapter*.</string>
   <string name="gallery_save_image_write_permission_rationale">Permiso pri la deskargo (\'download\') di kopiuri di imaji en tua lokala aparato bezonesas.</string>
   <string name="err_cannot_save_file">Ne povas konservar kopiuro dil arkivo</string>
   <string name="snippet_share_intro">\"%1$s\" en @Wikipedio: %2$s</string>
