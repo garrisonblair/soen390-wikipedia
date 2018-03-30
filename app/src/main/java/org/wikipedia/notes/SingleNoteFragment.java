@@ -30,10 +30,12 @@ public class SingleNoteFragment extends Fragment {
     private int pageId;
     private int position;
     private ArrayList<String> references;
+    private String comment;
     private NoteReferenceService noteReferenceService;
     private TTSWrapper tts;
     private boolean speaking = false;
     private View view;
+    private int noteId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,8 @@ public class SingleNoteFragment extends Fragment {
             position = getArguments().getInt("position");
             references = getArguments().getStringArrayList("references");
             noteSpans = getArguments().getString("spans");
+            comment = getArguments().getString("comment");
+            noteId = getArguments().getInt("noteId");
         }
         tts = TTSWrapper.getInstance(getContext(), new UtteranceProgressListener() {
             @Override
@@ -94,7 +98,9 @@ public class SingleNoteFragment extends Fragment {
         });
 
         // Button for commenting on the note
-        // TODO: implement action for adding comment
+        ImageButton commentBtn = view.findViewById(R.id.note_comment);
+        commentBtn.setOnClickListener(v -> openNotesCommentFragment(comment, noteId, pageId));
+
 
         // Button for editing the note
         ImageButton edit = view.findViewById(R.id.note_edit);
@@ -121,13 +127,15 @@ public class SingleNoteFragment extends Fragment {
     }
 
     @NonNull
-    public static SingleNoteFragment newInstance(String note, String spans, ArrayList<String> references, int position) {
+    public static SingleNoteFragment newInstance(String note, String spans, ArrayList<String> references, String comment, int noteId, int position) {
         SingleNoteFragment fragment = new SingleNoteFragment();
 
         Bundle args = new Bundle();
         args.putString("note", note);
         args.putString("spans", spans);
         args.putStringArrayList("references", references);
+        args.putString("comment", comment);
+        args.putInt("noteId", noteId);
         args.putInt("position", position);
 
         fragment.setArguments(args);
@@ -153,6 +161,25 @@ public class SingleNoteFragment extends Fragment {
                 .findFragmentById(R.id.fragment_notes_edit);
     }
 
+    private void openNotesCommentFragment(String comment, int noteId, int pageId) {
+        NotesCommentFragment fragment = notesCommentFragment();
+
+        if (fragment == null) {
+            fragment = NotesCommentFragment.newInstance(comment, noteId, pageId);
+            getActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.activity_note_container, fragment)
+                    .addToBackStack(null)
+                    .commit();
+        }
+    }
+
+    @Nullable
+    private NotesCommentFragment notesCommentFragment() {
+        return (NotesCommentFragment) getActivity().getSupportFragmentManager()
+                .findFragmentById(R.id.fragment_notes_comment);
+    }
+
     @Override
     public void onPause() {
         tts.shutdown();
@@ -170,6 +197,10 @@ public class SingleNoteFragment extends Fragment {
             @Override
             public void onError(String utteranceId) { }
         });
+
+        if (getActivity().getIntent().getExtras().getString("noteCommentText") != null) {
+            comment = getActivity().getIntent().getExtras().getString("noteCommentText");
+        }
     }
 
     @Override
