@@ -147,7 +147,7 @@ public class NotesEditFragment extends Fragment {
                     int end = editBody.getSelectionEnd();
 
                     // Update view
-                    note.replace(start, end, "");
+                    note.replace(start, end, "[...]");
                     editBody.setText(note);
 
                 } else {
