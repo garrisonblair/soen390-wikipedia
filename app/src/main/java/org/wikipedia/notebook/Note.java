@@ -24,12 +24,13 @@ public class Note{
         this.references = new ArrayList<Reference>();
     }
 
-    public Note(int id, int articleid, String articleTitle, String text) {
+    public Note(int id, int articleid, String articleTitle, String text, String comment) {
         this.id = id;
         this.articleid = articleid;
         this.articleTitle = articleTitle;
         this.originalText = text;
         this.references = new ArrayList<Reference>();
+        this.comment = comment;
     }
 
     public void addReference(Reference reference) {
@@ -41,8 +42,9 @@ public class Note{
     }
 
     public String getText() {
-        if (updatedText != null)
+        if (updatedText != null) {
             return this.updatedText;
+        }
         return this.originalText;
     }
 
@@ -82,14 +84,22 @@ public class Note{
         this.comment = null;
     }
 
-    public void resetToOriginalText(){
+    public void resetToOriginalText() {
         this.updatedText = null;
     }
 
     public boolean isTextUpdated() {
-        if (this.updatedText == null)
+        if (this.updatedText == null) {
             return false;
+        }
         return true;
     }
-    public List<Reference> getAllReferences() { return this.references; }
+    public List<Reference> getAllReferences() {
+        return this.references;
+    }
+
+    public String getSpan() {
+        //TODO
+        return "";
+    }
 }
