@@ -12,14 +12,14 @@ import static org.junit.Assert.assertTrue;
 public class NoteTest {
     @Test
     public void isTextUpdatedTest() {
-        Note note = new Note(1,2,"title","original text");
+        Note note = new Note(1,2,"title","original text", null);
         assertTrue(!note.isTextUpdated());
         note.updateText("updated text");
         assertTrue(note.isTextUpdated());
     }
 
     public void getTextTest() {
-        Note note = new Note(1,2,"title","original text");
+        Note note = new Note(1,2,"title","original text", null);
         assertEquals("original text", note.getText());
         note.updateText("updated text");
         assertEquals("updated text", note.getText());
