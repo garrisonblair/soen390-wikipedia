@@ -97,7 +97,7 @@ public class NotesActivity extends BaseActivity {
             fragment = NotesFragment.newInstance();
             getSupportFragmentManager()
                     .beginTransaction()
-                    .add(R.id.activity_note_container, fragment)
+                    .add(R.id.activity_note_container, fragment, "NotesFragment")
                     .commit();
         }
     }
