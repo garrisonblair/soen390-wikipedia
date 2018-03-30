@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragment_notes_comment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp">
+        <RelativeLayout android:id="@+id/upperView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dip" >
+            <ImageButton android:id="@+id/notes_comment_back_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_arrow_back_themed_24dp"
+                android:background="@android:color/transparent"
+                android:layout_alignParentLeft="true"
+                android:clickable="true" />
+            <TextView android:id="@+id/notes_comment_title"
+                android:text="Comments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                android:textSize="24sp"/>
+
+            <ImageButton android:id="@+id/notes_comment_done_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_save"
+                android:background="@android:color/transparent"
+                android:layout_alignParentRight="true"
+                android:clickable="true" />
+        </RelativeLayout>
+
+        <EditText android:id="@+id/notes_comment_body"
+            android:hint="Add comment..."
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textIsSelectable="true"
+            android:scrollbars="vertical"/>
+    </LinearLayout>
+</RelativeLayout>
