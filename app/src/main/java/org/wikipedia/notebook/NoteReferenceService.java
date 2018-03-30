@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import retrofit2.http.HEAD;
+
 /**
  * Created by Andres on 2018-03-09.
  */
@@ -169,7 +171,6 @@ public class NoteReferenceService {
             @Override
             protected Void doInBackground(Object... objects) {
                 NoteEntity noteEntity = noteToNoteEntityWithId(note);
-                noteEntity.setComment(note.getComment());
                 noteDao.updateNote(noteEntity);
                 callBack.afterSetComment();
                 return null;
@@ -191,8 +192,25 @@ public class NoteReferenceService {
         }.execute(new Object());
     }
 
+    @SuppressLint("StaticFieldLeak")
+    public void updateCommentOnNote(String comment, int noteId, SetCommentCallBack callBack) {
+        new AsyncTask<Object, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Object... objects) {
+                noteDao.updateComment(comment, noteId);
+                callBack.afterSetComment();
+                return null;
+            }
+        }.execute(new Object());
+    }
+
+    public String getComment(int noteId) {
+        return noteDao.getComment(noteId);
+    }
+
     private Note noteEntityToNote(NoteEntity noteEntity) {
-        Note note = new Note(noteEntity.getId(), noteEntity.getArticleId(), noteEntity.getArticleTitle(), noteEntity.getText());
+        Note note = new Note(noteEntity.getId(), noteEntity.getArticleId(), noteEntity.getArticleTitle(), noteEntity.getText(), noteEntity.getComment());
         String updatedText = noteEntity.getUpdatedText();
         if (updatedText != null) {
            note.updateText(updatedText);
@@ -206,6 +224,7 @@ public class NoteReferenceService {
         noteEntity.setId(note.getId());
         noteEntity.setUpdatedText(note.getUpdatedText());
         noteEntity.setSpan(note.getSpan());
+        noteEntity.setComment(note.getComment());
         return noteEntity;
     }
 }

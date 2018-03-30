@@ -25,12 +25,13 @@ public class Note{
         this.references = new ArrayList<Reference>();
     }
 
-    public Note(int id, int articleid, String articleTitle, String text) {
+    public Note(int id, int articleid, String articleTitle, String text, String comment) {
         this.id = id;
         this.articleid = articleid;
         this.articleTitle = articleTitle;
         this.originalText = text;
         this.references = new ArrayList<Reference>();
+        this.comment = comment;
     }
 
     public void addReference(Reference reference) {
