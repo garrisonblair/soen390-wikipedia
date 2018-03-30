@@ -14,9 +14,12 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.google.android.youtube.player.YouTubePlayerSupportFragment;
+
 import org.wikipedia.R;
 import org.wikipedia.page.ExtendedBottomSheetDialogFragment;
-import org.wikipedia.relatedvideos.components.YouTubeVideoPlayerDialog;
+import org.wikipedia.page.PageActivity;
+import org.wikipedia.page.PageFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -135,6 +138,7 @@ public class RelatedVideosDialog extends ExtendedBottomSheetDialogFragment {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
+
             VideoInfo video = videos.get(position);
 
             TextView videoNameView = (TextView) holder.getRootView().findViewById(R.id.video_name_view);
@@ -146,18 +150,15 @@ public class RelatedVideosDialog extends ExtendedBottomSheetDialogFragment {
 
                 @Override
                 public void onClick(View view) {
-
-                    LayoutInflater inflater = getLayoutInflater();
-                    View customView = inflater.inflate(R.layout.dialog_youtube_player_view, null);
-                    PopupWindow mPopupWindow = new PopupWindow(customView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
-                    );
-                    if (Build.VERSION.SDK_INT >= 21){
-                        mPopupWindow.setElevation(5.0f);
-                    }
-
-                    mPopupWindow.showAtLocation(rootView, Gravity.CENTER, 0, 0);
-
-
+                    // REMOVE: Temporary placeholder for testing
+                    String videoId = "hY7m5jjJ9mM";
+                    String videoTitle = "CATS will make you LAUGH YOUR HEAD OFF - Funny CAT compilation";
+                    String videoDescription = "Cats are amazing creatures because they make us laugh all the time! Watching funny cats is the hardest try not to laugh challenge! Just look how all these cats & kittens play, fail, get along with dogs and other animals, get scared, make funny sounds, get angry,... So ridiculous, funny and cute! What is your favourite clip? :) Hope you like our compilation, please share it and SUBSCRIBE! Watch also our other videos! The content in this compilation is licensed and used with authorization of the rights holder. If you have any questions about compilation or clip licensing, please contact us: tigerlicensing@gmail.com WANT TO SEE YOUR PET IN OUR COMPILATIONS? Send your clips or links to: tigerlicensing@gmail.com For more funny videos & pictures visit and like our Facebook page: https://www.facebook.com/tigerstudiosfun MUSIC USED: \"\u00AD\u00AD\u00ADMonkeys Spinning Monkeys\" Kevin MacLeod (incompetech.com) Licensed under Creative Commons: By Attribution 3.0 https://creativecommons.org/licenses/... Big Swing Band by Audionautix is licensed under a Creative Commons Attribution license (https://creativecommons.org/licenses/...) Artist: http://audionautix.com/ #cat #cats #funny #compilation #laugh #challenge";
+                    // ADD: To add in, in place of above content after above is removed
+                    //videoId = video.getID();
+                    //videoTitle = video.getTitle();
+                    //videoDescription = video.getDescription();
+                    ((PageActivity) getActivity()).openYouTubePlayer(videoId, videoTitle, videoDescription);
                     return;
                 }
             });
@@ -172,7 +173,6 @@ public class RelatedVideosDialog extends ExtendedBottomSheetDialogFragment {
         public int getItemCount() {
             return videos.size();
         }
-
 
 
     }

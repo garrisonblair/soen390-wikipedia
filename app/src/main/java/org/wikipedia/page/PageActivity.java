@@ -62,6 +62,7 @@ import org.wikipedia.page.tabs.TabsProvider;
 import org.wikipedia.page.tabs.TabsProvider.TabPosition;
 import org.wikipedia.readinglist.AddToReadingListDialog;
 import org.wikipedia.relatedvideos.RelatedVideosDialog;
+import org.wikipedia.relatedvideos.YouTubeFragmentActivity;
 import org.wikipedia.search.SearchFragment;
 import org.wikipedia.search.SearchInvokeSource;
 import org.wikipedia.settings.SettingsActivity;
@@ -76,9 +77,6 @@ import org.wikipedia.util.log.L;
 import org.wikipedia.views.ObservableWebView;
 import org.wikipedia.widgets.WidgetProviderFeaturedPage;
 import org.wikipedia.wiktionary.WiktionaryDialog;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -1009,5 +1007,24 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
         intent.putExtra("pageTitle", pageTitle);
         startActivity(intent);
         //finish();
+    }
+
+
+    public void openYouTubePlayer(String videoId, String videoTitle, String videoDescription) {
+
+        Log.d("DEV_DEBUG", "Should open youtube player activity");
+        int pageId = pageFragment.getPage().getPageProperties().getPageId();
+        String pageTitle = pageFragment.getPage().getDisplayTitle();
+
+        // Creating and adding of properties to be passed into the youtubevideoplayer activity and fragment
+        Intent intent = new Intent(pageFragment.getContext(), YouTubeFragmentActivity.class);
+        intent.putExtra("pageId", pageId);
+        intent.putExtra("pageTitle", pageTitle);
+        intent.putExtra("videoId", videoId);
+        intent.putExtra("videoTitle", videoTitle);
+        intent.putExtra("videoDescription", videoDescription);
+
+        startActivity(intent);
+
     }
 }
