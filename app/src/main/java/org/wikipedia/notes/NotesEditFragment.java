@@ -282,6 +282,15 @@ public class NotesEditFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        if (getActivity().getIntent().getExtras().getString("noteText") != null
+                && getActivity().getIntent().getExtras().getString("noteSpan") != null) {
+            note = ((NotesActivity) getActivity()).annotate(
+                    getActivity().getIntent().getExtras().getString("noteText"),
+                    getActivity().getIntent().getExtras().getString("noteSpan")
+            );
+            TextView editBody = view.findViewById(R.id.note_edit_body);
+            editBody.setText(note);
+        }
     }
 
     @Override
