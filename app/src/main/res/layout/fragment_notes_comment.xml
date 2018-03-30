@@ -32,7 +32,7 @@
             <ImageButton android:id="@+id/notes_comment_done_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/icon_save"
+                android:src="@drawable/content_save"
                 android:background="@android:color/transparent"
                 android:layout_alignParentRight="true"
                 android:clickable="true" />
