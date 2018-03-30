@@ -138,39 +138,32 @@ public class NotesEditFragment extends Fragment {
 
         // Trim text button
         ImageButton backspace = view.findViewById(R.id.icon_backspace);
+        backspace.setOnClickListener(v -> {
+            if (editBody.getSelectionStart() != editBody.getSelectionEnd()) {
+                int start = editBody.getSelectionStart();
+                int end = editBody.getSelectionEnd();
 
-        backspace.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (editBody.getSelectionStart() != editBody.getSelectionEnd()) {
-                    int start = editBody.getSelectionStart();
-                    int end = editBody.getSelectionEnd();
-
-                    // Update view
-                    note.replace(start, end, "[...]");
-                    editBody.setText(note);
-
+                // Update view
+                if (start == 0 || end == note.length()) {
+                    note.replace(start, end, "");
                 } else {
-                    Toast.makeText(getContext(), "Select text to trim first", Toast.LENGTH_SHORT).show();
+                    note.replace(start, end, "[...]");
                 }
+                editBody.setText(note);
+            } else {
+                Toast.makeText(getContext(), "Select text to trim first", Toast.LENGTH_SHORT).show();
             }
         });
 
         // Reset to original note button
         ImageButton resetButton = view.findViewById(R.id.icon_reset);
+        resetButton.setOnClickListener(v -> {
+            // Reset text
+            noteInstance.resetToOriginalText();
 
-        resetButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                // Reset text
-                noteInstance.resetToOriginalText();
-
-                // Update view
-                note.replace(0, note.length(), noteInstance.getText());
-                editBody.setText(note);
-            }
+            // Update view
+            note.replace(0, note.length(), noteInstance.getText());
+            editBody.setText(note);
         });
 
         // Done commit button
