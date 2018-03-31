@@ -17,6 +17,7 @@ import org.wikipedia.page.PageActivity;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * Created by Fred on 2018-03-23.
  *
@@ -28,15 +29,11 @@ public class RelatedVideosDialog extends ExtendedBottomSheetDialogFragment {
     public static final String TITLE_ARGUMENT = "title_argument_related_videos_dialog";
 
     private String title;
-    private List<VideoInfo> videos;
+    private List<VideoInfo> videos = new ArrayList<VideoInfo>();
     private YouTubeVideoService videoService;
 
     private View rootView;
     private RecyclerView videoRecyclerView;
-
-    private String[] sample = {"YouTubeVideoAdapter 1", "YouTubeVideoAdapter 2", "YouTubeVideoAdapter 3", "YouTubeVideoAdapter 4"};
-
-
 
     //Instance getter because Fragments cant have non-default constructors
     public static RelatedVideosDialog newInstance(String title) {
@@ -65,13 +62,16 @@ public class RelatedVideosDialog extends ExtendedBottomSheetDialogFragment {
 
     private void retrieveVideos(String searchTerm) {
 
-        // TO DO: Add this back. currently making build fail
-        //videoService.searchVideos(searchTerm);
+        videoService.searchVideos(searchTerm, new YouTubeVideoService.Callback() {
+            @Override
+            public void onYouTubeAPIResult(List<VideoInfo> list) {
+                videos.addAll(list);
+                if (videoRecyclerView != null) {
+                    videoRecyclerView.getAdapter().notifyDataSetChanged();
+                }
 
-        videos = new ArrayList<VideoInfo>();
-        videos.add(new VideoInfoTestImpl("DaOJv-fMlmA", "THOR RAGNAROK Grandmaster Moves To Earth EXTENDED - Team Darryl Short Film (2017) Jeff Goldblum HD", ""));
-        videos.add(new VideoInfoTestImpl("jI8Im6RoPWo", "10 Playstation Fails Sony Wants You To Forget", ""));
-        videos.add(new VideoInfoTestImpl("j-W6ccHY6-Q", "Fallout 4 - 25 Behemoths VS 25 Sentry Bots - Battles #1", ""));
+            }
+        });
 
     }
 
@@ -158,9 +158,7 @@ public class RelatedVideosDialog extends ExtendedBottomSheetDialogFragment {
                 }
             });
 
-            //set the ontouch listener
-
-            new ThumbnailLoadTask(thumbnailView, video.getID()).execute();
+            new ThumbnailLoadTask(thumbnailView, video.getURL()).execute();
 
         }
 

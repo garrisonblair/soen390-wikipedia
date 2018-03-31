@@ -9,13 +9,15 @@ public class VideoInfoTestImpl implements VideoInfo {
     private String id;
     private String title;
     private String description;
-    private String url;
+
+    private String thumbnailURL;
 
 
-    public VideoInfoTestImpl(String id, String title, String description) {
+    public VideoInfoTestImpl(String id, String title, String description, String thumbnailURL) {
         this.id = id;
         this.title = title;
         this.description = description;
+        this.thumbnailURL = thumbnailURL;
     }
 
     public void setId(String id) {
@@ -30,8 +32,8 @@ public class VideoInfoTestImpl implements VideoInfo {
         this.description = description;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setUrl(String thumbnailURL) {
+        this.thumbnailURL = thumbnailURL;
     }
 
     @Override
@@ -51,6 +53,7 @@ public class VideoInfoTestImpl implements VideoInfo {
 
     @Override
     public String getURL() {
-        return url;
+
+        return thumbnailURL;
     }
 }

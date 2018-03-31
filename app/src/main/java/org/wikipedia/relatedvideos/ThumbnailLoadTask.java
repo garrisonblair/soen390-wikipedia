@@ -14,12 +14,11 @@ import java.net.URL;
 
 public class ThumbnailLoadTask extends AsyncTask<Void, Void, Bitmap> {
     private ImageView imageView;
-    private String videoID;
-    public static final String THUMBNAIL_URL = "https://img.youtube.com/vi/";
+    private String url;
 
-    public ThumbnailLoadTask(ImageView imageView, String videoID) {
+    public ThumbnailLoadTask(ImageView imageView, String thumbnailURL) {
         this.imageView = imageView;
-        this.videoID = videoID;
+        this.url = thumbnailURL;
     }
 
     @Override
@@ -27,7 +26,7 @@ public class ThumbnailLoadTask extends AsyncTask<Void, Void, Bitmap> {
         Bitmap logo = null;
 
         try {
-            InputStream is = new URL(THUMBNAIL_URL + videoID + "/0.jpg").openStream();
+            InputStream is = new URL(url).openStream();
 
             logo = BitmapFactory.decodeStream(is);
 
