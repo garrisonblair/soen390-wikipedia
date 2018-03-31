@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -145,14 +146,11 @@ public class RelatedVideosDialog extends ExtendedBottomSheetDialogFragment {
 
                 @Override
                 public void onClick(View view) {
-                    // REMOVE: Temporary placeholder for testing
-                    String videoId = "hY7m5jjJ9mM";
-                    String videoTitle = "CATS will make you LAUGH YOUR HEAD OFF - Funny CAT compilation";
-                    String videoDescription = "Cats are amazing creatures because they make us laugh all the time! Watching funny cats is the hardest try not to laugh challenge! Just look how all these cats & kittens play, fail, get along with dogs and other animals, get scared, make funny sounds, get angry,... So ridiculous, funny and cute! What is your favourite clip? :) Hope you like our compilation, please share it and SUBSCRIBE! Watch also our other videos! The content in this compilation is licensed and used with authorization of the rights holder. If you have any questions about compilation or clip licensing, please contact us: tigerlicensing@gmail.com WANT TO SEE YOUR PET IN OUR COMPILATIONS? Send your clips or links to: tigerlicensing@gmail.com For more funny videos & pictures visit and like our Facebook page: https://www.facebook.com/tigerstudiosfun MUSIC USED: \"\u00AD\u00AD\u00ADMonkeys Spinning Monkeys\" Kevin MacLeod (incompetech.com) Licensed under Creative Commons: By Attribution 3.0 https://creativecommons.org/licenses/... Big Swing Band by Audionautix is licensed under a Creative Commons Attribution license (https://creativecommons.org/licenses/...) Artist: http://audionautix.com/ #cat #cats #funny #compilation #laugh #challenge";
-                    // ADD: To add in, in place of above content after above is removed
-                    //videoId = video.getID();
-                    //videoTitle = video.getTitle();
-                    //videoDescription = video.getDescription();
+
+                    String videoId = video.getID();
+                    String videoTitle = video.getTitle();
+                    String videoDescription = video.getDescription();
+                    Log.d("DEV_DEBUG", videoDescription);
                     ((PageActivity) getActivity()).openYouTubePlayer(videoId, videoTitle, videoDescription);
                     return;
                 }

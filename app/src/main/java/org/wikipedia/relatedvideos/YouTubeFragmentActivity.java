@@ -69,7 +69,7 @@ public class YouTubeFragmentActivity extends BaseActivity {
             public void onClick(View v) {
                 StringBuilder videoShare = new StringBuilder();
                 videoShare.append(videoTitle);
-                videoShare.append("\n\nYouTube video related to " + pageTitle + "Wikipedia article:");
+                videoShare.append("\n\nYouTube video related to " + pageTitle + " Wikipedia article.");
                 videoShare.append("\n\nYouTube video URL: " + "https://www.youtube.com/watch?v=" + videoId);
                 ShareUtil.shareText(v.getContext(), videoTitle, videoShare.toString());
             }
