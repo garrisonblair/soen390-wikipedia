@@ -4,6 +4,7 @@
     package="org.wikipedia"
     android:installLocation="auto"
     tools:node="strict">
+
     <!--
     If the build is intended to be Google Play-updateable, the package name
     should be the same as for Google Play (name depends on Beta or Stable).
@@ -16,7 +17,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
     <uses-permission
         android:name="android.permission.GET_ACCOUNTS"
         android:maxSdkVersion="22" />
@@ -28,7 +28,7 @@
         android:maxSdkVersion="22" />
 
     <!-- For notifications, e.g. User account notices, Wikipedia Zero, etc. -->
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <!-- For being able to receive notifications upon boot -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -36,12 +36,25 @@
     <!-- For Nearby feature -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-feature android:name="android.hardware.location" tools:node="replace" android:required="false" />
-    <uses-feature android:name="android.hardware.location.gps" tools:node="replace" android:required="false" />
-    <uses-feature android:name="android.hardware.location.network" android:required="false" />
-    <uses-feature android:name="android.hardware.wifi" tools:node="replace" android:required="false"  />
-    <uses-feature android:name="android.hardware.camera" android:required="true" />
 
+    <uses-feature
+        android:name="android.hardware.location"
+        android:required="false"
+        tools:node="replace" />
+    <uses-feature
+        android:name="android.hardware.location.gps"
+        android:required="false"
+        tools:node="replace" />
+    <uses-feature
+        android:name="android.hardware.location.network"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.wifi"
+        android:required="false"
+        tools:node="replace" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
     <uses-feature
         android:name="android.hardware.location"
         android:required="false"
@@ -65,7 +78,9 @@
         Don't let Google Play filter out devices that just have fake touch
         (e.g. mouse and keyboard instead of a real touchscreen).
     -->
-    <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
 
     <application
         android:name=".WikipediaApp"
@@ -164,14 +179,15 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".notes.NotesActivity"
-            android:parentActivityName=".activity.BaseActivity"/>
         <activity
-            android:label="@string/youtube_player_title"
+            android:name=".notes.NotesActivity"
+            android:parentActivityName=".activity.BaseActivity" />
+        <activity
             android:name=".relatedvideos.YouTubeFragmentActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="@string/youtube_player_title"
             android:parentActivityName=".page.PageActivity"
-            android:screenOrientation="nosensor"
-            android:configChanges="orientation|screenSize|keyboardHidden"/>
+            android:screenOrientation="nosensor" />
         <activity
             android:name=".crash.CrashReportActivity"
             android:excludeFromRecents="true"
@@ -271,11 +287,8 @@
         </activity>
         <activity
             android:name=".offline.RemoteCompilationsActivity"
-            android:theme="@style/AppTheme.GreenActionMode"/>
-
-        <activity
-            android:name=".offline.CompilationDetailActivity" />
-
+            android:theme="@style/AppTheme.GreenActionMode" />
+        <activity android:name=".offline.CompilationDetailActivity" />
         <activity
             android:name=".offline.OfflineTutorialActivity"
             android:theme="@style/AppTheme.TranslucentStatus" />
@@ -386,11 +399,11 @@
         <activity
             android:name=".main.TestKeywordSelectActivity"
             android:label="@string/title_activity_test_keyword_select"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".relatedvideos.FragmentUtilActivity"
-            android:label="FragmentUtilActivity"></activity>
-
+            android:label="FragmentUtilActivity" />
+        <activity android:name=".relatedvideos.YouTubeFragmentActivityTestActivity"></activity>
     </application>
 
 </manifest>

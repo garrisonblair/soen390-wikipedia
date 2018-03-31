@@ -29,6 +29,7 @@ public class YouTubeFragmentActivity extends BaseActivity {
     private String videoDescription;
     private String pageTitle;
     private String pageId;
+    private YouTubePlayer player;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,6 +92,7 @@ public class YouTubeFragmentActivity extends BaseActivity {
         youTubePlayerFragment.initialize(YouTubeAPIKey.API_KEY, new YouTubePlayer.OnInitializedListener() {
             @Override
             public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
+
                 if (!b) {
                     Log.d("DEV_DEBUG", "Player is working");
                     youTubePlayer.cueVideo(videoId);
