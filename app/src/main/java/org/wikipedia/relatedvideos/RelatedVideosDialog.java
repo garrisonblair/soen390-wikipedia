@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import org.wikipedia.R;
 import org.wikipedia.page.ExtendedBottomSheetDialogFragment;
+import org.wikipedia.page.PageActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +35,6 @@ public class RelatedVideosDialog extends ExtendedBottomSheetDialogFragment {
 
     private View rootView;
     private RecyclerView videoRecyclerView;
-
 
     //Instance getter because Fragments cant have non-default constructors
     public static RelatedVideosDialog newInstance(String title) {
@@ -133,6 +134,7 @@ public class RelatedVideosDialog extends ExtendedBottomSheetDialogFragment {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
+
             VideoInfo video = videos.get(position);
 
             TextView videoNameView = (TextView) holder.getRootView().findViewById(R.id.video_name_view);
@@ -144,7 +146,12 @@ public class RelatedVideosDialog extends ExtendedBottomSheetDialogFragment {
 
                 @Override
                 public void onClick(View view) {
-                    //TODO: Open Video
+
+                    String videoId = video.getID();
+                    String videoTitle = video.getTitle();
+                    String videoDescription = video.getDescription();
+                    Log.d("DEV_DEBUG", videoDescription);
+                    ((PageActivity) getActivity()).openYouTubePlayer(videoId, videoTitle, videoDescription);
                     return;
                 }
             });
@@ -157,7 +164,6 @@ public class RelatedVideosDialog extends ExtendedBottomSheetDialogFragment {
         public int getItemCount() {
             return videos.size();
         }
-
 
 
     }
