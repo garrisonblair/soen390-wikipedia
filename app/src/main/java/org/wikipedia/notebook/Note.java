@@ -9,25 +9,29 @@ import java.util.List;
 
 public class Note{
 
-    private String text;
+    private String originalText;
+    private String updatedText;
     private List<Reference> references;
     private String articleTitle;
     private int articleid;
     private int id;
+    private String comment;
+    private String span;
 
     public Note(int articleid, String articleTitle, String text) {
-        this.text = text;
+        this.originalText = text;
         this.articleTitle = articleTitle;
         this.articleid = articleid;
         this.references = new ArrayList<Reference>();
     }
 
-    public Note(int id, int articleid, String articleTitle, String text) {
+    public Note(int id, int articleid, String articleTitle, String text, String comment) {
         this.id = id;
         this.articleid = articleid;
         this.articleTitle = articleTitle;
-        this.text = text;
+        this.originalText = text;
         this.references = new ArrayList<Reference>();
+        this.comment = comment;
     }
 
     public void addReference(Reference reference) {
@@ -39,11 +43,18 @@ public class Note{
     }
 
     public String getText() {
-        return this.text;
+        if (updatedText != null) {
+            return this.updatedText;
+        }
+        return this.originalText;
     }
 
     public int getId() {
         return id;
+    }
+
+    public String getSpan() {
+        return this.span;
     }
 
     public int getArticleid() {
@@ -53,5 +64,46 @@ public class Note{
     public String getArticleTitle() {
         return articleTitle;
     }
-    public List<Reference> getAllReferences() { return this.references; }
+
+    public void updateText(String newText) {
+        this.updatedText = newText;
+    }
+
+    public String getOriginalText() {
+        return this.originalText;
+    }
+
+    public String getUpdatedText() {
+        return this.updatedText;
+    }
+
+    public String getComment() {
+        return this.comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public void setSpan(String span) {
+        this.span = span;
+    }
+
+    public void deleteComment() {
+        this.comment = null;
+    }
+
+    public void resetToOriginalText() {
+        this.updatedText = null;
+    }
+
+    public boolean isTextUpdated() {
+        if (this.updatedText == null) {
+            return false;
+        }
+        return true;
+    }
+    public List<Reference> getAllReferences() {
+        return this.references;
+    }
 }

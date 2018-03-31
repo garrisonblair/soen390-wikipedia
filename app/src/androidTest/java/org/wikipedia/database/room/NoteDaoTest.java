@@ -14,6 +14,7 @@ import org.wikipedia.notebook.database.NoteEntity;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Logger;
 
 import static org.junit.Assert.assertEquals;
 
@@ -45,7 +46,6 @@ public class NoteDaoTest {
         mNoteDao.addNote(noteEntity);
 
         List<NoteEntity> allNotes = mNoteDao.getAllNotesForArticle(123);
-
         assertEquals(allNotes.get(0).getArticleId(),noteEntity.getArticleId());
         assertEquals(allNotes.size(),1);
     }
@@ -60,6 +60,29 @@ public class NoteDaoTest {
         mNoteDao.deleteNote(noteEntity);
         noteEntityList = mNoteDao.getAllNotesForArticle(123);
         assertEquals(noteEntityList.size(), 0);
+    }
 
+    @Test
+    public void updateNoteTest() throws Exception {
+        NoteEntity noteEntity = new NoteEntity(123,"title","new note");
+        int rowId = (int)mNoteDao.addNote(noteEntity);
+        List<NoteEntity> noteList = mNoteDao.getAllNotesForArticle(123);
+        assertEquals(1, noteList.size());
+        noteEntity = noteList.get(0);
+        noteEntity.setUpdatedText("updated Text");
+        noteEntity.setComment("new comment");
+        noteEntity.setSpan("new span");
+        mNoteDao.updateNote(noteEntity);
+        noteList = mNoteDao.getAllNotesForArticle(123);
+        assertEquals(1, noteList.size());
+        noteEntity = noteList.get(0);
+        assertEquals("updated Text", noteEntity.getUpdatedText());
+        assertEquals("new comment", noteEntity.getComment());
+        noteEntity.setComment(null);
+        mNoteDao.updateNote(noteEntity);
+        noteList = mNoteDao.getAllNotesForArticle(123);
+        noteEntity = noteList.get(0);
+        assertEquals(null, noteEntity.getComment());
+        assertEquals("new span", noteEntity.getSpan());
     }
 }

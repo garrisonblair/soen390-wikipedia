@@ -179,9 +179,9 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".notes.NotesActivity"
-            android:parentActivityName=".activity.BaseActivity" />
+        <activity android:name=".notes.NotesActivity"
+            android:parentActivityName=".activity.BaseActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".relatedvideos.YouTubeFragmentActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
