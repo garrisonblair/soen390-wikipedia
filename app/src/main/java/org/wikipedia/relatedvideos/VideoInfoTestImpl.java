@@ -9,6 +9,8 @@ public class VideoInfoTestImpl implements VideoInfo {
     private String id;
     private String title;
     private String description;
+    private String url;
+
 
     public VideoInfoTestImpl(String id, String title, String description) {
         this.id = id;
@@ -28,6 +30,9 @@ public class VideoInfoTestImpl implements VideoInfo {
         this.description = description;
     }
 
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
     @Override
     public String getTitle() {
@@ -42,5 +47,10 @@ public class VideoInfoTestImpl implements VideoInfo {
     @Override
     public String getDescription() {
         return description;
+    }
+
+    @Override
+    public String getURL() {
+        return url;
     }
 }
