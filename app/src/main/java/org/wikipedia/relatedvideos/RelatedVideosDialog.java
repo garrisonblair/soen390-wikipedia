@@ -7,10 +7,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.wikipedia.R;
 import org.wikipedia.page.ExtendedBottomSheetDialogFragment;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Created by Fred on 2018-03-23.
@@ -22,18 +27,31 @@ public class RelatedVideosDialog extends ExtendedBottomSheetDialogFragment {
 
     public static final String TITLE_ARGUMENT = "title_argument_related_videos_dialog";
 
+    private String title;
+    private List<VideoInfo> videos = new ArrayList<VideoInfo>();
+    private YouTubeVideoService videoService;
+
     private View rootView;
     private RecyclerView videoRecyclerView;
-
-    private String title;
-
-    private String[] sample = {"YouTubeVideoAdapter 1", "YouTubeVideoAdapter 2", "YouTubeVideoAdapter 3", "YouTubeVideoAdapter 4"};
-
 
 
     //Instance getter because Fragments cant have non-default constructors
     public static RelatedVideosDialog newInstance(String title) {
         RelatedVideosDialog dialog = new RelatedVideosDialog();
+        Bundle args = new Bundle();
+
+        dialog.setVideoService(new YouTubeVideoService());
+
+        args.putString(TITLE_ARGUMENT, title);
+
+        dialog.setArguments(args);
+        return dialog;
+    }
+
+    static RelatedVideosDialog newInstance(String title, YouTubeVideoService videoService) {
+        RelatedVideosDialog dialog = new RelatedVideosDialog();
+        dialog.setVideoService(videoService);
+
         Bundle args = new Bundle();
 
         args.putString(TITLE_ARGUMENT, title);
@@ -42,19 +60,42 @@ public class RelatedVideosDialog extends ExtendedBottomSheetDialogFragment {
         return dialog;
     }
 
+    private void retrieveVideos(String searchTerm) {
+
+        videoService.searchVideos(searchTerm, new YouTubeVideoService.Callback() {
+            @Override
+            public void onYouTubeAPIResult(List<VideoInfo> list) {
+                videos.addAll(list);
+                if (videoRecyclerView != null) {
+                    videoRecyclerView.getAdapter().notifyDataSetChanged();
+                }
+
+            }
+        });
+
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        title = this.getArguments().getString(TITLE_ARGUMENT);
+        retrieveVideos(title);
+    }
+
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.dialog_related_videos, container);
 
-        title = this.getArguments().getString(TITLE_ARGUMENT);
+
 
         videoRecyclerView = (RecyclerView) rootView.findViewById(R.id.video_list);
         videoRecyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         videoRecyclerView.setLayoutManager(layoutManager);
 
-        videoRecyclerView.setAdapter(new VideoRecyclerAdapter(sample));
+        videoRecyclerView.setAdapter(new VideoRecyclerAdapter(videos));
 
         return rootView;
     }
@@ -76,9 +117,9 @@ public class RelatedVideosDialog extends ExtendedBottomSheetDialogFragment {
             }
         }
 
-        private String[] videos;
+        private List<VideoInfo> videos;
 
-        VideoRecyclerAdapter(String[] videos) {
+        VideoRecyclerAdapter(List<VideoInfo> videos) {
             this.videos = videos;
         }
 
@@ -92,18 +133,36 @@ public class RelatedVideosDialog extends ExtendedBottomSheetDialogFragment {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            String video = videos[position];
+            VideoInfo video = videos.get(position);
 
             TextView videoNameView = (TextView) holder.getRootView().findViewById(R.id.video_name_view);
-            videoNameView.setText(video);
+            videoNameView.setText(video.getTitle());
+
+            ImageView thumbnailView = (ImageView) holder.getRootView().findViewById(R.id.video_thumbnail);
+
+            thumbnailView.setOnClickListener(new View.OnClickListener(){
+
+                @Override
+                public void onClick(View view) {
+                    //TODO: Open Video
+                    return;
+                }
+            });
+
+            new ThumbnailLoadTask(thumbnailView, video.getURL()).execute();
+
         }
 
         @Override
         public int getItemCount() {
-            return videos.length;
+            return videos.size();
         }
 
 
 
+    }
+
+    public void setVideoService(YouTubeVideoService videoService) {
+        this.videoService = videoService;
     }
 }

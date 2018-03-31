@@ -382,6 +382,9 @@
             android:name=".main.TestKeywordSelectActivity"
             android:label="@string/title_activity_test_keyword_select"
             android:theme="@style/AppTheme"></activity>
+        <activity
+            android:name=".relatedvideos.FragmentUtilActivity"
+            android:label="FragmentUtilActivity"></activity>
     </application>
 
 </manifest>
