@@ -24,7 +24,7 @@ public class Visit {
         return subVisits;
     }
 
-    public PageProperties getArticleID() {
+    public PageProperties getPageInfo() {
         return page;
     }
 
