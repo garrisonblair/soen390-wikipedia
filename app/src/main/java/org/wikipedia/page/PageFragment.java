@@ -996,9 +996,8 @@ public class PageFragment extends Fragment implements BackPressedHandler {
     public void onPageLoadComplete() {
 
         JourneyRecorder journeyRecorder = JourneyRecorder.getInstance();
-        if (!journeyRecorder.isJourneyInProgress()) {
-            journeyRecorder.startJourney(model.getPage().getPageProperties());
-        }
+
+        journeyRecorder.visitPage(model.getPage().getPageProperties());
 
         refreshView.setEnabled(true);
         if (callback() != null) {

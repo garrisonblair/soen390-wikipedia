@@ -31,4 +31,22 @@ public class Visit {
     public void addSubVisit(Visit visit) {
         subVisits.add(visit);
     }
+
+    public String toString(int depth) {
+        String result = "";
+
+        for (int i = 0; i < depth; i++) {
+            result += "  ";
+        }
+
+        result += page.getDisplayTitle() + "\n";
+
+
+        depth++;
+        for (Visit visit : subVisits) {
+            result += visit.toString(depth);
+        }
+
+        return result;
+    }
 }

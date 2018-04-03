@@ -1,5 +1,7 @@
 package org.wikipedia.journey;
 
+import android.util.Log;
+
 import org.wikipedia.page.PageProperties;
 
 import java.util.Stack;
@@ -10,12 +12,14 @@ import java.util.Stack;
 
 public class JourneyRecorder {
 
-    private Visit root = null;
+    private Visit root;
 
     private Visit currentVisit;
-    private Stack<Visit> pageStack = new Stack<Visit>();
+    private Stack<Visit> pageStack;
 
     private static JourneyRecorder INSTANCE;
+
+    private boolean backStackPop;
 
     public static JourneyRecorder getInstance() {
 
@@ -26,8 +30,18 @@ public class JourneyRecorder {
         return INSTANCE;
     }
 
+    public JourneyRecorder() {
+        pageStack = new Stack<Visit>();
+        backStackPop = false;
+        root = null;
+    }
+
     public void visitPage(PageProperties page) {
         if (!isJourneyInProgress()) {
+            startJourney(page);
+            return;
+        } else if (backStackPop) {
+            backStackPop = false;
             return;
         }
 
@@ -43,11 +57,14 @@ public class JourneyRecorder {
     public void leavePage() {
 
         if (!pageStack.empty()) {
+            backStackPop = true;
+
             currentVisit = pageStack.pop();
             return;
         }
 
         //else journey done
+        Log.d("DEV", getJourneyString());
         root = null;
         return;
     }
@@ -59,6 +76,11 @@ public class JourneyRecorder {
 
     public boolean isJourneyInProgress() {
         return root != null;
+    }
+
+    public String getJourneyString() {
+
+        return root.toString(0);
     }
 
 }
