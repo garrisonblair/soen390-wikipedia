@@ -35,6 +35,7 @@ import org.wikipedia.gallery.GalleryItem;
 import org.wikipedia.gallery.GalleryThumbnailScrollView;
 import org.wikipedia.gallery.ImageInfo;
 import org.wikipedia.history.HistoryEntry;
+import org.wikipedia.journey.JourneyRecorder;
 import org.wikipedia.page.ExtendedBottomSheetDialogFragment;
 import org.wikipedia.page.PageTitle;
 import org.wikipedia.util.GeoUtil;
@@ -164,6 +165,9 @@ public class LinkPreviewDialog extends ExtendedBottomSheetDialogFragment
             getDialog().dismiss();
         }
         HistoryEntry newEntry = new HistoryEntry(pageTitle, entrySource);
+        JourneyRecorder journeyRecorder = JourneyRecorder.getInstance();
+        journeyRecorder.visitPage(pageTitle.getProperties());
+
         loadPage(pageTitle, newEntry, false);
     }
 

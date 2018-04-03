@@ -1,5 +1,7 @@
 package org.wikipedia.journey;
 
+import org.wikipedia.page.PageProperties;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,10 +13,10 @@ public class Visit {
 
     private List<Visit> subVisits;
 
-    private String articleID;
+    private PageProperties page;
 
-    public Visit(String articleID) {
-        this.articleID = articleID;
+    public Visit(PageProperties articleID) {
+        this.page = articleID;
         subVisits = new ArrayList<Visit>();
     }
 
@@ -22,8 +24,8 @@ public class Visit {
         return subVisits;
     }
 
-    public String getArticleID() {
-        return articleID;
+    public PageProperties getArticleID() {
+        return page;
     }
 
     public void addSubVisit(Visit visit) {
