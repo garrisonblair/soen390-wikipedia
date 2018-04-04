@@ -48,6 +48,14 @@ public class JourneyRecorder {
         applicationContext = context;
     }
 
+    public Visit getRoot() {
+        return root;
+    }
+
+    public Visit getCurrentVisit() {
+        return currentVisit;
+    }
+
     public void visitPage(PageProperties page) {
         if (!isJourneyInProgress()) {
             startJourney(page);
@@ -122,6 +130,18 @@ public class JourneyRecorder {
         }
 
         return null;
+    }
+
+    /*
+        Test methods
+     */
+
+    static void reset() {
+        INSTANCE = null;
+    }
+
+    Stack<Visit> getPageStack() {
+        return pageStack;
     }
 
 }
