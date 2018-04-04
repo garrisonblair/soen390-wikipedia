@@ -995,7 +995,7 @@ public class PageFragment extends Fragment implements BackPressedHandler {
 
     public void onPageLoadComplete() {
 
-        JourneyRecorder journeyRecorder = JourneyRecorder.getInstance();
+        JourneyRecorder journeyRecorder = JourneyRecorder.getInstance(getActivity().getApplicationContext());
 
         journeyRecorder.visitPage(model.getPage().getPageProperties());
 
@@ -1313,7 +1313,7 @@ public class PageFragment extends Fragment implements BackPressedHandler {
         }
         if (pageFragmentLoadState.popBackStack()) {
 
-            JourneyRecorder journeyRecorder = JourneyRecorder.getInstance();
+            JourneyRecorder journeyRecorder = JourneyRecorder.getInstance(getActivity().getApplicationContext());
             journeyRecorder.leavePage();
 
             Log.d("DEV", "popBackstack");

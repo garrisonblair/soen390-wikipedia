@@ -1,10 +1,17 @@
 package org.wikipedia.journey;
 
-import android.util.Log;
-
 import org.wikipedia.page.PageProperties;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Stack;
+
+import android.content.Context;
+import android.util.Log;
+
 
 /**
  * Created by Fred on 2018-04-02.
@@ -21,19 +28,24 @@ public class JourneyRecorder {
 
     private boolean backStackPop;
 
-    public static JourneyRecorder getInstance() {
+
+    private static String FILENAME = "journeyPersistance";
+    private Context applicationContext;
+
+    public static JourneyRecorder getInstance(Context applicationContext) {
 
         if (INSTANCE == null) {
-            INSTANCE = new JourneyRecorder();
+            INSTANCE = new JourneyRecorder(applicationContext);
         }
 
         return INSTANCE;
     }
 
-    public JourneyRecorder() {
+    public JourneyRecorder(Context context) {
         pageStack = new Stack<Visit>();
         backStackPop = false;
         root = null;
+        applicationContext = context;
     }
 
     public void visitPage(PageProperties page) {
@@ -65,6 +77,7 @@ public class JourneyRecorder {
 
         //else journey done
         Log.d("DEV", getJourneyString());
+        persist();
         root = null;
         return;
     }
@@ -81,6 +94,34 @@ public class JourneyRecorder {
     public String getJourneyString() {
 
         return root.toString(0);
+    }
+
+    private void persist() {
+        File file = new File(applicationContext.getFilesDir(), FILENAME);
+
+        try {
+            ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(file));
+            output.writeObject(root);
+        } catch (Exception e) {
+            Log.d("DEBUG", e.getMessage());
+            Log.d("DEBUG", "Problem opening file for writing");
+        }
+    }
+
+    public Visit getLastJourney() {
+        File file = new File(applicationContext.getFilesDir(), FILENAME);
+
+        try {
+            ObjectInputStream input = new ObjectInputStream(new FileInputStream(file));
+            Visit journey = (Visit) input.readObject();
+
+            return journey;
+        } catch (Exception e) {
+            Log.d("DEBUG", e.getMessage());
+            Log.d("DEBUG", "Problem opening file for reading");
+        }
+
+        return null;
     }
 
 }

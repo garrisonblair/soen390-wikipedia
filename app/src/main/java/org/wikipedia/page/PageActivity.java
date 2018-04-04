@@ -550,7 +550,7 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
             return;
         }
 
-        JourneyRecorder journeyRecorder = JourneyRecorder.getInstance();
+        JourneyRecorder journeyRecorder = JourneyRecorder.getInstance(getApplicationContext());
         journeyRecorder.leavePage();
         finish();
     }
