@@ -33,6 +33,12 @@ public enum NavTab implements EnumCode {
         @NonNull @Override public Fragment newInstance() {
             return NearbyFragment.newInstance();
         }
+    },
+    STATISTICS(R.string.stat_title, R.drawable.icon_stat_statistics) {
+        @NonNull @Override public Fragment newInstance() {
+            //TODO: add statistic fragment instance
+            return null;
+        }
     };
 
     private static final EnumCodeMap<NavTab> MAP = new EnumCodeMap<>(NavTab.class);

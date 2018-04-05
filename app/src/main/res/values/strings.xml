@@ -692,4 +692,7 @@
     <string name="error_player">There was an error initializing the YouTubePlayer (%1$s)</string>
     <string name="youtube_player_title">Related YouTube Video</string>
 
+    <!-- Statistics -->
+    <string name="stat_title">App Statistics</string>
+
 </resources>
