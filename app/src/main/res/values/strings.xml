@@ -39,6 +39,7 @@
     <string name="menu_page_font_and_theme">Font and theme</string>
     <string name="menu_page_add_to_list">Add to reading list</string>
     <string name="menu_page_share">Share link</string>
+    <string name="menu_page_view_journey">View my journey</string>
 
     <!-- Long press menu -->
     <string name="menu_long_press_open_page">Open</string>
