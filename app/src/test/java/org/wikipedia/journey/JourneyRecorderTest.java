@@ -61,7 +61,7 @@ public class JourneyRecorderTest {
 
     @Test
     public void testJourneySecondVisitPage() {
-        JourneyRecorder jr = spy(JourneyRecorder.getInstance(mock(Context.class)));
+        JourneyRecorder jr = JourneyRecorder.getInstance(mock(Context.class));
         PageProperties page1 = mock(PageProperties.class);
         PageProperties page2 = mock(PageProperties.class);
 
@@ -79,7 +79,39 @@ public class JourneyRecorderTest {
     }
 
     @Test
-    public void testJourneyLeavePage() {
+    public void testJourneyLeaveInnerPage() {
+        JourneyRecorder jr = JourneyRecorder.getInstance(mock(Context.class));
+        PageProperties page1 = mock(PageProperties.class);
+        PageProperties page2 = mock(PageProperties.class);
+
+        jr.visitPage(page1);
+
+        Visit firstVisit = jr.getCurrentVisit();
+
+        jr.visitPage(page2);
+
+        assertEquals(jr.getPageStack().peek(), firstVisit);
+
+        jr.leavePage();
+
+        assertTrue(jr.getPageStack().empty());
+        assertEquals(firstVisit, jr.getCurrentVisit());
 
     }
+
+    @Test
+    public void testJourneyLeaveRootPage() {
+        JourneyRecorder jr = spy(JourneyRecorder.getInstance(mock(Context.class)));
+        doNothing().when(jr).persist();
+
+        PageProperties page1 = mock(PageProperties.class);
+
+        jr.visitPage(page1);
+
+        jr.leavePage();
+
+        assertTrue(jr.getRoot() == null);
+        verify(jr).persist();
+    }
+
 }

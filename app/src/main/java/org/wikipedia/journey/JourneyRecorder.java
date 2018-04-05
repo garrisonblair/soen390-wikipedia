@@ -80,14 +80,13 @@ public class JourneyRecorder {
             backStackPop = true;
 
             currentVisit = pageStack.pop();
-            return;
+        } else {
+            //journey done
+            Log.d("DEBUG", getJourneyString());
+            persist();
+            root = null;
         }
 
-        //else journey done
-        Log.d("DEV", getJourneyString());
-        persist();
-        root = null;
-        return;
     }
 
     public void startJourney(PageProperties startPage) {
@@ -101,10 +100,10 @@ public class JourneyRecorder {
 
     public String getJourneyString() {
 
-        return root.toString(0);
+        return root.toString();
     }
 
-    private void persist() {
+    void persist() {
         File file = new File(applicationContext.getFilesDir(), FILENAME);
 
         try {

@@ -50,4 +50,8 @@ public class Visit implements Serializable{
 
         return result;
     }
+
+    public String toString() {
+        return this.toString(0);
+    }
 }
