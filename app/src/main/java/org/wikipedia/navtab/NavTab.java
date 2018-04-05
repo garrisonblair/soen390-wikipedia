@@ -34,7 +34,7 @@ public enum NavTab implements EnumCode {
             return NearbyFragment.newInstance();
         }
     },
-    STATISTICS(R.string.stat_title, R.drawable.icon_stat_statistics) {
+    STATISTICS(R.string.stat_title, R.drawable.icon_stat_charts) {
         @NonNull @Override public Fragment newInstance() {
             //TODO: add statistic fragment instance
             return null;

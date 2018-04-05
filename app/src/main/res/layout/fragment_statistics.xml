@@ -1,45 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/fragment_notes"
+    android:id="@+id/fragment_single_note"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="10dp">
-    <RelativeLayout android:id="@+id/upperView"
-        android:layout_width="fill_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="10dip" >
-        <ImageButton android:id="@+id/notes_back_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_arrow_back_themed_24dp"
-            android:background="@android:color/transparent"
-            android:layout_alignParentLeft="true"
-            android:clickable="true" />
-
-        <TextView
-            android:id="@+id/stats_title"
+        android:orientation="horizontal">
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Used Statistics"
-            android:textAlignment="center"
-            android:textAllCaps="true"
-            android:textSize="24sp"
-            android:textStyle="bold" />
-        <ImageButton android:id="@+id/stat_share_button"
+            android:layout_height="wrap_content">
+            <ImageButton android:id="@+id/stat_back_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:src="@drawable/ic_arrow_back_themed_24dp"
+                android:background="@android:color/transparent"
+                android:clickable="true" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/statistic_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                android:textSize="20sp"/>
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <ImageButton android:id="@+id/stat_share_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_share_themed_24dp"
+                android:background="@android:color/transparent"
+                android:layout_alignParentRight="true"
+                android:clickable="true" />
+        </RelativeLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:gravity="center">
+
+        <Space
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_share_themed_24dp"
-            android:background="@android:color/transparent"
-            android:layout_alignParentRight="true"
-            android:clickable="true" />
-    </RelativeLayout>
-    <!--
-    <ListView android:id="@+id/notes_list"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:clickable="true"/>!-->
+            android:layout_weight="1" />
 
+        <ImageButton
+            android:id="@+id/achievement"
+            android:layout_width="25dp"
+            android:layout_height="24dp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:src="@drawable/icon_stat_achievement" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView android:id="@+id/statistic_body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <ListView android:id="@+id/statistic_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="20dp"/>
+    </LinearLayout>
 </LinearLayout>
