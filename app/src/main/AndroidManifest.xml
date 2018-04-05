@@ -404,6 +404,7 @@
             android:name=".relatedvideos.FragmentUtilActivity"
             android:label="FragmentUtilActivity" />
         <activity android:name=".relatedvideos.YouTubeFragmentActivityTestActivity"></activity>
+        <activity android:name=".journey.JourneyActivity"></activity>
     </application>
 
 </manifest>
