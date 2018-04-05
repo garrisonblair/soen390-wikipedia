@@ -1,7 +1,4 @@
 package org.wikipedia.relatedvideos;
-
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,8 +6,6 @@ import android.view.View;
 import android.widget.Button;
 
 import org.wikipedia.R;
-import org.wikipedia.relatedvideos.YouTubeFragmentActivity;
-import org.wikipedia.views.ObservableWebView;
 
 public class YouTubeFragmentActivityTestActivity extends AppCompatActivity {
 
