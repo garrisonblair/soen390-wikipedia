@@ -19,58 +19,14 @@
                 android:src="@drawable/ic_arrow_back_themed_24dp"
                 android:background="@android:color/transparent"
                 android:clickable="true" />
-
-            <Space
+            <ImageButton android:id="@+id/notes_share_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <TextView
-                android:id="@+id/statistic_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:textAlignment="center"
-                android:textAllCaps="true"
-                android:textStyle="bold"
-                android:textSize="20sp"/>
-
-            <Space
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <ImageButton android:id="@+id/stat_share_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_share_themed_24dp"
+                android:src="@drawable/icon_stat_achievement"
                 android:background="@android:color/transparent"
                 android:layout_alignParentRight="true"
                 android:clickable="true" />
         </RelativeLayout>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:gravity="center">
-
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <ImageButton
-            android:id="@+id/achievement"
-            android:layout_width="25dp"
-            android:layout_height="24dp"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:src="@drawable/icon_stat_achievement" />
     </LinearLayout>
     <LinearLayout
         android:orientation="vertical"

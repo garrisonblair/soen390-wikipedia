@@ -12,6 +12,7 @@ import org.wikipedia.model.EnumCode;
 import org.wikipedia.model.EnumCodeMap;
 import org.wikipedia.nearby.NearbyFragment;
 import org.wikipedia.readinglist.ReadingListsFragment;
+import org.wikipedia.statistics.StatisticFragment;
 
 public enum NavTab implements EnumCode {
     EXPLORE(R.string.nav_item_feed, R.drawable.ic_globe) {
@@ -37,7 +38,7 @@ public enum NavTab implements EnumCode {
     STATISTICS(R.string.stat_title, R.drawable.icon_stat_charts) {
         @NonNull @Override public Fragment newInstance() {
             //TODO: add statistic fragment instance
-            return null;
+            return StatisticFragment.newInstance();
         }
     };
 
