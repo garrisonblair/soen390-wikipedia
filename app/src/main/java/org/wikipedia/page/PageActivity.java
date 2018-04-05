@@ -53,6 +53,7 @@ import org.wikipedia.events.ChangeTextSizeEvent;
 import org.wikipedia.feed.mainpage.MainPageClient;
 import org.wikipedia.gallery.GalleryActivity;
 import org.wikipedia.history.HistoryEntry;
+import org.wikipedia.journey.JourneyRecorder;
 import org.wikipedia.language.LangLinksActivity;
 import org.wikipedia.notes.NotesActivity;
 import org.wikipedia.notes.NotesFragment;
@@ -532,7 +533,7 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
         bottomSheetPresenter.showAddToListDialog(getSupportFragmentManager(), title, source, listDialogDismissListener);
     }
 
-    // Note: back button first handled in {@link #onOptionsItemSelected()};
+    // Note: back button first handled in {@lxink #onOptionsItemSelected()};
     @Override
     public void onBackPressed() {
         if (isCabOpen()) {
@@ -551,6 +552,9 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
         if (pageFragment.onBackPressed()) {
             return;
         }
+
+        JourneyRecorder journeyRecorder = JourneyRecorder.getInstance(getApplicationContext());
+        journeyRecorder.leavePage();
         finish();
     }
 
