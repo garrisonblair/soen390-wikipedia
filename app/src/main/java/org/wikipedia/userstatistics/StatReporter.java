@@ -16,4 +16,8 @@ public class StatReporter {
         start = new Date();
     }
 
+    public void pauseVisit() {
+        pause = new Date();
+    }
+
 }
