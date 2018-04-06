@@ -20,4 +20,8 @@ public class StatReporter {
         pause = new Date();
     }
 
+    public void resumeVisit() {
+        resume = new Date();
+    }
+
 }
