@@ -37,7 +37,6 @@ public enum NavTab implements EnumCode {
     },
     STATISTICS(R.string.stat_title, R.drawable.icon_stat_charts) {
         @NonNull @Override public Fragment newInstance() {
-            //TODO: add statistic fragment instance
             return StatisticFragment.newInstance();
         }
     };

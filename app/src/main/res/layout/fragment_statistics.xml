@@ -19,7 +19,7 @@
                 android:src="@drawable/ic_arrow_back_themed_24dp"
                 android:background="@android:color/transparent"
                 android:clickable="true" />
-            <ImageButton android:id="@+id/notes_share_button"
+            <ImageButton android:id="@+id/achievement_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/icon_stat_achievement"
