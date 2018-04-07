@@ -12,16 +12,17 @@ public class ArticleVisit {
     private long visitTimeEnd;
     private long totalVisitTime;
 
-    public ArticleVisit(int articleId, long totalVisitTime, long visitTimeStart, long visitTimeEnd) {
+    public ArticleVisit(int articleId, long visitTimeStart, long visitTimeEnd, long totalVisitTime) {
         this.articleId = articleId;
-        this.totalVisitTime = totalVisitTime;
+        this.totalVisitTime = visitTimeEnd - visitTimeStart;
         this.visitTimeStart = visitTimeStart;
         this.visitTimeEnd = visitTimeEnd;
+        this.visitId = -1;
     }
 
-    public ArticleVisit(int visitId, int articleId, long totalVisitTime) {
-        this.visitId = visitId;
+    public ArticleVisit(int articleId, int visitId, long totalVisitTime) {
         this.articleId = articleId;
+        this.visitId = visitId;
         this.totalVisitTime = totalVisitTime;
     }
 
