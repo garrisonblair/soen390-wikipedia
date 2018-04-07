@@ -23,11 +23,11 @@ public interface ArticleVisitDao {
     @Query("DELETE FROM articleVisits WHERE articleId = :articleId")
     void deleteSpecificArticleVisits(int articleId);
 
-    @Query("UPDATE articleVisit SET timeSpentReading = :timeSpentReading WHERE id = :id")
-    void upDateTimeSpentReading(long timeSpentReading);
+    @Query("UPDATE articleVisits SET timeSpentReading = :timeSpentReading WHERE id = :id")
+    void upDateTimeSpentReading(long timeSpentReading, int id);
 
     @Insert
-    int addArtictleVisit(ArticleVisitEntity articleVisitEntity);
+    void addArtictleVisit(ArticleVisitEntity articleVisitEntity);
 
     @Delete
     void deleteArticleVisit(ArticleVisitEntity articleVisitEntity);

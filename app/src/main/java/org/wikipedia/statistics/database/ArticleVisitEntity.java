@@ -44,10 +44,4 @@ public class ArticleVisitEntity {
     public long getTimeSpentReading() {
         return this.timeSpentReading;
     }
-
-
-
-
-
-
 }
