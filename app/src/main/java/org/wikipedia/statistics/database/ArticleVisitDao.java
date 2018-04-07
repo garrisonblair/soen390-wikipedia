@@ -1,8 +1,39 @@
 package org.wikipedia.statistics.database;
 
+import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Delete;
+import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
+
+import java.util.List;
+
 /**
  * Created by steve on 07/04/18.
  */
+@Dao
+public interface ArticleVisitDao {
 
-public class ArticleVisitDao {
+    @Query("SELECT * FROM articleVisits ORDER BY articleId ASC")
+    List<ArticleVisitEntity> getTotalUniqueVisits();
+
+    @Query("SELECT * FROM articleVisits WHERE articleId = :articleId")
+    List<ArticleVisitEntity> getSpecificArticleUniqueVisits(int articleId);
+
+    @Query("DELETE FROM articleVisits WHERE articleId = :articleId")
+    void deleteSpecificArticleVisits(int articleId);
+
+    @Query("UPDATE articleVisit SET timeSpentReading = :timeSpentReading WHERE id = :id")
+    void upDateTimeSpentReading(long timeSpentReading);
+
+    @Insert
+    int addArtictleVisit(ArticleVisitEntity articleVisitEntity);
+
+    @Delete
+    void deleteArticleVisit(ArticleVisitEntity articleVisitEntity);
+
+    @Update
+    void updateArticleVisit(ArticleVisitEntity articleVisitEntity);
+
+
 }
