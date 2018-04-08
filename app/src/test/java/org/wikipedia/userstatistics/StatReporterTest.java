@@ -10,10 +10,10 @@ public class StatReporterTest {
     @Test
     public void testEndVisit() throws InterruptedException {
         // Visit article for 3 seconds
-        StatReporter statReporter = new StatReporter();
+        StatReporter statReporter = new StatReporter(0);
         long visitTime = 3;
 
-        statReporter.enterArticle(0);
+        statReporter.enterArticle();
         Thread.sleep(3000);
         statReporter.endVisit();
 
@@ -21,10 +21,10 @@ public class StatReporterTest {
         Assert.assertEquals(visitTime, statReporter.getTimeSpent());
 
         // Visit article for 3 seconds, pause for a second, then resume for another 3 seconds
-        statReporter = new StatReporter();
+        statReporter = new StatReporter(0);
         visitTime = 6;
 
-        statReporter.enterArticle(0);
+        statReporter.enterArticle();
         Thread.sleep(3000);
         statReporter.pauseVisit();
         Thread.sleep(1000);

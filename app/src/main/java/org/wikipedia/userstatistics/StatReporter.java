@@ -1,5 +1,7 @@
 package org.wikipedia.userstatistics;
 
+import android.util.Log;
+
 import java.util.Date;
 
 public class StatReporter {
@@ -13,8 +15,11 @@ public class StatReporter {
 
     private static final long DIV_BY_TO_GET_SECONDS = 1000;
 
-    public void enterArticle(int articleId) {
+    public StatReporter(int articleId) {
         this.articleId = articleId;
+    }
+
+    public void enterArticle() {
         start = new Date();
     }
 
@@ -36,6 +41,7 @@ public class StatReporter {
             timeSpent = diff / DIV_BY_TO_GET_SECONDS;
         }
         // TODO: save timeSpent to db
+        Log.i("DEBUG: TIME SPENT", Long.toString(timeSpent));
     }
 
     public long getTimeSpent()  {
