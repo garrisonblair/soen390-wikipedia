@@ -13,7 +13,7 @@ public class StatReporterTest {
         StatReporter statReporter = new StatReporter();
         long visitTime = 3;
 
-        statReporter.enterArticle(0000);
+        statReporter.enterArticle(0);
         Thread.sleep(3000);
         statReporter.endVisit();
 
@@ -24,7 +24,7 @@ public class StatReporterTest {
         statReporter = new StatReporter();
         visitTime = 6;
 
-        statReporter.enterArticle(0000);
+        statReporter.enterArticle(0);
         Thread.sleep(3000);
         statReporter.pauseVisit();
         Thread.sleep(1000);
