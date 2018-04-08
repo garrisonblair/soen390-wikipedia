@@ -11,7 +11,7 @@ public class StatReporter {
     private Date resume;
     private Date end;
 
-    private static final long DIV_BY_TO_GET_MINUTES = 60000;
+    private static final long DIV_BY_TO_GET_SECONDS = 1000;
 
     public void enterArticle(int articleId) {
         this.articleId = articleId;
@@ -30,12 +30,16 @@ public class StatReporter {
         end = new Date();
         if (pause != null && resume != null) {
             long diff = pause.getTime() - start.getTime() + end.getTime() - resume.getTime();
-            timeSpent = diff / DIV_BY_TO_GET_MINUTES;
+            timeSpent = diff / DIV_BY_TO_GET_SECONDS;
         } else {
             long diff = end.getTime() - start.getTime();
-            timeSpent = diff / DIV_BY_TO_GET_MINUTES;
+            timeSpent = diff / DIV_BY_TO_GET_SECONDS;
         }
         // TODO: save timeSpent to db
+    }
+
+    public long getTimeSpent()  {
+        return timeSpent;
     }
 
 }
