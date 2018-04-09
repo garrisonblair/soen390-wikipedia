@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/fragment_single_note"
+    android:id="@+id/fragment_statistics"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,13 +12,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <ImageButton android:id="@+id/stat_back_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:src="@drawable/ic_arrow_back_themed_24dp"
-                android:background="@android:color/transparent"
-                android:clickable="true" />
+
             <ImageButton android:id="@+id/achievement_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
