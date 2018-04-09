@@ -11,13 +11,8 @@ public class StatReporter {
     private Date start;
     private Date pause;
     private Date resume;
-    private Date end;
 
     private static final long DIV_BY_TO_GET_SECONDS = 1000;
-
-    public StatReporter(int articleId) {
-        this.articleId = articleId;
-    }
 
     public void enterArticle() {
         start = new Date();
@@ -32,7 +27,7 @@ public class StatReporter {
     }
 
     public void endVisit() {
-        end = new Date();
+        Date end = new Date();
         if (pause != null && resume != null) {
             long diff = pause.getTime() - start.getTime() + end.getTime() - resume.getTime();
             timeSpent = diff / DIV_BY_TO_GET_SECONDS;
@@ -42,6 +37,11 @@ public class StatReporter {
         }
         // TODO: save timeSpent to db
         Log.i("DEBUG: TIME SPENT", Long.toString(timeSpent));
+        Log.i("DEBUG: ARTICLE ID", Integer.toString(articleId));
+    }
+
+    public void setArticleId(int articleId) {
+        this.articleId = articleId;
     }
 
     public long getTimeSpent()  {
