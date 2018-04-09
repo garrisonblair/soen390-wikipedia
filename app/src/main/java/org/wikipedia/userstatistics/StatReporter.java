@@ -35,9 +35,12 @@ public class StatReporter {
             long diff = end.getTime() - start.getTime();
             timeSpent = diff / DIV_BY_TO_GET_SECONDS;
         }
-        // TODO: save timeSpent to db
         Log.i("DEBUG: TIME SPENT", Long.toString(timeSpent));
         Log.i("DEBUG: ARTICLE ID", Integer.toString(articleId));
+    }
+
+    public void saveVisit() {
+        // TODO: save timeSpent to db
     }
 
     public void setArticleId(int articleId) {
