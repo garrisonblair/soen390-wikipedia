@@ -6,6 +6,7 @@
     tools:context="org.wikipedia.statistics.AchievementFragment">
 
     <TextView
+        android:id="@+id/fragment_achievement_title"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:textAlignment="center"
