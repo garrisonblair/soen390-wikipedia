@@ -23,18 +23,9 @@ public class ArticleStatCalculator {
     private long totalTimeSpentReading;
     private int longestReadArticleId;
 
-    private int totalNotes;
-    private int totalArticlesWithNotes;
-
-    private int textSearches;
-    private int gallerySearches;
-    private int cameraSearches;
-
-    private int ttsUses;
-
-    public ArticleStatCalculator(Context context) {
+    public ArticleStatCalculator(Context context, AppDatabase database) {
         this.context = context;
-        this.db = AppDatabase.getInstance(context);
+        this.db = database;
         this.articleVisitDao = db.articleVisitDao();
 
         visitedArticles = articleVisitDao.getTotalUniqueVisits();
@@ -53,6 +44,10 @@ public class ArticleStatCalculator {
                 uniqueVisitedArticles.add(article.getArticleId());
             }
         }
+    }
+
+    public ArticleStatCalculator(Context context) {
+        this(context, AppDatabase.getInstance(context));
     }
 
     public long getTotalTimeSpentReading() {
