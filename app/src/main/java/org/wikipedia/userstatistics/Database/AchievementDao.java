@@ -18,11 +18,14 @@ public interface AchievementDao {
     @Query("SELECT * FROM achievements")
     List<AchievementEntity> getAllAchievements();
 
-    @Query("SELECT * FROM achievements WHERE name = :name")
-    Achievement getAchievement(String name);
-
     @Query("SELECT * FROM achievements WHERE obtained = 1")
     List<AchievementEntity> getUnlockedAchievements();
+
+    @Query("SELECT * FROM achievements WHERE obtained = 0")
+    List<AchievementEntity> getLockedAchievements();
+
+    @Query("SELECT * FROM achievements WHERE name = :name")
+    Achievement getAchievement(String name);
 
     @Update
     void updateAchievement(AchievementEntity achievement);
