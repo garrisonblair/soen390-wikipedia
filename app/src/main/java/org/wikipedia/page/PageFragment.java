@@ -75,7 +75,7 @@ import org.wikipedia.readinglist.database.ReadingListDbHelper;
 import org.wikipedia.readinglist.database.ReadingListPage;
 import org.wikipedia.settings.Prefs;
 import org.wikipedia.theme.ThemeBridgeAdapter;
-import org.wikipedia.userstatistics.StatReporter;
+import org.wikipedia.userstatistics.ArticleStatReporter;
 import org.wikipedia.util.ActiveTimer;
 import org.wikipedia.util.DeviceUtil;
 import org.wikipedia.util.DimenUtil;
@@ -180,7 +180,7 @@ public class PageFragment extends Fragment implements BackPressedHandler {
     private TabsProvider tabsProvider;
     private ActiveTimer activeTimer = new ActiveTimer();
 
-    private StatReporter statReporter;
+    private ArticleStatReporter articleStatReporter;
 
     private WikipediaApp app;
 
@@ -351,8 +351,8 @@ public class PageFragment extends Fragment implements BackPressedHandler {
                 new PageActionToolbarHideHandler(rootView.findViewById(R.id.fragment_page_coordinator), null);
         snackbarHideHandler.setScrollView(webView);
 
-        statReporter = new StatReporter(getContext());
-        statReporter.enterArticle();
+        articleStatReporter = new ArticleStatReporter();
+        articleStatReporter.enterArticle();
 
         return rootView;
     }
@@ -370,9 +370,9 @@ public class PageFragment extends Fragment implements BackPressedHandler {
 
     @Override
     public void onDestroy() {
-        statReporter.setArticleId(getPage().getPageProperties().getPageId());
-        statReporter.endVisit();
-        statReporter.saveVisit();
+        articleStatReporter.setArticleId(getPage().getPageProperties().getPageId());
+        articleStatReporter.endVisit();
+        articleStatReporter.saveVisit(getContext());
         super.onDestroy();
         app.getRefWatcher().watch(this);
     }
@@ -646,7 +646,7 @@ public class PageFragment extends Fragment implements BackPressedHandler {
                 : 0;
         Prefs.pageLastShown(time);
 
-        statReporter.pauseVisit();
+        articleStatReporter.pauseVisit();
     }
 
     @Override
@@ -654,7 +654,7 @@ public class PageFragment extends Fragment implements BackPressedHandler {
         super.onResume();
         initPageScrollFunnel();
         activeTimer.resume();
-        statReporter.resumeVisit();
+        articleStatReporter.resumeVisit();
     }
 
     @Override
