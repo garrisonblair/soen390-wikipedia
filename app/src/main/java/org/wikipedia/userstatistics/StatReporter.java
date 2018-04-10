@@ -1,6 +1,11 @@
 package org.wikipedia.userstatistics;
 
+import android.content.Context;
 import android.util.Log;
+
+import org.wikipedia.database.room.AppDatabase;
+import org.wikipedia.statistics.database.ArticleVisitDao;
+import org.wikipedia.statistics.database.ArticleVisitEntity;
 
 import java.util.Date;
 
@@ -12,7 +17,13 @@ public class StatReporter {
     private Date pause;
     private Date resume;
 
-    private static final long DIV_BY_TO_GET_SECONDS = 1000;
+    private AppDatabase db;
+    private ArticleVisitDao articleVisitDao;
+
+    public StatReporter(Context context) {
+        this.db = AppDatabase.getInstance(context);
+        this.articleVisitDao = db.articleVisitDao();
+    }
 
     public void enterArticle() {
         start = new Date();
@@ -29,18 +40,19 @@ public class StatReporter {
     public void endVisit() {
         Date end = new Date();
         if (pause != null && resume != null) {
-            long diff = pause.getTime() - start.getTime() + end.getTime() - resume.getTime();
-            timeSpent = diff / DIV_BY_TO_GET_SECONDS;
+            timeSpent = pause.getTime() - start.getTime() + end.getTime() - resume.getTime();
         } else {
-            long diff = end.getTime() - start.getTime();
-            timeSpent = diff / DIV_BY_TO_GET_SECONDS;
+            timeSpent = end.getTime() - start.getTime();
+
         }
         Log.i("DEBUG: TIME SPENT", Long.toString(timeSpent));
         Log.i("DEBUG: ARTICLE ID", Integer.toString(articleId));
     }
 
     public void saveVisit() {
-
+        ArticleVisitEntity articleVisitEntity = new ArticleVisitEntity(articleId, timeSpent, start.getTime());
+        articleVisitDao.addArticleVisit(articleVisitEntity);
+        Log.i("DEBUG", "ARTICLE SAVED");
     }
 
     public void setArticleId(int articleId) {

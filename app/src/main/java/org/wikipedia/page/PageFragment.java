@@ -351,7 +351,7 @@ public class PageFragment extends Fragment implements BackPressedHandler {
                 new PageActionToolbarHideHandler(rootView.findViewById(R.id.fragment_page_coordinator), null);
         snackbarHideHandler.setScrollView(webView);
 
-        statReporter = new StatReporter();
+        statReporter = new StatReporter(getContext());
         statReporter.enterArticle();
 
         return rootView;
@@ -372,6 +372,7 @@ public class PageFragment extends Fragment implements BackPressedHandler {
     public void onDestroy() {
         statReporter.setArticleId(getPage().getPageProperties().getPageId());
         statReporter.endVisit();
+        statReporter.saveVisit();
         super.onDestroy();
         app.getRefWatcher().watch(this);
     }
