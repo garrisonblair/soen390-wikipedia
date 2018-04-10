@@ -1,6 +1,7 @@
 package org.wikipedia.edit;
 
 import android.content.Intent;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 
@@ -43,7 +44,7 @@ public class EditHandler implements CommunicationBridge.JSEventListener {
         intent.putExtra(EditSectionActivity.EXTRA_SECTION_ID, section.getId());
         intent.putExtra(EditSectionActivity.EXTRA_SECTION_HEADING, section.getHeading());
         intent.putExtra(EditSectionActivity.EXTRA_TITLE, currentPage.getTitle());
-        intent.putExtra(EditSectionActivity.EXTRA_PAGE_PROPS, currentPage.getPageProperties());
+        intent.putExtra(EditSectionActivity.EXTRA_PAGE_PROPS, (Parcelable) currentPage.getPageProperties());
         intent.putExtra(EditSectionActivity.EXTRA_HIGHLIGHT_TEXT, highlightText);
         fragment.startActivityForResult(intent, Constants.ACTIVITY_REQUEST_EDIT_SECTION);
     }

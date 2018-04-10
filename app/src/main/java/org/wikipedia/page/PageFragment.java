@@ -53,6 +53,7 @@ import org.wikipedia.edit.EditHandler;
 import org.wikipedia.gallery.GalleryActivity;
 import org.wikipedia.history.HistoryEntry;
 import org.wikipedia.history.UpdateHistoryTask;
+import org.wikipedia.journey.JourneyRecorder;
 import org.wikipedia.language.LangLinksActivity;
 import org.wikipedia.notebook.NoteReferenceService;
 import org.wikipedia.notes.NotesActivity;
@@ -74,6 +75,7 @@ import org.wikipedia.readinglist.database.ReadingListDbHelper;
 import org.wikipedia.readinglist.database.ReadingListPage;
 import org.wikipedia.settings.Prefs;
 import org.wikipedia.theme.ThemeBridgeAdapter;
+import org.wikipedia.userstatistics.StatReporter;
 import org.wikipedia.util.ActiveTimer;
 import org.wikipedia.util.DeviceUtil;
 import org.wikipedia.util.DimenUtil;
@@ -177,6 +179,8 @@ public class PageFragment extends Fragment implements BackPressedHandler {
     private ShareHandler shareHandler;
     private TabsProvider tabsProvider;
     private ActiveTimer activeTimer = new ActiveTimer();
+
+    private StatReporter statReporter;
 
     private WikipediaApp app;
 
@@ -310,7 +314,6 @@ public class PageFragment extends Fragment implements BackPressedHandler {
         pageFragmentLoadState = new PageFragmentLoadState();
         noteReferenceService = new NoteReferenceService(getContext());
 
-
         initTabs();
     }
 
@@ -348,6 +351,9 @@ public class PageFragment extends Fragment implements BackPressedHandler {
                 new PageActionToolbarHideHandler(rootView.findViewById(R.id.fragment_page_coordinator), null);
         snackbarHideHandler.setScrollView(webView);
 
+        statReporter = new StatReporter(getContext());
+        statReporter.enterArticle();
+
         return rootView;
     }
 
@@ -364,6 +370,9 @@ public class PageFragment extends Fragment implements BackPressedHandler {
 
     @Override
     public void onDestroy() {
+        statReporter.setArticleId(getPage().getPageProperties().getPageId());
+        statReporter.endVisit();
+        statReporter.saveVisit();
         super.onDestroy();
         app.getRefWatcher().watch(this);
     }
@@ -518,6 +527,7 @@ public class PageFragment extends Fragment implements BackPressedHandler {
 
         webView.setWebViewClient(new OkHttpWebViewClient() {
             @NonNull @Override public WikiSite getWikiSite() {
+
                 return model.getTitle().getWikiSite();
             }
         });
@@ -635,6 +645,8 @@ public class PageFragment extends Fragment implements BackPressedHandler {
                 ? System.currentTimeMillis()
                 : 0;
         Prefs.pageLastShown(time);
+
+        statReporter.pauseVisit();
     }
 
     @Override
@@ -642,6 +654,7 @@ public class PageFragment extends Fragment implements BackPressedHandler {
         super.onResume();
         initPageScrollFunnel();
         activeTimer.resume();
+        statReporter.resumeVisit();
     }
 
     @Override
@@ -992,6 +1005,11 @@ public class PageFragment extends Fragment implements BackPressedHandler {
     }
 
     public void onPageLoadComplete() {
+
+        JourneyRecorder journeyRecorder = JourneyRecorder.getInstance(getActivity().getApplicationContext());
+
+        journeyRecorder.visitPage(model.getPage().getPageProperties());
+
         refreshView.setEnabled(true);
         if (callback() != null) {
             callback().onPageInvalidateOptionsMenu();
@@ -1305,6 +1323,11 @@ public class PageFragment extends Fragment implements BackPressedHandler {
             return true;
         }
         if (pageFragmentLoadState.popBackStack()) {
+
+            JourneyRecorder journeyRecorder = JourneyRecorder.getInstance(getActivity().getApplicationContext());
+            journeyRecorder.leavePage();
+
+            Log.d("DEV", "popBackstack");
             return true;
         }
         if (tabsProvider.onBackPressed()) {
