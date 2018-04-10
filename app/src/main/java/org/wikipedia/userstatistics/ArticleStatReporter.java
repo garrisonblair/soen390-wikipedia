@@ -9,7 +9,7 @@ import org.wikipedia.statistics.database.ArticleVisitEntity;
 
 import java.util.Date;
 
-public class StatReporter {
+public class ArticleStatReporter {
 
     private int articleId;
     private long timeSpent;
@@ -20,9 +20,7 @@ public class StatReporter {
     private AppDatabase db;
     private ArticleVisitDao articleVisitDao;
 
-    public StatReporter(Context context) {
-        this.db = AppDatabase.getInstance(context);
-        this.articleVisitDao = db.articleVisitDao();
+    public ArticleStatReporter() {
     }
 
     public void enterArticle() {
@@ -49,7 +47,10 @@ public class StatReporter {
         Log.i("DEBUG: ARTICLE ID", Integer.toString(articleId));
     }
 
-    public void saveVisit() {
+    public void saveVisit(Context context) {
+        this.db = AppDatabase.getInstance(context);
+        this.articleVisitDao = db.articleVisitDao();
+
         ArticleVisitEntity articleVisitEntity = new ArticleVisitEntity(articleId, timeSpent, start.getTime());
         articleVisitDao.addArticleVisit(articleVisitEntity);
         Log.i("DEBUG", "ARTICLE SAVED");

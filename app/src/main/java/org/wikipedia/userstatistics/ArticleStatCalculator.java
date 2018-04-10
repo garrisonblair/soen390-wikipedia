@@ -12,7 +12,7 @@ import org.wikipedia.database.room.AppDatabase;
 import org.wikipedia.statistics.database.ArticleVisitDao;
 import org.wikipedia.statistics.database.ArticleVisitEntity;
 
-public class StatCalculator {
+public class ArticleStatCalculator {
 
     private Context context;
     private AppDatabase db;
@@ -32,7 +32,7 @@ public class StatCalculator {
 
     private int ttsUses;
 
-    public StatCalculator(Context context) {
+    public ArticleStatCalculator(Context context) {
         this.context = context;
         this.db = AppDatabase.getInstance(context);
         this.articleVisitDao = db.articleVisitDao();
