@@ -50,6 +50,8 @@ public class ArticleVisitDaoTest {
 
         // Get all unique ArticleVisitEntity article visits
         List<ArticleVisitEntity> articleVisitEntities = mAvd.getTotalUniqueVisits();
+        
+        System.out.println(articleVisitEntities.size());
 
         // Check that the values of the first entry match those that were created
         assertEquals(articleVisitEntities.get(0).getId(), 1);

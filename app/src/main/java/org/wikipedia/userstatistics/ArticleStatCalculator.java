@@ -22,6 +22,7 @@ public class ArticleStatCalculator {
 
     private long totalTimeSpentReading;
     private int longestReadArticleId;
+    private String longestReadArticleTitle;
 
     private int totalNotes;
     private int totalArticlesWithNotes;
@@ -48,6 +49,7 @@ public class ArticleStatCalculator {
             if (article.getTimeSpentReading() > longestTime) {
                 longestTime = article.getTimeSpentReading();
                 longestReadArticleId = article.getArticleId();
+                longestReadArticleTitle = article.getArticleTitle();
             }
             if (!(uniqueVisitedArticles.contains(article.getArticleId()))) {
                 uniqueVisitedArticles.add(article.getArticleId());
@@ -56,12 +58,12 @@ public class ArticleStatCalculator {
     }
 
     public long getTotalTimeSpentReading() {
-        return totalTimeSpentReading;
+        return TimeUnit.MILLISECONDS.toMinutes(totalTimeSpentReading);
     }
 
     public long getAverageTimeSpentReading() {
         if (visitedArticles.size() > 0) {
-            return totalTimeSpentReading / visitedArticles.size();
+            return TimeUnit.MILLISECONDS.toMinutes(totalTimeSpentReading / visitedArticles.size());
         } else {
             return 0;
         }
@@ -85,6 +87,10 @@ public class ArticleStatCalculator {
 
     public int getLongestReadArticleId() {
         return longestReadArticleId;
+    }
+
+    public String getLongestReadArticleTitle() {
+        return longestReadArticleTitle;
     }
 
     public int getTotalArticlesRead() {

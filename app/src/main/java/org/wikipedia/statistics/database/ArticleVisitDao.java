@@ -26,6 +26,9 @@ public interface ArticleVisitDao {
     @Query("UPDATE articleVisits SET timeSpentReading = :timeSpentReading WHERE id = :id")
     void upDateTimeSpentReading(long timeSpentReading, int id);
 
+    @Query("UPDATE articleVisits SET articleTitle = :articleTitle WHERE id = :id")
+    void updateArticleTitle(String articleTitle, int id);
+
     @Insert
     void addArticleVisit(ArticleVisitEntity articleVisitEntity);
 

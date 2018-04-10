@@ -3,7 +3,6 @@ package org.wikipedia.statistics;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.text.SpannableStringBuilder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +42,9 @@ public class StatisticFragment extends Fragment {
         stats = new ArrayList();
         StatCalculator statCalculator = new StatCalculator(getContext());
         stats.add("Totad read articles: " + statCalculator.getArticleStats().getTotalArticlesRead());
+        stats.add("Longest reading article: " + statCalculator.getArticleStats().getLongestReadArticleTitle());
+        stats.add("Average time spend on reading: " + statCalculator.getArticleStats().getAverageTimeSpentReading() + " mins");
+        stats.add("Total time spend on reading: " + statCalculator.getArticleStats().getTotalTimeSpentReading() + " mins");
         stats.add("Total noted articles: " + statCalculator.getNoteStats().getTotalNotedArticles());
         stats.add("Total notes: " + statCalculator.getNoteStats().getTotalNotes());
         stats.add("Ratio notes/articles: " + statCalculator.getNoteStats().getNotesPerArticle());
