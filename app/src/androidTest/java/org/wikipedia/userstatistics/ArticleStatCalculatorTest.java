@@ -11,7 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wikipedia.database.room.AppDatabase;
-import org.wikipedia.statistics.database.ArticleVisit;
 import org.wikipedia.statistics.database.ArticleVisitDao;
 import org.wikipedia.statistics.database.ArticleVisitEntity;
 
@@ -75,6 +74,7 @@ public class ArticleStatCalculatorTest {
         // Total time spent reading should be 210000 milliseconds
         Assert.assertEquals(210000, statCalculator.getTotalTimeSpentReading());
         // Average time spent reading should be 70000 ie 210000 / 3
+        Assert.assertEquals(70000, statCalculator.getAverageTimeSpentReading());
     }
 
 }
