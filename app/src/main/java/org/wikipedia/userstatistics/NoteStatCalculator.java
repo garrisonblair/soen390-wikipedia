@@ -32,6 +32,8 @@ public class NoteStatCalculator {
     }
 
     public double getNotesPerArticle() {
-        return totalNotes.size() / notedArticles.size();
+        if (notedArticles.size() > 0) {
+            return totalNotes.size() / notedArticles.size();
+        } else return 0;
     }
 }
