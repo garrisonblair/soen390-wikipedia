@@ -30,9 +30,6 @@ public interface AchievementDao {
     @Update
     void updateAchievement(AchievementEntity achievement);
 
-    @Query("UPDATE notes SET comment = :comment WHERE id = :noteId")
-    void updateComment(String comment, int noteId);
-
     @Insert
     void addAchievement(AchievementEntity achievement);
 
