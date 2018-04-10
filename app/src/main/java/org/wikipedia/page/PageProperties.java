@@ -15,6 +15,7 @@ import org.wikipedia.dataclient.WikiSite;
 import org.wikipedia.dataclient.page.PageLeadProperties;
 import org.wikipedia.util.DimenUtil;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.util.Date;
 
@@ -24,7 +25,7 @@ import static org.wikipedia.util.DateUtil.getIso8601DateFormat;
 /**
  * Immutable class that contains metadata associated with a PageTitle.
  */
-public class PageProperties implements Parcelable {
+public class PageProperties implements Parcelable, Serializable {
     private static final String JSON_NAME_TITLE_PRONUNCIATION_URL = "titlePronunciationUrl";
     private static final String JSON_NAME_GEO = "geo";
     private static final String JSON_NAME_NAMESPACE = "namespace";

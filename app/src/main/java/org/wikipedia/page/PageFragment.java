@@ -53,6 +53,7 @@ import org.wikipedia.edit.EditHandler;
 import org.wikipedia.gallery.GalleryActivity;
 import org.wikipedia.history.HistoryEntry;
 import org.wikipedia.history.UpdateHistoryTask;
+import org.wikipedia.journey.JourneyRecorder;
 import org.wikipedia.language.LangLinksActivity;
 import org.wikipedia.notebook.NoteReferenceService;
 import org.wikipedia.notes.NotesActivity;
@@ -525,6 +526,7 @@ public class PageFragment extends Fragment implements BackPressedHandler {
 
         webView.setWebViewClient(new OkHttpWebViewClient() {
             @NonNull @Override public WikiSite getWikiSite() {
+
                 return model.getTitle().getWikiSite();
             }
         });
@@ -1002,6 +1004,11 @@ public class PageFragment extends Fragment implements BackPressedHandler {
     }
 
     public void onPageLoadComplete() {
+
+        JourneyRecorder journeyRecorder = JourneyRecorder.getInstance(getActivity().getApplicationContext());
+
+        journeyRecorder.visitPage(model.getPage().getPageProperties());
+
         refreshView.setEnabled(true);
         if (callback() != null) {
             callback().onPageInvalidateOptionsMenu();
@@ -1315,6 +1322,11 @@ public class PageFragment extends Fragment implements BackPressedHandler {
             return true;
         }
         if (pageFragmentLoadState.popBackStack()) {
+
+            JourneyRecorder journeyRecorder = JourneyRecorder.getInstance(getActivity().getApplicationContext());
+            journeyRecorder.leavePage();
+
+            Log.d("DEV", "popBackstack");
             return true;
         }
         if (tabsProvider.onBackPressed()) {
