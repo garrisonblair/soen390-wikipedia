@@ -60,7 +60,11 @@ public class ArticleStatCalculator {
     }
 
     public long getAverageTimeSpentReading() {
-        return totalTimeSpentReading / visitedArticles.size();
+        if (visitedArticles.size() > 0) {
+            return totalTimeSpentReading / visitedArticles.size();
+        } else {
+            return 0;
+        }
     }
 
     public long getDailyTimeSpentReading() throws PackageManager.NameNotFoundException {
@@ -72,7 +76,11 @@ public class ArticleStatCalculator {
         long timeUsed = (new Date().getTime() - installed);
         long days = TimeUnit.MILLISECONDS.toDays(timeUsed);
 
-        return totalTimeSpentReading / days;
+        if (days > 0) {
+            return totalTimeSpentReading / days;
+        } else {
+            return 0;
+        }
     }
 
     public int getLongestReadArticleId() {
