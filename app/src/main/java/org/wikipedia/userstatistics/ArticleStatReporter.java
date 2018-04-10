@@ -12,6 +12,7 @@ import java.util.Date;
 public class ArticleStatReporter {
 
     private int articleId;
+    private String articleTitle;
     private long timeSpent;
     private Date start;
     private Date pause;
@@ -51,13 +52,17 @@ public class ArticleStatReporter {
         this.db = AppDatabase.getInstance(context);
         this.articleVisitDao = db.articleVisitDao();
 
-        ArticleVisitEntity articleVisitEntity = new ArticleVisitEntity(articleId, timeSpent, start.getTime());
+        ArticleVisitEntity articleVisitEntity = new ArticleVisitEntity(articleId, articleTitle, timeSpent, start.getTime());
         articleVisitDao.addArticleVisit(articleVisitEntity);
         Log.i("DEBUG", "ARTICLE SAVED");
     }
 
     public void setArticleId(int articleId) {
         this.articleId = articleId;
+    }
+
+    public void setArticleTitle(String articleTitle) {
+        this.articleTitle = articleTitle;
     }
 
     public long getTimeSpent()  {

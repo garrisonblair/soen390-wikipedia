@@ -43,10 +43,10 @@ public class ArticleVisitDaoTest {
     public void testReadWriteAndDeleteArticleVisits() {
 
         // Create 2 ArticleVisitEntity instances and add them to the room database
-        ArticleVisitEntity articleVisitEntity1 = new ArticleVisitEntity(1, 2, 3);
-        ArticleVisitEntity articleVisitEntity2 = new ArticleVisitEntity(4, 5, 6);
-        mAvd.addArtictleVisit(articleVisitEntity1);
-        mAvd.addArtictleVisit(articleVisitEntity2);
+        ArticleVisitEntity articleVisitEntity1 = new ArticleVisitEntity(1, "cat", 2, 3);
+        ArticleVisitEntity articleVisitEntity2 = new ArticleVisitEntity(4, "dag", 5, 6);
+        mAvd.addArticleVisit(articleVisitEntity1);
+        mAvd.addArticleVisit(articleVisitEntity2);
 
         // Get all unique ArticleVisitEntity article visits
         List<ArticleVisitEntity> articleVisitEntities = mAvd.getTotalUniqueVisits();
@@ -74,8 +74,8 @@ public class ArticleVisitDaoTest {
         assertEquals(articleVisitEntities.size(), 1);
 
         // Add a second entry with the same articleId
-        ArticleVisitEntity articleVisitEntity3 = new ArticleVisitEntity(2, 2, 10);
-        mAvd.addArtictleVisit(articleVisitEntity3);
+        ArticleVisitEntity articleVisitEntity3 = new ArticleVisitEntity(2, "Steve", 2, 10);
+        mAvd.addArticleVisit(articleVisitEntity3);
 
         // Get all the ArticleVisitEntity entries again from the db which should now only be one
         articleVisitEntities = mAvd.getTotalUniqueVisits();

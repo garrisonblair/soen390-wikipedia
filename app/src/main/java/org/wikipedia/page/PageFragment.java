@@ -371,6 +371,7 @@ public class PageFragment extends Fragment implements BackPressedHandler {
     @Override
     public void onDestroy() {
         articleStatReporter.setArticleId(getPage().getPageProperties().getPageId());
+        articleStatReporter.setArticleTitle(getPage().getDisplayTitle());
         articleStatReporter.endVisit();
         articleStatReporter.saveVisit(getContext());
         super.onDestroy();

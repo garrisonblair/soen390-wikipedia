@@ -34,6 +34,4 @@ public interface ArticleVisitDao {
 
     @Update
     void updateArticleVisit(ArticleVisitEntity articleVisitEntity);
-
-
 }
