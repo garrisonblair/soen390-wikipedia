@@ -16,6 +16,12 @@ public class StatCalculator {
     private int totalNotes;
     private int totalArticlesWithNotes;
 
+    private int textSearches;
+    private int gallerySearches;
+    private int cameraSearches;
+
+    private int ttsUses;
+
     public StatCalculator() {
         // TODO: load article and note info
     }

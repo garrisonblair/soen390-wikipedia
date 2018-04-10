@@ -27,7 +27,7 @@ public interface ArticleVisitDao {
     void upDateTimeSpentReading(long timeSpentReading, int id);
 
     @Insert
-    void addArtictleVisit(ArticleVisitEntity articleVisitEntity);
+    void addArticleVisit(ArticleVisitEntity articleVisitEntity);
 
     @Delete
     void deleteArticleVisit(ArticleVisitEntity articleVisitEntity);

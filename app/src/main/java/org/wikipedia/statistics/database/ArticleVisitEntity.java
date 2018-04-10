@@ -14,15 +14,12 @@ public class ArticleVisitEntity {
     private int id;
     private int articleId;
     private long timeSpentReading;
+    private long timeStart;
 
-    public ArticleVisitEntity(int id, int articleId, long timeSpentReading) {
-        this.id = id;
+    public ArticleVisitEntity(int articleId, long timeSpentReading, long timeStart) {
         this.articleId = articleId;
         this.timeSpentReading = timeSpentReading;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+        this.timeStart = timeStart;
     }
 
     public int getId() {
@@ -43,5 +40,13 @@ public class ArticleVisitEntity {
 
     public long getTimeSpentReading() {
         return this.timeSpentReading;
+    }
+
+    public void setTimeStart(long timeStart) {
+        this.timeStart = timeStart;
+    }
+
+    public long getTimeStart() {
+        return timeStart;
     }
 }

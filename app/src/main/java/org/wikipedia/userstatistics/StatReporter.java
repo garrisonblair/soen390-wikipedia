@@ -40,7 +40,7 @@ public class StatReporter {
     }
 
     public void saveVisit() {
-        // TODO: save timeSpent to db
+
     }
 
     public void setArticleId(int articleId) {
