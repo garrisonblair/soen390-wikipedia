@@ -28,6 +28,11 @@ public class AchievementService {
         void afterGetUnlockedAchievements(List<AchievementEntity> achievements);
     }
 
+    public interface GetLockedAchievementsCallback {
+        void afterGetLockedAchievements(List<AchievementEntity> achievements);
+    }
+
+
     public interface AddAchievementCallback {
         void afterAddAchievement();
     }
@@ -83,6 +88,21 @@ public class AchievementService {
     }
 
     @SuppressLint("StaticFieldLeak")
+    public void getLockedAchievements(GetLockedAchievementsCallback callback) {
+        new AsyncTask<Object, Void, List<AchievementEntity>>() {
+
+            @Override
+            protected List<AchievementEntity> doInBackground(Object... objects) {
+                List<AchievementEntity> achievementEntities = achievementDao.getLockedAchievements();
+                return achievementEntities;
+            }
+            protected void onPostExecute(List<AchievementEntity> result) {
+                callback.afterGetLockedAchievements(result);
+            }
+        }.execute(new Object());
+    }
+
+    @SuppressLint("StaticFieldLeak")
     public void addAchievement(Achievement newAchievement, AddAchievementCallback callback) {
         new AsyncTask<Object, Void, Void>() {
 
@@ -124,12 +144,12 @@ public class AchievementService {
     }
 
 
-    private Achievement achievementEntityToAchievement(AchievementEntity achievementEntity) {
+    public Achievement achievementEntityToAchievement(AchievementEntity achievementEntity) {
         Achievement achievement = new Achievement(achievementEntity.getId(), achievementEntity.getName(), achievementEntity.getDescription(), achievementEntity.getObtained(), achievementEntity.getObtainedDate());
         return achievement;
     }
 
-    private AchievementEntity achievementToAchievementEntity(Achievement achievement) {
+    public AchievementEntity achievementToAchievementEntity(Achievement achievement) {
         AchievementEntity achievementEntity = new AchievementEntity(achievement.getName(), achievement.getDescription(), achievement.getObtained(), achievement.getObtainedDate());
         achievementEntity.setId(achievement.getId());
         return achievementEntity;
