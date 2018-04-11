@@ -11,18 +11,25 @@ import org.wikipedia.notebook.database.NoteDao;
 import org.wikipedia.notebook.database.NoteEntity;
 import org.wikipedia.notebook.database.ReferenceDao;
 import org.wikipedia.notebook.database.ReferenceEntity;
+
 import org.wikipedia.statistics.database.ArticleVisitDao;
 import org.wikipedia.statistics.database.ArticleVisitEntity;
+
+import org.wikipedia.userstatistics.Database.AchievementDao;
+import org.wikipedia.userstatistics.Database.AchievementEntity;
+
 
 /**
  * Created by Andres on 2018-03-08.
  */
 
 @Database(entities = {NoteEntity.class, ReferenceEntity.class, ArticleVisitEntity.class}, version = 3)
+
 public abstract class AppDatabase extends RoomDatabase{
     private static AppDatabase INSTANCE;
     public abstract NoteDao noteDao();
     public abstract ReferenceDao referenceDao();
+
     public abstract ArticleVisitDao articleVisitDao();
 
     static final Migration MIGRATION_1_2 = new Migration(1, 2) {
@@ -41,10 +48,15 @@ public abstract class AppDatabase extends RoomDatabase{
         }
     };
 
+    public abstract AchievementDao achievementDao();
+
     public static AppDatabase getInstance(Context context) {
         if (INSTANCE == null) {
-            INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                    AppDatabase.class, "SOEN390-database").addMigrations(MIGRATION_1_2, MIGRATION_2_3).allowMainThreadQueries().build();
+            INSTANCE = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "SOEN390-database")
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+                    .allowMainThreadQueries().build();
+
+            //TODO: Populate achievements table
         }
         return INSTANCE;
     }
