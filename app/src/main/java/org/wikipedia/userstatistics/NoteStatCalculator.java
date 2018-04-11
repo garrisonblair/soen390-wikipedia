@@ -15,7 +15,7 @@ public class NoteStatCalculator {
     private List<NoteEntity> totalNotes;
     private List<String> notedArticles;
 
-    public NoteStatCalculator(Context context, AppDatabase database) {
+    public NoteStatCalculator(AppDatabase database) {
         this.db = database;
         this.noteDao = db.noteDao();
 
@@ -24,7 +24,7 @@ public class NoteStatCalculator {
     }
 
     public NoteStatCalculator(Context context) {
-        this(context, AppDatabase.getInstance(context));
+        this(AppDatabase.getInstance(context));
     }
 
     public int getTotalNotes() {

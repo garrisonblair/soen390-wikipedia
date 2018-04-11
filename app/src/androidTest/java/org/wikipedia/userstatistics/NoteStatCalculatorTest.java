@@ -63,7 +63,7 @@ public class NoteStatCalculatorTest {
     @Test
     public void testNoteStatCalculator() throws Exception {
 
-        NoteStatCalculator statCalculator = new NoteStatCalculator(context, db);
+        NoteStatCalculator statCalculator = new NoteStatCalculator(db);
 
         // Total number of notes should be 3
         Assert.assertEquals(3, statCalculator.getTotalNotes());
