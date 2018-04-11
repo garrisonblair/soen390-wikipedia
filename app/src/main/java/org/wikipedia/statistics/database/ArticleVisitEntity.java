@@ -13,11 +13,13 @@ public class ArticleVisitEntity {
     @PrimaryKey(autoGenerate = true)
     private int id;
     private int articleId;
+    private String articleTitle;
     private long timeSpentReading;
     private long timeStart;
 
-    public ArticleVisitEntity(int articleId, long timeSpentReading, long timeStart) {
+    public ArticleVisitEntity(int articleId, String articleTitle, long timeSpentReading, long timeStart) {
         this.articleId = articleId;
+        this.articleTitle = articleTitle;
         this.timeSpentReading = timeSpentReading;
         this.timeStart = timeStart;
     }
@@ -40,6 +42,14 @@ public class ArticleVisitEntity {
 
     public void setTimeSpentReading(long timeSpentReading) {
         this.timeSpentReading = timeSpentReading;
+    }
+
+    public String getArticleTitle() {
+        return articleTitle;
+    }
+
+    public void setArticleTitle(String articleTitle) {
+        this.articleTitle = articleTitle;
     }
 
     public long getTimeSpentReading() {

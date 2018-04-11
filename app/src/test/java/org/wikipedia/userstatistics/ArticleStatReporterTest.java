@@ -16,7 +16,7 @@ public class ArticleStatReporterTest {
         articleStatReporter.endVisit();
 
         // Verify that timeSpent is 3 seconds
-        Assert.assertEquals(visitTime, articleStatReporter.getTimeSpent());
+        Assert.assertEquals(visitTime, (articleStatReporter.getTimeSpent() / 1000));
 
         // Visit article for 3 seconds, pause for a second, then resume for another 3 seconds
         articleStatReporter = new ArticleStatReporter();
@@ -31,6 +31,6 @@ public class ArticleStatReporterTest {
         articleStatReporter.endVisit();
 
         // Verify that timeSpent is 6 seconds
-        Assert.assertEquals(visitTime, articleStatReporter.getTimeSpent());
+        Assert.assertEquals(visitTime, (articleStatReporter.getTimeSpent() / 1000));
     }
 }

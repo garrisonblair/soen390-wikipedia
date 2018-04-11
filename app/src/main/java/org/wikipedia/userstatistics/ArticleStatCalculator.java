@@ -21,7 +21,8 @@ public class ArticleStatCalculator {
     private List<Integer> uniqueVisitedArticles;
 
     private long totalTimeSpentReading;
-    private int longestReadArticleId;
+    private String longestReadArticleTitle;
+    private long longestReadArticleTime;
 
     public ArticleStatCalculator(Context context, AppDatabase database) {
         this.context = context;
@@ -31,14 +32,14 @@ public class ArticleStatCalculator {
         visitedArticles = articleVisitDao.getTotalUniqueVisits();
 
         totalTimeSpentReading = 0;
-        long longestTime = 0;
+        longestReadArticleTime = 0;
         uniqueVisitedArticles = new ArrayList<>();
 
         for (ArticleVisitEntity article: visitedArticles) {
             totalTimeSpentReading += article.getTimeSpentReading();
-            if (article.getTimeSpentReading() > longestTime) {
-                longestTime = article.getTimeSpentReading();
-                longestReadArticleId = article.getArticleId();
+            if (article.getTimeSpentReading() > longestReadArticleTime) {
+                longestReadArticleTime = article.getTimeSpentReading();
+                longestReadArticleTitle = article.getArticleTitle();
             }
             if (!(uniqueVisitedArticles.contains(article.getArticleId()))) {
                 uniqueVisitedArticles.add(article.getArticleId());
@@ -78,8 +79,12 @@ public class ArticleStatCalculator {
         }
     }
 
-    public int getLongestReadArticleId() {
-        return longestReadArticleId;
+    public String getLongestReadArticleTitle() {
+        return longestReadArticleTitle;
+    }
+
+    public long getLongestReadArticleTime() {
+        return longestReadArticleTime;
     }
 
     public int getTotalArticlesRead() {
