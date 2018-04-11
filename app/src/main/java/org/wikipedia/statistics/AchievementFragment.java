@@ -4,6 +4,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,9 +14,18 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.wikipedia.R;
+import org.wikipedia.userstatistics.AchievementService;
+import org.wikipedia.userstatistics.Database.AchievementEntity;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static cn.pedant.SweetAlert.SweetAlertDialog.*;
@@ -39,6 +49,39 @@ public class AchievementFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_achievement, container, false);
+
+        ArrayList<String> achievements = new ArrayList();
+
+        AchievementService service = new AchievementService(getContext());
+        service.getAllAchievements((AchievementService.GetAllAchievementsCallback) achievements1 -> {
+            for (AchievementEntity ach: achievements1) {
+                achievements.add(ach.getName());
+            }
+        });
+
+        ListView achievementList = view.findViewById(R.id.achievement_list);
+
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(), R.layout.simple_row, achievements){
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent){
+
+                // Get the current item from ListView
+                View view = super.getView(position, convertView, parent);
+
+                if(position %2 == 1)
+                {
+                    TextView tv = (TextView) view;
+                    tv.setTextColor(Color.GREEN);
+                } else {
+                    TextView tv = (TextView) view;
+                    tv.setTextColor(Color.RED);
+                }
+                return view;
+            }
+        };
+
+        achievementList.setAdapter(arrayAdapter);
+
         return view;
     }
 
@@ -55,44 +98,6 @@ public class AchievementFragment extends Fragment {
                     dialog.show();
                     mSecretClickCount = 0;
                 }
-            }
-        });
-
-        view.setOnLongClickListener(new View.OnLongClickListener() {
-
-            @Override
-            public boolean onLongClick(View view) {
-                Toast.makeText(getContext(), "Long Click", Toast.LENGTH_SHORT).show();
-
-                int uniqueID = (int)System.currentTimeMillis();
-
-                Intent intent = new Intent(getContext(), AchievementFragment.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                PendingIntent pendingIntent = PendingIntent.getActivity(getContext(), 0, intent, 0);
-
-                String title = "NEW ACHIEVEMENT";
-                String description = "HELLO";
-                String channelId = Integer.toString(uniqueID);
-
-                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getContext(), channelId)
-                        .setSmallIcon(R.drawable.icon_done)
-                        .setContentTitle(title)
-                        .setContentText(description)
-                        .setPriority(NotificationCompat.PRIORITY_MAX)
-                        .setAutoCancel(true)
-                        .setContentIntent(pendingIntent);
-
-//                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getContext());
-                NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(getContext().NOTIFICATION_SERVICE);
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    NotificationChannel channel = new NotificationChannel(channelId, "Channel human readable title", NotificationManager.IMPORTANCE_DEFAULT);
-                    notificationManager.createNotificationChannel(channel);
-                }
-
-                notificationManager.notify(uniqueID, mBuilder.build());
-
-                return true;
             }
         });
     }
