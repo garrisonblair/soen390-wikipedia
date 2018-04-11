@@ -21,7 +21,7 @@ import org.wikipedia.userstatistics.Database.AchievementEntity;
 
 import java.util.concurrent.Executors;
 
-@Database(entities = {NoteEntity.class, ReferenceEntity.class, ArticleVisitEntity.class}, version = 3)
+@Database(entities = {NoteEntity.class, ReferenceEntity.class, ArticleVisitEntity.class, AchievementEntity.class}, version = 3)
 
 public abstract class AppDatabase extends RoomDatabase{
     private static AppDatabase INSTANCE;
