@@ -315,7 +315,7 @@ dependencies {
 // Then Unzip and traverse to <download location>/bin/<your operating system folder>
 // Run sonar.sh or whatever your sonar sonar script and once it is up and running open on https://localhost:9000
 // Login with Username: admin Password: admin
-// To run static analysis use the commands below
+// To run static analysis use the commands below. Please note you will need to use the token you get when you sign into your sonarqube instance
 // ./gradlew sonarqube   -Dsonar.host.url=http://localhost:9000   -Dsonar.login=3e1b700c923b698f2abed7abec5ba76e5211f835
 // Properties can be be configured in the sonar.properties file in: <download location>/bin/<your operating system folder>/sonar.properties
 // Additional configuration can be found here: https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner+for+Gradle
