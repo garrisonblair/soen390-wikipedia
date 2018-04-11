@@ -3,6 +3,8 @@ package org.wikipedia.userstatistics.Database;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
+import org.wikipedia.userstatistics.AchievementsList;
+
 /**
  * Created by Ken on 2018-04-10.
  */
@@ -83,12 +85,14 @@ public class AchievementEntity {
     }
 
     public static AchievementEntity[] populateData() {
-        return new AchievementEntity[] {
-                new AchievementEntity("ach1", "title1"),
-                new AchievementEntity("ach2", "title2"),
-                new AchievementEntity("ach3", "title3"),
-                new AchievementEntity("ach4", "title4"),
-                new AchievementEntity("ach5", "title5")
-        };
+
+        int size = AchievementsList.values().length;
+        AchievementEntity[] list = new AchievementEntity[size];
+        int i = 0;
+        for (AchievementsList ach : AchievementsList.values()) {
+            list[i] = new AchievementEntity(ach.getName(), ach.getDescription());
+            i++;
+        }
+        return list;
     }
 }
