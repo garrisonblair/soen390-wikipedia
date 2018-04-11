@@ -10,9 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import org.wikipedia.R;
-import org.wikipedia.views.SwipeableItemTouchHelperCallback;
+import org.wikipedia.userstatistics.StatCalculator;
+
+import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -21,6 +25,7 @@ import butterknife.Unbinder;
 public class StatisticFragment extends Fragment {
 
     private Unbinder unbinder;
+    private ArrayList<String> stats;
 
     @NonNull
     public static StatisticFragment newInstance() {
@@ -32,8 +37,21 @@ public class StatisticFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_statistics, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-        ItemTouchHelper.Callback touchCallback = new SwipeableItemTouchHelperCallback(getContext());
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(touchCallback);
+        //ItemTouchHelper.Callback touchCallback = new SwipeableItemTouchHelperCallback(getContext());
+        //ItemTouchHelper itemTouchHelper = new ItemTouchHelper(touchCallback);
+
+        stats = new ArrayList();
+        StatCalculator statCalculator = new StatCalculator(getContext());
+        stats.add("Totad read articles: " + statCalculator.getArticleStats().getTotalArticlesRead());
+        stats.add("Longest reading article: " + statCalculator.getArticleStats().getLongestReadArticleTitle());
+        stats.add("Average time spend on reading: " + statCalculator.getArticleStats().getAverageTimeSpentReading() + " mins");
+        stats.add("Total time spend on reading: " + statCalculator.getArticleStats().getTotalTimeSpentReading() + " mins");
+        stats.add("Total noted articles: " + statCalculator.getNoteStats().getTotalNotedArticles());
+        stats.add("Total notes: " + statCalculator.getNoteStats().getTotalNotes());
+        stats.add("Ratio notes/articles: " + statCalculator.getNoteStats().getNotesPerArticle());
+
+        ListView statList = view.findViewById(R.id.statistic_list);
+        statList.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.simple_row, stats));
 
         ImageButton achievementButton = view.findViewById(R.id.achievement_button);
 
