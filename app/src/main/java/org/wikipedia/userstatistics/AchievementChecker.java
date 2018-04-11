@@ -15,20 +15,19 @@ public class AchievementChecker {
     //This is where we define the conditions for each achievements
     public AchievementChecker(String achievementName, int value, Context context) {
         this.context = context;
-        switch (achievementName){
-            case "ach1":
-                if (value < 1) {
-                    unlockAchievement(achievementName);
+        for (AchievementsList ach: AchievementsList.values()) {
+            if (achievementName.equals(ach.getName())) {
+                if (ach.getOperator().equals("<")) {
+                    if (value < ach.getMinValue()) {
+                        unlockAchievement(achievementName);
+                    }
+                } else {
+                    if (value > ach.getMinValue()) {
+                        unlockAchievement(achievementName);
+                    }
                 }
-                break;
-            case "ach2":
-                if (value < 1) {
-                    unlockAchievement(achievementName);
-                }
-                break;
-            default: break;
+            }
         }
-
     }
 
     private void unlockAchievement(String achievementName) {
