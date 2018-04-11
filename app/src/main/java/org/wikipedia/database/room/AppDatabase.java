@@ -6,6 +6,7 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import org.wikipedia.notebook.database.NoteDao;
 import org.wikipedia.notebook.database.NoteEntity;
@@ -18,10 +19,7 @@ import org.wikipedia.statistics.database.ArticleVisitEntity;
 import org.wikipedia.userstatistics.Database.AchievementDao;
 import org.wikipedia.userstatistics.Database.AchievementEntity;
 
-
-/**
- * Created by Andres on 2018-03-08.
- */
+import java.util.concurrent.Executors;
 
 @Database(entities = {NoteEntity.class, ReferenceEntity.class, ArticleVisitEntity.class}, version = 3)
 
@@ -52,11 +50,17 @@ public abstract class AppDatabase extends RoomDatabase{
 
     public static AppDatabase getInstance(Context context) {
         if (INSTANCE == null) {
-            INSTANCE = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "SOEN390-database")
+            INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
+                    AppDatabase.class, "SOEN390-database")
+                    .addCallback(new Callback() {
+                                    @Override
+                                    public void onCreate(@NonNull SupportSQLiteDatabase db) {
+                                        super.onCreate(db);
+                                        Executors.newSingleThreadScheduledExecutor().execute(() -> getInstance(context).achievementDao().addAllAchievements(AchievementEntity.populateData()));
+                                    }
+                                })
                     .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                     .allowMainThreadQueries().build();
-
-            //TODO: Populate achievements table
         }
         return INSTANCE;
     }
