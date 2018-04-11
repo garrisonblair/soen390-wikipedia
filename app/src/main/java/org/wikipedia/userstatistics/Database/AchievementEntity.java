@@ -28,13 +28,13 @@ public class AchievementEntity {
         checked = 0;
     }
 
-    public AchievementEntity(String name, String description, int obtained, String obtainedDate) {
-        this.name = name;
-        this.description = description;
-        this.obtained = obtained;
-        this.obtainedDate = obtainedDate;
-        checked = 0;
-    }
+//    public AchievementEntity(String name, String description, int obtained, String obtainedDate) {
+//        this.name = name;
+//        this.description = description;
+//        this.obtained = obtained;
+//        this.obtainedDate = obtainedDate;
+//        checked = 0;
+//    }
 
     public int getId() {
         return id;

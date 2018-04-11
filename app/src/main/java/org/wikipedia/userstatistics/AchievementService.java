@@ -150,7 +150,10 @@ public class AchievementService {
     }
 
     public AchievementEntity achievementToAchievementEntity(Achievement achievement) {
-        AchievementEntity achievementEntity = new AchievementEntity(achievement.getName(), achievement.getDescription(), achievement.getObtained(), achievement.getObtainedDate());
+        AchievementEntity achievementEntity = new AchievementEntity(achievement.getName(), achievement.getDescription());
+        achievementEntity.setObtained(achievement.getObtained());
+        achievementEntity.setChecked(achievement.getChecked());
+        achievementEntity.setObtainedDate(achievement.getObtainedDate());
         achievementEntity.setId(achievement.getId());
         return achievementEntity;
     }
