@@ -67,32 +67,30 @@ public class AchievementFragment extends Fragment {
                 int uniqueID = (int)System.currentTimeMillis();
 
                 Intent intent = new Intent(getContext(), AchievementFragment.class);
-//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 PendingIntent pendingIntent = PendingIntent.getActivity(getContext(), 0, intent, 0);
 
                 String title = "NEW ACHIEVEMENT";
                 String description = "HELLO";
                 String channelId = Integer.toString(uniqueID);
 
-                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getContext(), "notify_001")
+                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getContext(), channelId)
                         .setSmallIcon(R.drawable.icon_done)
                         .setContentTitle(title)
                         .setContentText(description)
-                        .setPriority(NotificationCompat.PRIORITY_MAX);
-//                        .setAutoCancel(true);
-//                        .setContentIntent(pendingIntent);
+                        .setPriority(NotificationCompat.PRIORITY_MAX)
+                        .setAutoCancel(true)
+                        .setContentIntent(pendingIntent);
 
 //                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getContext());
                 NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(getContext().NOTIFICATION_SERVICE);
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    NotificationChannel channel = new NotificationChannel("notify_001",
-                            "Channel human readable title",
-                            NotificationManager.IMPORTANCE_DEFAULT);
+                    NotificationChannel channel = new NotificationChannel(channelId, "Channel human readable title", NotificationManager.IMPORTANCE_DEFAULT);
                     notificationManager.createNotificationChannel(channel);
                 }
 
-                notificationManager.notify(0, mBuilder.build());
+                notificationManager.notify(uniqueID, mBuilder.build());
 
                 return true;
             }
