@@ -15,12 +15,16 @@ public class NoteStatCalculator {
     private List<NoteEntity> totalNotes;
     private List<String> notedArticles;
 
-    public NoteStatCalculator(Context context) {
-        this.db = AppDatabase.getInstance(context);
+    public NoteStatCalculator(Context context, AppDatabase database) {
+        this.db = database;
         this.noteDao = db.noteDao();
 
         totalNotes = noteDao.getAllNotes();
         notedArticles = noteDao.getAllArticles();
+    }
+
+    public NoteStatCalculator(Context context) {
+        this(context, AppDatabase.getInstance(context));
     }
 
     public int getTotalNotes() {
@@ -33,7 +37,7 @@ public class NoteStatCalculator {
 
     public double getNotesPerArticle() {
         if (notedArticles.size() > 0) {
-            return totalNotes.size() / notedArticles.size();
+            return ((double) totalNotes.size() / notedArticles.size());
         } else {
             return 0;
         }
