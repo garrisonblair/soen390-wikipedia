@@ -33,6 +33,9 @@ public interface AchievementDao {
     @Insert
     void addAchievement(AchievementEntity achievement);
 
+    @Insert
+    void addAllAchievements(Achievement... achievements);
+
     @Query("UPDATE achievements SET checked = 1 WHERE obtained = 1")
     void checkAchievements();
 }
