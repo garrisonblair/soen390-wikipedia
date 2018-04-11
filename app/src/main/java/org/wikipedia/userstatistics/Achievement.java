@@ -26,16 +26,20 @@ public class Achievement {
     }
 
     //Create a new achievement
-    public Achievement(String name, String description) {
-        this.name = name;
-        this.description = description;
-        obtained = 0;
-        obtainedDate = null;
-        checked = 0;
-    }
+//    public Achievement(String name, String description) {
+//        this.name = name;
+//        this.description = description;
+//        obtained = 0;
+//        obtainedDate = null;
+//        checked = 0;
+//    }
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
