@@ -15,8 +15,6 @@ import com.unnamed.b.atv.model.TreeNode;
 import org.wikipedia.R;
 import org.wikipedia.views.ViewUtil;
 
-import static android.support.v4.content.ContextCompat.startActivity;
-
 /**
  * Created by Andres on 2018-04-10.
  */

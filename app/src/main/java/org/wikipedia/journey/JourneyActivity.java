@@ -8,9 +8,7 @@ import com.unnamed.b.atv.view.AndroidTreeView;
 
 import org.wikipedia.R;
 import org.wikipedia.activity.BaseActivity;
-import org.wikipedia.history.HistoryEntry;
 import org.wikipedia.page.PageActivity;
-import org.wikipedia.page.PageTitle;
 
 import java.util.List;
 
@@ -19,10 +17,10 @@ public class JourneyActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_layout);
+        //setContentView(R.layout.nothing_to_display_layout);
         TreeNode root = setUpTree();
         if (root.isLeaf()) {
-            setContentView(R.layout.activity_layout);
+            setContentView(R.layout.nothing_to_display_layout);
         } else {
             AndroidTreeView treeView = new AndroidTreeView(this, root);
             setContentView(treeView.getView());
