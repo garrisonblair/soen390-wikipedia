@@ -27,7 +27,7 @@ public class JourneyArticleHolder extends TreeNode.BaseNodeViewHolder<Visit> {
         void afterViewArticleClicked(Visit visit);
     }
     private ViewArticleCallback callback;
-    private final int LEVEL_LEFT_MARGIN = 50;
+    private static final int LEVEL_LEFT_MARGIN = 50;
 
     public JourneyArticleHolder(Context context, ViewArticleCallback callback) {
         super(context);
@@ -61,6 +61,7 @@ public class JourneyArticleHolder extends TreeNode.BaseNodeViewHolder<Visit> {
                     public boolean onMenuItemClick(MenuItem menuItem) {
 
                         callback.afterViewArticleClicked(visit);
+                        JourneyRecorder.getInstance(context).setCurrentVisit(visit);
                         return false;
                     }
                 });

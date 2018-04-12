@@ -56,12 +56,18 @@ public class JourneyRecorder {
         return currentVisit;
     }
 
+    void setCurrentVisit(Visit visit) {
+        this.currentVisit = visit;
+    }
+
     public void visitPage(PageProperties page) {
         if (!isJourneyInProgress()) {
             startJourney(page);
             return;
         } else if (backStackPop) {
             backStackPop = false;
+            return;
+        } else if (currentVisit.getPageInfo().equals(page)) {
             return;
         }
 
