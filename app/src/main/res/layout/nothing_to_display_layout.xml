@@ -7,12 +7,12 @@
     tools:context="org.wikipedia.journey.JourneyActivity">
 
     <TextView
-        android:id="@+id/journey_empty"
+        android:id="@+id/nothing_to_display"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
-        android:text="Nothing to display"
+        android:text="@string/nothing_to_display"
         android:textSize="24sp"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
