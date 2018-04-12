@@ -37,6 +37,10 @@ public class AchievementService {
         void afterAddAchievement();
     }
 
+    public interface DeleteAchievementCallback {
+        void afterDeleteAchievement();
+    }
+
     public interface CheckAchievementsCallback {
         void afterCheckAchievements();
     }
@@ -111,6 +115,20 @@ public class AchievementService {
                 AchievementEntity achievementEntity = new AchievementEntity(newAchievement.getName(), newAchievement.getDescription());
                 achievementDao.addAchievement(achievementEntity);
                 callback.afterAddAchievement();
+                return null;
+            }
+        }.execute(new Object());
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    public void deleteAchievement(Achievement achievement, DeleteAchievementCallback callback) {
+        new AsyncTask<Object, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Object... objects) {
+                AchievementEntity achievementEntity = new AchievementEntity(achievement.getName(), achievement.getDescription());
+                achievementDao.deleteAchievement(achievementEntity);
+                callback.afterDeleteAchievement();
                 return null;
             }
         }.execute(new Object());
