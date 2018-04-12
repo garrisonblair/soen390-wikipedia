@@ -1,15 +1,18 @@
 package org.wikipedia.notes;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.text.SpannableStringBuilder;
+import android.text.style.StyleSpan;
+import android.text.style.UnderlineSpan;
+import android.util.Log;
 
 import org.wikipedia.R;
 import org.wikipedia.WikipediaApp;
 import org.wikipedia.activity.BaseActivity;
 import org.wikipedia.util.ResourceUtil;
-
-import butterknife.OnClick;
 
 public class NotesActivity extends BaseActivity {
 
@@ -25,16 +28,66 @@ public class NotesActivity extends BaseActivity {
         openNotesFragment();
     }
 
-    private void openNotesFragment(@NonNull String pageId, @NonNull String pageTitle) {
-        NotesFragment fragment = notesFragment();
+    public SpannableStringBuilder annotate(String note, String spans) {
+        SpannableStringBuilder annotatedNote = new SpannableStringBuilder(note);
+        int start;
+        String s;
+        int end;
+        String e;
+        int numSpans;
+        int i = 0;
 
-        if (fragment == null) {
-            fragment = NotesFragment.newInstance(pageTitle, pageId);
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .add(R.id.activity_note_container, fragment)
-                    .commit();
+        if (spans == null) {
+            return annotatedNote;
         }
+
+        while (i < spans.length()) {
+            i += 1; // Leave '['
+            s = "";
+            e = "";
+            while (spans.charAt(i) != '.') {
+                s += spans.charAt(i++);
+            }
+            i += 1; // Leave '.'
+            start = Integer.parseInt(s);
+            while (spans.charAt(i) != '.') {
+                e += spans.charAt(i++);
+            }
+            i += 1; // Leave '.'
+            end = Integer.parseInt(e);
+            numSpans = Integer.parseInt(String.valueOf(spans.charAt(i++)));
+            if (numSpans != 0) {
+                for (int j = 0; j < numSpans; j++) {
+                    switch (spans.charAt(i++)) {
+                        case 'b':
+                            annotatedNote.setSpan(
+                                    new StyleSpan(Typeface.BOLD),
+                                    start,
+                                    end,
+                                    SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            break;
+                        case 'i':
+                            annotatedNote.setSpan(
+                                    new StyleSpan(Typeface.ITALIC),
+                                    start,
+                                    end,
+                                    SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            break;
+                        case 'u':
+                            annotatedNote.setSpan(
+                                    new UnderlineSpan(),
+                                    start,
+                                    end,
+                                    SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            i += 1; // Leave ']'
+        }
+        return annotatedNote;
     }
 
     private void openNotesFragment() {
@@ -44,7 +97,7 @@ public class NotesActivity extends BaseActivity {
             fragment = NotesFragment.newInstance();
             getSupportFragmentManager()
                     .beginTransaction()
-                    .add(R.id.activity_note_container, fragment)
+                    .add(R.id.activity_note_container, fragment, "NotesFragment")
                     .commit();
         }
     }
@@ -57,9 +110,25 @@ public class NotesActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
+        Fragment f = getSupportFragmentManager().findFragmentById(R.id.activity_note_container);
+
         app.getSessionFunnel().backPressed();
         super.onBackPressed();
-        finish();
+
+        if (f instanceof NotesFragment) {
+            Log.i("DEBUG: Finish", f.toString());
+            finish();
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
     @Override

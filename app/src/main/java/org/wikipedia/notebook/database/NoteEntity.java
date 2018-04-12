@@ -14,6 +14,9 @@ public class NoteEntity {
     private int articleId;
     private String articleTitle;
     private String text;
+    private String updatedText;
+    private String comment;
+    private String span;
 
     public NoteEntity(int articleId, String articleTitle,  String text) {
         this.articleId = articleId;
@@ -29,12 +32,24 @@ public class NoteEntity {
         return this.id;
     }
 
+    public String getComment() {
+        return this.comment;
+    }
+
     public String getText() {
         return this.text;
     }
 
+    public String getSpan() {
+        return this.span;
+    }
+
     public String getArticleTitle() {
         return this.articleTitle;
+    }
+
+    public String getUpdatedText() {
+        return this.updatedText;
     }
 
     public void setArticleTitle(String articleTitle) {
@@ -45,12 +60,24 @@ public class NoteEntity {
         this.articleId = articleId;
     }
 
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public void setSpan(String span) {
+        this.span = span;
+    }
+
     public void setId(int noteId) {
         this.id = noteId;
     }
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public void setUpdatedText(String newText) {
+        this.updatedText = newText;
     }
 
 }
