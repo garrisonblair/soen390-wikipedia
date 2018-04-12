@@ -12,7 +12,7 @@ import org.wikipedia.model.EnumCode;
 import org.wikipedia.model.EnumCodeMap;
 import org.wikipedia.nearby.NearbyFragment;
 import org.wikipedia.readinglist.ReadingListsFragment;
-import org.wikipedia.statistics.StatisticFragment;
+import org.wikipedia.userstatistics.StatisticFragment;
 
 public enum NavTab implements EnumCode {
     EXPLORE(R.string.nav_item_feed, R.drawable.ic_globe) {

@@ -1,4 +1,4 @@
-package org.wikipedia.statistics.database;
+package org.wikipedia.userstatistics.Database;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
@@ -12,13 +12,11 @@ public class ArticleVisitEntity {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
-    private int articleId;
     private String articleTitle;
     private long timeSpentReading;
     private long timeStart;
 
-    public ArticleVisitEntity(int articleId, String articleTitle, long timeSpentReading, long timeStart) {
-        this.articleId = articleId;
+    public ArticleVisitEntity(String articleTitle, long timeSpentReading, long timeStart) {
         this.articleTitle = articleTitle;
         this.timeSpentReading = timeSpentReading;
         this.timeStart = timeStart;
@@ -30,14 +28,6 @@ public class ArticleVisitEntity {
 
     public int getId() {
         return this.id;
-    }
-
-    public void setArticleId(int articleId) {
-        this.articleId = articleId;
-    }
-
-    public int getArticleId() {
-        return this.articleId;
     }
 
     public void setArticleTitle(String articleTitle) {

@@ -1,10 +1,9 @@
-package org.wikipedia.statistics;
+package org.wikipedia.userstatistics;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,9 +13,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import org.wikipedia.R;
-import org.wikipedia.userstatistics.StatCalculator;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -39,14 +38,21 @@ public class StatisticFragment extends Fragment {
 
         stats = new ArrayList();
         StatCalculator statCalculator = new StatCalculator(getContext());
-        stats.add("Totad read articles: " + statCalculator.getArticleStats().getTotalArticlesRead());
+        stats.add("Total articles read: " + statCalculator.getArticleStats().getTotalArticlesRead());
         if (statCalculator.getArticleStats().getLongestReadArticleTitle() == null) {
-            stats.add("Longest reading article: No article has been read yet.");
+            stats.add("Longest read article: No article has been read yet.");
         } else {
-            stats.add("Longest reading article: " + statCalculator.getArticleStats().getLongestReadArticleTitle());
+            String title = statCalculator.getArticleStats().getLongestReadArticleTitle().replaceAll("_", " ");
+            stats.add("Longest read article: " + title);
         }
-        stats.add("Average time spend on reading: " + statCalculator.getArticleStats().getAverageTimeSpentReading() + " mins");
-        stats.add("Total time spend on reading: " + statCalculator.getArticleStats().getTotalTimeSpentReading() + " mins");
+        stats.add("Average time spend on reading: "
+                + TimeUnit.MILLISECONDS.toMinutes(
+                        statCalculator.getArticleStats().getAverageTimeSpentReading())
+                + " minutes");
+        stats.add("Total time spend reading: "
+                + TimeUnit.MILLISECONDS.toMinutes(
+                        statCalculator.getArticleStats().getTotalTimeSpentReading())
+                + " minutes");
         stats.add("Total noted articles: " + statCalculator.getNoteStats().getTotalNotedArticles());
         stats.add("Total notes: " + statCalculator.getNoteStats().getTotalNotes());
         stats.add("Ratio notes/articles: " + statCalculator.getNoteStats().getNotesPerArticle());

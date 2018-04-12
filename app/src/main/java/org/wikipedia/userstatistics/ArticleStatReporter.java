@@ -4,14 +4,13 @@ import android.content.Context;
 import android.util.Log;
 
 import org.wikipedia.database.room.AppDatabase;
-import org.wikipedia.statistics.database.ArticleVisitDao;
-import org.wikipedia.statistics.database.ArticleVisitEntity;
+import org.wikipedia.userstatistics.Database.ArticleVisitDao;
+import org.wikipedia.userstatistics.Database.ArticleVisitEntity;
 
 import java.util.Date;
 
 public class ArticleStatReporter {
 
-    private int articleId;
     private String articleTitle;
     private long timeSpent;
     private Date start;
@@ -26,14 +25,20 @@ public class ArticleStatReporter {
 
     public void enterArticle() {
         start = new Date();
+
+        Log.i("DEBUG: ENTER", "");
     }
 
     public void pauseVisit() {
         pause = new Date();
+
+        Log.i("DEBUG: PAUSE", "");
     }
 
     public void resumeVisit() {
         resume = new Date();
+
+        Log.i("DEBUG: RESUME", "");
     }
 
     public void endVisit() {
@@ -45,20 +50,16 @@ public class ArticleStatReporter {
 
         }
         Log.i("DEBUG: TIME SPENT", Long.toString(timeSpent));
-        Log.i("DEBUG: ARTICLE ID", Integer.toString(articleId));
+        Log.i("DEBUG: TITLE", articleTitle);
     }
 
     public void saveVisit(Context context) {
         this.db = AppDatabase.getInstance(context);
         this.articleVisitDao = db.articleVisitDao();
 
-        ArticleVisitEntity articleVisitEntity = new ArticleVisitEntity(articleId, articleTitle, timeSpent, start.getTime());
+        ArticleVisitEntity articleVisitEntity = new ArticleVisitEntity(articleTitle, timeSpent, start.getTime());
         articleVisitDao.addArticleVisit(articleVisitEntity);
         Log.i("DEBUG", "ARTICLE SAVED");
-    }
-
-    public void setArticleId(int articleId) {
-        this.articleId = articleId;
     }
 
     public void setArticleTitle(String articleTitle) {

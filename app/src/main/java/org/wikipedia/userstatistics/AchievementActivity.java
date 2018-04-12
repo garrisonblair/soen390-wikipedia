@@ -1,4 +1,4 @@
-package org.wikipedia.statistics;
+package org.wikipedia.userstatistics;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
