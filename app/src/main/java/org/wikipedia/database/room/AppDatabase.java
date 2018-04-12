@@ -12,12 +12,12 @@ import org.wikipedia.notebook.database.NoteDao;
 import org.wikipedia.notebook.database.NoteEntity;
 import org.wikipedia.notebook.database.ReferenceDao;
 import org.wikipedia.notebook.database.ReferenceEntity;
+import org.wikipedia.statistics.database.ArticleVisitDao;
+import org.wikipedia.statistics.database.ArticleVisitEntity;
 import org.wikipedia.userstatistics.Database.AchievementDao;
 import org.wikipedia.userstatistics.Database.AchievementEntity;
 
 import java.util.concurrent.Executors;
-import org.wikipedia.statistics.database.ArticleVisitDao;
-import org.wikipedia.statistics.database.ArticleVisitEntity;
 
 /**
  * Created by Andres on 2018-03-08.
@@ -43,7 +43,7 @@ public abstract class AppDatabase extends RoomDatabase{
         @Override
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("CREATE TABLE 'articleVisits' ('id' INTEGER, "
-                    + "'articleId' INTEGER, 'articleTitle' STRING, 'timeSpentReading' LONG), 'timeStart' LONG");
+                    + "'articleId' INTEGER, 'articleTitle' STRING, 'timeSpentReading' LONG, 'timeStart' LONG)");
         }
     };
 
