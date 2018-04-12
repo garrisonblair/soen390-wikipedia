@@ -13,8 +13,8 @@ import org.wikipedia.notebook.database.NoteEntity;
 import org.wikipedia.notebook.database.ReferenceDao;
 import org.wikipedia.notebook.database.ReferenceEntity;
 
-import org.wikipedia.userstatistics.Database.ArticleVisitDao;
-import org.wikipedia.userstatistics.Database.ArticleVisitEntity;
+import org.wikipedia.statistics.database.ArticleVisitDao;
+import org.wikipedia.statistics.database.ArticleVisitEntity;
 
 import org.wikipedia.userstatistics.Database.AchievementDao;
 import org.wikipedia.userstatistics.Database.AchievementEntity;
@@ -27,7 +27,7 @@ public abstract class AppDatabase extends RoomDatabase{
     private static AppDatabase INSTANCE;
     public abstract NoteDao noteDao();
     public abstract ReferenceDao referenceDao();
-
+    public abstract AchievementDao achievementDao();
     public abstract ArticleVisitDao articleVisitDao();
 
     static final Migration MIGRATION_1_2 = new Migration(1, 2) {
@@ -42,11 +42,9 @@ public abstract class AppDatabase extends RoomDatabase{
         @Override
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("CREATE TABLE 'articleVisits' ('id' INTEGER, "
-                    + "'articleTitle' STRING, 'timeSpentReading' LONG, 'timeStart' LONG)");
+                    + "'articleId' INTEGER, 'articleTitle' STRING, 'timeSpentReading' LONG, 'timeStart' LONG)");
         }
     };
-
-    public abstract AchievementDao achievementDao();
 
     public static AppDatabase getInstance(Context context) {
         if (INSTANCE == null) {

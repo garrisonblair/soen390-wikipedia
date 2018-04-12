@@ -38,5 +38,8 @@ public interface AchievementDao {
 
     @Query("UPDATE achievements SET checked = 1 WHERE obtained = 1")
     void checkAchievements();
+
+    @Query("DELETE FROM achievements WHERE name = :name")
+    void delete(String name);
 }
 

@@ -20,6 +20,7 @@ public class ArticleStatReporter {
     private AppDatabase db;
     private ArticleVisitDao articleVisitDao;
 
+    private static final double TO_SEC = 1 / 1000;
     public ArticleStatReporter() {
     }
 
@@ -60,6 +61,8 @@ public class ArticleStatReporter {
         ArticleVisitEntity articleVisitEntity = new ArticleVisitEntity(articleTitle, timeSpent, start.getTime());
         articleVisitDao.addArticleVisit(articleVisitEntity);
         Log.i("DEBUG", "ARTICLE SAVED");
+
+        checkAchievements(context);
     }
 
     public void setArticleTitle(String articleTitle) {
@@ -68,6 +71,20 @@ public class ArticleStatReporter {
 
     public long getTimeSpent()  {
         return timeSpent;
+    }
+
+    //Check if user obtained any new achievements at the end of article visit.
+    private void checkAchievements(Context context){
+        AchievementChecker checker = new AchievementChecker(context);
+        ArticleStatCalculator calculator = new ArticleStatCalculator(context);
+        double totalReadingTime = (double) calculator.getTotalTimeSpentReading() * TO_SEC;
+        double thisReadingTime = (double) timeSpent * TO_SEC;
+        int totalArticleVisits = calculator.getTotalArticlesRead();
+
+        checker.check(AchievementsList.A1.getName(), totalReadingTime);
+        checker.check(AchievementsList.A2.getName(), thisReadingTime);
+        checker.check(AchievementsList.A3.getName(), thisReadingTime);
+        checker.check(AchievementsList.A4.getName(), totalArticleVisits);
     }
 
 }
