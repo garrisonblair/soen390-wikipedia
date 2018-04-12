@@ -4,6 +4,5 @@
 echo Starting SonarQube
 
 value=`cat scripts/sonarqubeToken`
-
 ./gradlew sonarqube -Dsonar.host.url=http://localhost:9000   -Dsonar.login= $value
 echo Finished SonarQube
