@@ -51,11 +51,19 @@ public class AchievementFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_achievement, container, false);
 
         ArrayList<String> achievements = new ArrayList();
+        ArrayList<String> unlockedAchievements = new ArrayList();
+        ArrayList<String> lockedAchievements = new ArrayList();
 
         AchievementService service = new AchievementService(getContext());
         service.getAllAchievements((AchievementService.GetAllAchievementsCallback) achievements1 -> {
             for (AchievementEntity ach: achievements1) {
                 achievements.add(ach.getName());
+
+                if (ach.getChecked() == 1) {
+                    unlockedAchievements.add(ach.getName());
+                } else {
+                    lockedAchievements.add(ach.getName());
+                }
             }
         });
 
@@ -72,9 +80,11 @@ public class AchievementFragment extends Fragment {
                 {
                     TextView tv = (TextView) view;
                     tv.setTextColor(Color.GREEN);
+//                    tv.setPadding(0, 0, 0, 0);
                 } else {
                     TextView tv = (TextView) view;
                     tv.setTextColor(Color.RED);
+//                    tv.setPadding(0, 0, 0, 0);
                 }
                 return view;
             }
@@ -95,6 +105,23 @@ public class AchievementFragment extends Fragment {
                 if(mSecretClickCount == SECRET_CLICK_LIMIT) {
                     SweetAlertDialog dialog = new SweetAlertDialog(getContext(), SUCCESS_TYPE);
                     dialog.setTitleText("Good job!");
+                    dialog.setConfirmText("See Achievements");
+                    dialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+                            sDialog.dismissWithAnimation();
+
+                            // Open achievements activity
+                            Intent intent = new Intent(getContext(), AchievementActivity.class);
+                            startActivity(intent);
+                        }
+                    });
+                    dialog.setCancelButton("Close", new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+                            sDialog.dismissWithAnimation();
+                        }
+                    });
                     dialog.show();
                     mSecretClickCount = 0;
                 }
