@@ -1,6 +1,7 @@
 package org.wikipedia.userstatistics.Database;
 
 import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
@@ -38,5 +39,8 @@ public interface AchievementDao {
 
     @Query("UPDATE achievements SET checked = 1 WHERE obtained = 1")
     void checkAchievements();
+
+    @Delete
+    void deleteAchievement(AchievementEntity achievement);
 }
 
