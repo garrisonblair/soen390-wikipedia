@@ -67,7 +67,7 @@ public class JourneyRecorder {
         } else if (backStackPop) {
             backStackPop = false;
             return;
-        } else if (currentVisit.getPageInfo().equals(page)) {
+        } else if (currentVisit.getPageInfo().getPageId() == page.getPageId()) {
             return;
         }
 
@@ -105,6 +105,9 @@ public class JourneyRecorder {
     }
 
     public String getJourneyString() {
+        if (root == null) {
+            return "";
+        }
 
         return root.toString();
     }
