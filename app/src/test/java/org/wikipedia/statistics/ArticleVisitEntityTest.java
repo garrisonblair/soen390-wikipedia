@@ -15,7 +15,7 @@ public class ArticleVisitEntityTest {
 
     @Test
     public void testArticleVisitEntityConstructor() {
-        ArticleVisitEntity articleVisitEntity = new ArticleVisitEntity(1, 2, 1111);
+        ArticleVisitEntity articleVisitEntity = new ArticleVisitEntity(1, "cat", 2, 1111);
         assertEquals(articleVisitEntity.getId(), 1);
         assertEquals(articleVisitEntity.getArticleId(), 2);
         assertEquals(articleVisitEntity.getTimeSpentReading(), 1111);
@@ -23,7 +23,7 @@ public class ArticleVisitEntityTest {
 
     @Test
     public void testArticleVisitEntityGetters() {
-        ArticleVisitEntity articleVisitEntity = new ArticleVisitEntity(1, 2, 1111);
+        ArticleVisitEntity articleVisitEntity = new ArticleVisitEntity(1, "dog", 2, 1111);
         assertEquals(articleVisitEntity.getId(), 1);
         assertEquals(articleVisitEntity.getArticleId(), 2);
         assertEquals(articleVisitEntity.getTimeSpentReading(), 1111);
@@ -31,7 +31,7 @@ public class ArticleVisitEntityTest {
 
     @Test
     public void testArticleVisitEntitySetters() {
-        ArticleVisitEntity articleVisitEntity = new ArticleVisitEntity(1, 2, 1111);
+        ArticleVisitEntity articleVisitEntity = new ArticleVisitEntity(1, "wikipedia", 2, 1111);
         articleVisitEntity.setId(11);
         articleVisitEntity.setArticleId(22);
         articleVisitEntity.setTimeSpentReading(11111111);
