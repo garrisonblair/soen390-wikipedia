@@ -2,5 +2,8 @@
 
 # insert your sonarQube key after login
 echo Starting SonarQube
-./gradlew sonarqube -Dsonar.host.url=http://localhost:9000   -Dsonar.login=d3c1868445eaf0f47204028409337e7920073618
+
+value=`cat config.txt`
+
+./gradlew sonarqube -Dsonar.host.url=http://localhost:9000   -Dsonar.login= $value
 echo Finished SonarQube
