@@ -17,7 +17,7 @@ public class AchievementChecker {
     }
 
     //This is where we define the conditions for each achievements
-    public void check(String achievementName, int value) {
+    public void check(String achievementName, double value) {
         for (AchievementsList ach: AchievementsList.values()) {
             if (achievementName.equals(ach.getName())) {
                 if (ach.getOperator().equals("<")) {
