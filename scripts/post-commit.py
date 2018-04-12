@@ -1,8 +1,8 @@
-from subprocess import call
+import subprocess
 
 data = ""
-with open('sonarqubeToken', 'r') as tokenFile:
+with open('scripts/sonarqubeToken', 'r') as tokenFile:
     data=tokenFile.read().replace('\n', '')
 
 
-call([f"./gradlew sonarqube -Dsonar.host.url=http://localhost:9000   -Dsonar.login={data}"])
+subprocess.Popen(["./gradlew", "sonarqube", "-Dsonar.host.url=http://localhost:9000", "-Dsonar.login=" + data], close_fds=True)
