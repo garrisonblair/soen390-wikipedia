@@ -35,10 +35,13 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
         <ListView android:id="@+id/achievement_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="80dp"/>
+            android:paddingTop="80dp"
+            android:dividerHeight="10dp"/>
     </LinearLayout>
 </FrameLayout>

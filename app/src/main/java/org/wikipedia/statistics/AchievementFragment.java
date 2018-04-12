@@ -6,6 +6,9 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,6 +20,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +38,7 @@ import java.util.List;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static cn.pedant.SweetAlert.SweetAlertDialog.*;
+import static org.wikipedia.R.*;
 
 
 public class AchievementFragment extends Fragment {
@@ -68,15 +74,22 @@ public class AchievementFragment extends Fragment {
             ViewHolder holder = null;
             if(convertView == null) {
                 holder = new ViewHolder();
-                convertView = inflater.inflate(R.layout.achievement_row, null);
-                holder.textViewTitle = (TextView) convertView.findViewById(R.id.achievementRowTitle);
-                holder.textViewDescription = (TextView) convertView.findViewById(R.id.achievementRowDescription);
+                convertView = inflater.inflate(layout.achievement_row, null);
+                holder.textViewTitle = (TextView) convertView.findViewById(id.achievementRowTitle);
+                holder.textViewDescription = (TextView) convertView.findViewById(id.achievementRowDescription);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
             holder.textViewTitle.setText(objects.get(position).getName());
             holder.textViewDescription.setText(objects.get(position).getDescription());
+
+            // TODO: Fix color
+            if (objects.get(position).getChecked() == 0) {
+                LinearLayout layout = convertView.findViewById(id.achievement_text);
+                Drawable background =  layout.getBackground();
+                background.setColorFilter(Color.rgb(255,223,0), PorterDuff.Mode.SRC);
+            }
             return convertView;
         }
     }
@@ -96,7 +109,7 @@ public class AchievementFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_achievement, container, false);
+        View view = inflater.inflate(layout.fragment_achievement, container, false);
 
         ArrayList<AchievementEntity> achievements = new ArrayList();
 
@@ -107,7 +120,7 @@ public class AchievementFragment extends Fragment {
             }
         });
 
-        ListView achievementList = view.findViewById(R.id.achievement_list);
+        ListView achievementList = view.findViewById(id.achievement_list);
 
         CustomAdapter customAdapter = new CustomAdapter(getContext(), achievements);
 
