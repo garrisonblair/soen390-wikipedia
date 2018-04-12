@@ -42,7 +42,7 @@ public abstract class AppDatabase extends RoomDatabase{
         @Override
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("CREATE TABLE 'articleVisits' ('id' INTEGER, "
-                    + "'articleId' INTEGER, 'articleTitle' STRING, 'timeSpentReading' LONG)");
+                    + "'articleId' INTEGER, 'articleTitle' STRING, 'timeSpentReading' LONG), 'timeStart' LONG");
         }
     };
 

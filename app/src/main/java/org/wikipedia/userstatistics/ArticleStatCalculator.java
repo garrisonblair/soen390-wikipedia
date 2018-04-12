@@ -21,40 +21,35 @@ public class ArticleStatCalculator {
     private List<Integer> uniqueVisitedArticles;
 
     private long totalTimeSpentReading;
-    private int longestReadArticleId;
     private String longestReadArticleTitle;
+    private long longestReadArticleTime;
 
-    private int totalNotes;
-    private int totalArticlesWithNotes;
-
-    private int textSearches;
-    private int gallerySearches;
-    private int cameraSearches;
-
-    private int ttsUses;
-
-    public ArticleStatCalculator(Context context) {
+    public ArticleStatCalculator(Context context, AppDatabase database) {
         this.context = context;
-        this.db = AppDatabase.getInstance(context);
+        this.db = database;
         this.articleVisitDao = db.articleVisitDao();
 
         visitedArticles = articleVisitDao.getTotalUniqueVisits();
 
         totalTimeSpentReading = 0;
-        long longestTime = 0;
+        longestReadArticleTime = 0;
         uniqueVisitedArticles = new ArrayList<>();
 
         for (ArticleVisitEntity article: visitedArticles) {
             totalTimeSpentReading += article.getTimeSpentReading();
-            if (article.getTimeSpentReading() > longestTime) {
-                longestTime = article.getTimeSpentReading();
-                longestReadArticleId = article.getArticleId();
+
+            if (article.getTimeSpentReading() > longestReadArticleTime) {
+                longestReadArticleTime = article.getTimeSpentReading();
                 longestReadArticleTitle = article.getArticleTitle();
             }
             if (!(uniqueVisitedArticles.contains(article.getArticleId()))) {
                 uniqueVisitedArticles.add(article.getArticleId());
             }
         }
+    }
+
+    public ArticleStatCalculator(Context context) {
+        this(context, AppDatabase.getInstance(context));
     }
 
     public long getTotalTimeSpentReading() {
@@ -85,8 +80,12 @@ public class ArticleStatCalculator {
         }
     }
 
-    public int getLongestReadArticleId() {
-        return longestReadArticleId;
+    public String getLongestReadArticleTitle() {
+        return longestReadArticleTitle;
+    }
+
+    public long getLongestReadArticleTime() {
+        return longestReadArticleTime;
     }
 
     public String getLongestReadArticleTitle() {

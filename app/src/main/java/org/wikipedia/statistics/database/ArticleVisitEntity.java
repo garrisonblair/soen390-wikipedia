@@ -52,6 +52,14 @@ public class ArticleVisitEntity {
         this.timeSpentReading = timeSpentReading;
     }
 
+    public String getArticleTitle() {
+        return articleTitle;
+    }
+
+    public void setArticleTitle(String articleTitle) {
+        this.articleTitle = articleTitle;
+    }
+
     public long getTimeSpentReading() {
         return this.timeSpentReading;
     }
