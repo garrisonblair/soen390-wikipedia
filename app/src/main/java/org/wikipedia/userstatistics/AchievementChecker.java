@@ -1,6 +1,7 @@
 package org.wikipedia.userstatistics;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import org.wikipedia.userstatistics.Database.AchievementEntity;
 
@@ -68,6 +69,8 @@ public class AchievementChecker {
 //                        });
 //                        dialog.show();
                     });
+
+                    Toast.makeText(context, "Achievement Unlocked: " + achievementName, Toast.LENGTH_SHORT).show();
                     return;
                 }
             }

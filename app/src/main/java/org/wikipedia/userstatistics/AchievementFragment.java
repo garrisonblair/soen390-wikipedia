@@ -104,9 +104,6 @@ public class AchievementFragment extends Fragment {
         }
     }
 
-    private static final int SECRET_CLICK_LIMIT = 3;
-    private int mSecretClickCount;
-
     public static AchievementFragment newInstance() {
         return new AchievementFragment();
     }
@@ -136,40 +133,5 @@ public class AchievementFragment extends Fragment {
         achievementList.setAdapter(customAdapter);
 
         return view;
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mSecretClickCount++;
-
-                if (mSecretClickCount == SECRET_CLICK_LIMIT) {
-//                    SweetAlertDialog dialog = new SweetAlertDialog(getContext(), SUCCESS_TYPE);
-//                    dialog.setTitleText("Good job!");
-//                    dialog.setConfirmText("See Achievements");
-//                    dialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-//                        @Override
-//                        public void onClick(SweetAlertDialog sDialog) {
-//                            sDialog.dismissWithAnimation();
-//
-//                            // Open achievements activity
-//                            Intent intent = new Intent(getContext(), AchievementActivity.class);
-//                            startActivity(intent);
-//                        }
-//                    });
-//                    dialog.setCancelButton("Close", new SweetAlertDialog.OnSweetClickListener() {
-//                        @Override
-//                        public void onClick(SweetAlertDialog sDialog) {
-//                            sDialog.dismissWithAnimation();
-//                        }
-//                    });
-//                    dialog.show();
-
-                    mSecretClickCount = 0;
-                }
-            }
-        });
     }
 }
