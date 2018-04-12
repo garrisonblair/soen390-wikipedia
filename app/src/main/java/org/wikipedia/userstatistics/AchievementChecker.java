@@ -43,8 +43,8 @@ public class AchievementChecker {
                     service.unlockAchievement(achievement, () -> {
                         //TODO: Notify new achievement
                     });
+                    return;
                 }
-                return;
             }
         });
 
