@@ -32,8 +32,6 @@ jobs:
     script: ./gradlew -q clean assembleDevDebug
   - stage: UnitTests
     script: ./gradlew testDevDebug
-  #- stage: SonarQube
-  #  script: ./gradlew sonarqube   -Dsonar.host.url=http://localhost:9000   -Dsonar.login=3e1b700c923b698f2abed7abec5ba76e5211f835
   - stage: Android Tests
     before_script:
     - echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a
