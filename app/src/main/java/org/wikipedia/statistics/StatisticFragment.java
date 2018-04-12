@@ -41,7 +41,7 @@ public class StatisticFragment extends Fragment {
         StatCalculator statCalculator = new StatCalculator(getContext());
         stats.add("Totad read articles: " + statCalculator.getArticleStats().getTotalArticlesRead());
         if (statCalculator.getArticleStats().getLongestReadArticleTitle() == null) {
-            stats.add("Longest reading article: No article has read yet.");
+            stats.add("Longest reading article: No article has been read yet.");
         } else {
             stats.add("Longest reading article: " + statCalculator.getArticleStats().getLongestReadArticleTitle());
         }
