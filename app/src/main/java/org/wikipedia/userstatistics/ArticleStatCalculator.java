@@ -88,10 +88,6 @@ public class ArticleStatCalculator {
         return longestReadArticleTime;
     }
 
-    public String getLongestReadArticleTitle() {
-        return longestReadArticleTitle;
-    }
-
     public int getTotalArticlesRead() {
         return visitedArticles.size();
     }
