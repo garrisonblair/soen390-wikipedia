@@ -157,7 +157,6 @@ public class AchievementFragment extends Fragment {
 //                        }
 //                    });
 //                    dialog.show();
-                    AchievementChecker checker = new AchievementChecker("Wikinerd", 1, getContext());
 
                     mSecretClickCount = 0;
                 }
