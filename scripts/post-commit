@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# insert your sonarQube key after login
+./gradlew sonarqube   -Dsonar.host.url=http://localhost:9000   -Dsonar.login=3e1b700c923b698f2abed7abec5ba76e5211f835
