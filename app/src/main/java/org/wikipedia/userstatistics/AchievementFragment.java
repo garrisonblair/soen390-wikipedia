@@ -50,9 +50,9 @@ public class AchievementFragment extends Fragment {
         private static final int G_GOLD_COLOR = 223;
         private static final int B_GOLD_COLOR = 0;
 
-        private static final int R_GREY_COLOR = 84;
-        private static final int G_GREY_COLOR = 89;
-        private static final int B_GREY_COLOR = 93;
+        private static final int R_GREY_COLOR = 46;
+        private static final int G_GREY_COLOR = 49;
+        private static final int B_GREY_COLOR = 54;
 
         private class ViewHolder {
             private TextView textViewTitle;
