@@ -50,6 +50,10 @@ public class AchievementFragment extends Fragment {
         private static final int G_GOLD_COLOR = 223;
         private static final int B_GOLD_COLOR = 0;
 
+        private static final int R_GREY_COLOR = 84;
+        private static final int G_GREY_COLOR = 89;
+        private static final int B_GREY_COLOR = 93;
+
         private class ViewHolder {
             private TextView textViewTitle;
             private TextView textViewDescription;
@@ -87,10 +91,14 @@ public class AchievementFragment extends Fragment {
             holder.textViewDescription.setText(objects.get(position).getDescription());
 
             // TODO: Fix color
-            if (objects.get(position).getChecked() == 0) {
+            if (objects.get(position).getChecked() == 1) {
                 LinearLayout layout = convertView.findViewById(R.id.achievement_text);
                 Drawable background =  layout.getBackground();
                 background.setColorFilter(Color.rgb(R_GOLD_COLOR, G_GOLD_COLOR, B_GOLD_COLOR), PorterDuff.Mode.SRC);
+            } else {
+                LinearLayout layout = convertView.findViewById(R.id.achievement_text);
+                Drawable background =  layout.getBackground();
+                background.setColorFilter(Color.rgb(R_GREY_COLOR, G_GREY_COLOR, B_GREY_COLOR), PorterDuff.Mode.SRC);
             }
             return convertView;
         }

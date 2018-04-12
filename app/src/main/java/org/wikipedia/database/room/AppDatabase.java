@@ -13,8 +13,8 @@ import org.wikipedia.notebook.database.NoteEntity;
 import org.wikipedia.notebook.database.ReferenceDao;
 import org.wikipedia.notebook.database.ReferenceEntity;
 
-import org.wikipedia.statistics.database.ArticleVisitDao;
-import org.wikipedia.statistics.database.ArticleVisitEntity;
+import org.wikipedia.userstatistics.Database.ArticleVisitDao;
+import org.wikipedia.userstatistics.Database.ArticleVisitEntity;
 
 import org.wikipedia.userstatistics.Database.AchievementDao;
 import org.wikipedia.userstatistics.Database.AchievementEntity;
