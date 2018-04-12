@@ -23,6 +23,8 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -137,5 +139,54 @@ public class NoteReferenceServiceTest {
         when(nrs.getAllNotedArticles()).thenReturn(titles);
         boolean deleteOrNot = nrs.articleCannotDelete(contextMock, "Concordia");
         assertTrue(deleteOrNot);
+    }
+
+    @Test
+    public void updateNoteTextTest() {
+        UpdateNoteTextCallBack callBackMock = mock(UpdateNoteTextCallBack.class);
+        Note noteMock = mock(Note.class);
+        when(noteMock.getId()).thenReturn(1);
+        when(noteMock.getArticleTitle()).thenReturn("title");
+        when(noteMock.getOriginalText()).thenReturn("text");
+        when(noteMock.getUpdatedText()).thenReturn("updated");
+        when(noteMock.getArticleid()).thenReturn(123);
+        nrs.updateNoteText(noteMock, callBackMock);
+
+        verify(callBackMock).afterUpdateNoteText();
+    }
+
+    @Test
+    public void setCommentOnNoteTest() {
+        SetCommentCallBack callBackMock = mock(SetCommentCallBack.class);
+        Note noteMock = mock(Note.class);
+        when(noteMock.getId()).thenReturn(1);
+        when(noteMock.getArticleTitle()).thenReturn("title");
+        when(noteMock.getComment()).thenReturn("my comment");
+        when(noteMock.getSpan()).thenReturn("span");
+        when(noteMock.getOriginalText()).thenReturn("text");
+        when(noteMock.getUpdatedText()).thenReturn("updated");
+        when(noteMock.getArticleid()).thenReturn(123);
+        nrs.setCommentOnNote(noteMock, callBackMock);
+        verify(noteMock).getComment();
+        verify(noteMock).getId();
+        verify(callBackMock).afterSetComment();
+        verify(noteDaoMock).updateNote(any(NoteEntity.class));
+
+    }
+
+    @Test
+    public void deleteCommentOnNoteTest() {
+        DeleteNoteCallBack callBackMock = mock(DeleteNoteCallBack.class);
+        Note noteMock = mock(Note.class);
+        when(noteMock.getId()).thenReturn(1);
+        when(noteMock.getArticleTitle()).thenReturn("title");
+        when(noteMock.getComment()).thenReturn("my comment");
+        when(noteMock.getSpan()).thenReturn("span");
+        when(noteMock.getOriginalText()).thenReturn("text");
+        when(noteMock.getUpdatedText()).thenReturn("updated");
+        when(noteMock.getArticleid()).thenReturn(123);
+        nrs.deleteCommentOnNote(noteMock, callBackMock);
+        verify(callBackMock).afterDeleteNote();
+        verify(noteDaoMock).updateNote(any(NoteEntity.class));
     }
 }
