@@ -164,6 +164,7 @@ public class LinkPreviewDialog extends ExtendedBottomSheetDialogFragment
             getDialog().dismiss();
         }
         HistoryEntry newEntry = new HistoryEntry(pageTitle, entrySource);
+
         loadPage(pageTitle, newEntry, false);
     }
 
