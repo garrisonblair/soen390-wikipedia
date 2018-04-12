@@ -127,7 +127,7 @@ public class AchievementService {
             @Override
             protected Void doInBackground(Object... objects) {
                 AchievementEntity achievementEntity = new AchievementEntity(achievement.getName(), achievement.getDescription());
-                achievementDao.deleteAchievement(achievementEntity);
+                achievementDao.delete(achievementEntity.getName());
                 callback.afterDeleteAchievement();
                 return null;
             }

@@ -70,8 +70,8 @@ public class AchievementChecker {
                         });
                         dialog.show();
                     });
+                    return;
                 }
-                return;
             }
         });
 
