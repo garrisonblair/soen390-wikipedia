@@ -42,6 +42,10 @@ public enum AchievementsList {
         this.minValue = minValue;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
     public String getName() {
         return name;
     }

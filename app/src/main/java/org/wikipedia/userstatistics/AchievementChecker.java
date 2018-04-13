@@ -17,18 +17,14 @@ public class AchievementChecker {
     }
 
     //This is where we define the conditions for each achievements
-    public void check(String achievementName, double value) {
-        for (AchievementsList ach: AchievementsList.values()) {
-            if (achievementName.equals(ach.getName())) {
-                if (ach.getOperator().equals("<")) {
-                    if (value <= ach.getMinValue()) {
-                        unlockAchievement(achievementName);
-                    }
-                } else {
-                    if (value >= ach.getMinValue()) {
-                        unlockAchievement(achievementName);
-                    }
-                }
+    public void check(AchievementsList achievement, double value) {
+        if (achievement.getOperator().equals("<")) {
+            if (value <= achievement.getMinValue()) {
+                unlockAchievement(achievement.getName());
+            }
+        } else {
+            if (value >= achievement.getMinValue()) {
+                unlockAchievement(achievement.getName());
             }
         }
     }

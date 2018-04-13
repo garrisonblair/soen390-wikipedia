@@ -236,7 +236,13 @@ public class NoteReferenceService {
         NoteStatCalculator calculator = new NoteStatCalculator(context);
 
         int totalNotes = calculator.getTotalNotes();
-        checker.check(AchievementsList.A5.getName(), totalNotes);
+
+        for (AchievementsList achievement: AchievementsList.values()) {
+            if (achievement.getCategory().equals("Note")) {
+                checker.check(achievement, totalNotes);
+            }
+        }
+
     }
 
 }
