@@ -112,7 +112,10 @@ public class FeaturesOnboardingFragment extends OnboardingFragment {
         PAGE_NEW_UPDATES(R.layout.inflate_features_onboarding_page_zero),
         TTS(R.layout.inflate_features_onboarding_page_one),
         IMAGE_SEARCH(R.layout.inflate_features_onboarding_page_two),
-        NOTES(R.layout.inflate_features_onboarding_page_three);
+        NOTES(R.layout.inflate_features_onboarding_page_three),
+        RELATED_VIDEOS(R.layout.inflate_features_onboarding_page_five),
+        ARTICLE_STATISTICS(R.layout.inflate_features_onboarding_page_six),
+        JOURNEY(R.layout.inflate_features_onboarding_page_seven);
 
         private static EnumCodeMap<OnboardingPage> MAP
                 = new EnumCodeMap<>(OnboardingPage.class);
