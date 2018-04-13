@@ -82,6 +82,8 @@ public class AchievementFragment extends Fragment {
                         finalHolder.checkStatus.setVisibility(View.INVISIBLE);
                     }
                 });
+            } else {
+                holder.checkStatus.setVisibility(View.INVISIBLE);
             }
 
             if (objects.get(position).getObtained() == 1) {
