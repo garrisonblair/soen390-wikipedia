@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 
+
 import com.android.build.gradle.internal.dsl.ProductFlavor
 import com.android.ddmlib.DdmPreferences
 
@@ -311,6 +312,36 @@ dependencies {
 //
 //    androidTestCompile 'com.android.support.test.espresso:espresso-idling-resource:3.0.1'
 }
+
+// Configuration for Sonarqube static analysis tool
+// Need to download: Latest LTS (SonarQube 6.7.2 (LTS*) from https://www.sonarqube.org/downloads/
+// Then Unzip and traverse to <download location>/bin/<your operating system folder>
+// Run sonar.sh or whatever your sonar sonar script and once it is up and running open on https://localhost:9000
+// Login with Username: admin Password: admin
+// To run static analysis use the commands below
+// ./gradlew sonarqube   -Dsonar.host.url=http://localhost:9000   -Dsonar.login=3e1b700c923b698f2abed7abec5ba76e5211f835
+// Properties can be be configured in the sonar.properties file in: <download location>/bin/<your operating system folder>/sonar.properties
+// Additional configuration can be found here: https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner+for+Gradle
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.2"
+    }
+}
+
+apply plugin: "org.sonarqube"
+
+// Default is debug but i think we should use devDebug
+// Alternate candidates include: amazonDebug, amazonRelease, releasesprodDebug, releasesprodRelease, fdroidDebug, fdroidRelease, prodDebug, prodRelease, devDebug, devRelease, alphaDebug, alphaRelease, customDebug, customRelease, betaDebug, betaRelease
+/*
+sonarqube {
+    androidVariant 'devDebug'
+}
+*/
 
 private setSigningConfigKey(config, Properties props) {
     if (props) {
