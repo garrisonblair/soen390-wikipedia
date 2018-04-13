@@ -20,7 +20,7 @@ public class ArticleStatReporter {
     private AppDatabase db;
     private ArticleVisitDao articleVisitDao;
 
-    private static final double TO_SEC = 1 / 1000;
+    private static final double TO_SEC = 1000.00;
     public ArticleStatReporter() {
     }
 
@@ -77,8 +77,8 @@ public class ArticleStatReporter {
     private void checkAchievements(Context context){
         AchievementChecker checker = new AchievementChecker(context);
         ArticleStatCalculator calculator = new ArticleStatCalculator(context);
-        double totalReadingTime = (double) calculator.getTotalTimeSpentReading() * TO_SEC;
-        double thisReadingTime = (double) timeSpent * TO_SEC;
+        double totalReadingTime = ((double) calculator.getTotalTimeSpentReading()) / TO_SEC;
+        double thisReadingTime = ((double) timeSpent) / TO_SEC;
         int totalArticleVisits = calculator.getTotalArticlesRead();
 
         checker.check(AchievementsList.A1.getName(), totalReadingTime);
