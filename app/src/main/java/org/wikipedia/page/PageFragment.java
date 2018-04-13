@@ -649,6 +649,10 @@ public class PageFragment extends Fragment implements BackPressedHandler {
                 ? System.currentTimeMillis()
                 : 0;
         Prefs.pageLastShown(time);
+
+        if (articleStatReporter != null) {
+            articleStatReporter.pauseVisit();
+        }
     }
 
     @Override
@@ -656,6 +660,10 @@ public class PageFragment extends Fragment implements BackPressedHandler {
         super.onResume();
         initPageScrollFunnel();
         activeTimer.resume();
+
+        if (articleStatReporter != null) {
+            articleStatReporter.resumeVisit();
+        }
     }
 
     @Override

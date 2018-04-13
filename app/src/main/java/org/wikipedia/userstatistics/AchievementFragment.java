@@ -1,43 +1,23 @@
 package org.wikipedia.userstatistics;
 
-//import android.app.NotificationChannel;
-//import android.app.NotificationManager;
-//import android.app.PendingIntent;
 import android.content.Context;
-//import android.content.Intent;
 import android.graphics.Color;
-//import android.graphics.ColorFilter;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-//import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-//import android.support.v4.app.NotificationCompat;
-//import android.support.v4.app.NotificationManagerCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-//import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-//import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-//import android.widget.Toast;
 
-//import org.w3c.dom.Text;
-//import org.wikipedia.R;
 import org.wikipedia.R;
 import org.wikipedia.userstatistics.Database.AchievementEntity;
 
 import java.util.ArrayList;
-//import java.util.List;
-//import java.util.PrimitiveIterator;
-
-//import cn.pedant.SweetAlert.SweetAlertDialog;
-//
-//import static cn.pedant.SweetAlert.SweetAlertDialog.*;
 
 public class AchievementFragment extends Fragment {
 
