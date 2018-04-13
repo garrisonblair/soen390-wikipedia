@@ -1,0 +1,48 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_achievement"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="org.wikipedia.userstatistics.AchievementFragment"
+    android:background="@color/base20">
+
+    <RelativeLayout android:id="@+id/upperView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <ImageButton android:id="@+id/notes_back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_stat_achievement"
+            android:background="@android:color/transparent"
+            android:layout_alignParentLeft="true"
+            android:clickable="true"
+            android:paddingTop="23dp"
+            android:paddingLeft="40dp"
+            android:tint="#FFDF00"/>
+        <TextView
+            android:id="@+id/fragment_achievement_title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textAlignment="center"
+            android:text="Achievements"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:textSize="24sp"
+            android:paddingTop="20dp"
+            android:textColor="#FFDF00"/>
+    </RelativeLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+        <ListView android:id="@+id/achievement_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="80dp"
+            android:paddingBottom="5dp"
+            android:dividerHeight="10dp"/>
+    </LinearLayout>
+</FrameLayout>

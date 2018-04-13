@@ -9,12 +9,13 @@ import org.wikipedia.notebook.database.NoteDao;
 import org.wikipedia.notebook.database.NoteEntity;
 import org.wikipedia.notebook.database.ReferenceDao;
 import org.wikipedia.notebook.database.ReferenceEntity;
+import org.wikipedia.userstatistics.AchievementChecker;
+import org.wikipedia.userstatistics.AchievementsList;
+import org.wikipedia.userstatistics.NoteStatCalculator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import retrofit2.http.HEAD;
 
 /**
  * Created by Andres on 2018-03-09.
@@ -112,6 +113,8 @@ public class NoteReferenceService {
                 }
                 referenceDao.addReferences(referenceEntities);
                 callback.afterSave();
+
+                checkAchievements();
                 return null;
             }
         }.execute(new Object());
@@ -227,4 +230,19 @@ public class NoteReferenceService {
         noteEntity.setComment(note.getComment());
         return noteEntity;
     }
+
+    public void checkAchievements() {
+        AchievementChecker checker = new AchievementChecker(context);
+        NoteStatCalculator calculator = new NoteStatCalculator(context);
+
+        int totalNotes = calculator.getTotalNotes();
+
+        for (AchievementsList achievement: AchievementsList.values()) {
+            if (achievement.getCategory().equals("Note")) {
+                checker.check(achievement, totalNotes);
+            }
+        }
+
+    }
+
 }

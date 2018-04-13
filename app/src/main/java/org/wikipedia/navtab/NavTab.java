@@ -12,6 +12,7 @@ import org.wikipedia.model.EnumCode;
 import org.wikipedia.model.EnumCodeMap;
 import org.wikipedia.nearby.NearbyFragment;
 import org.wikipedia.readinglist.ReadingListsFragment;
+import org.wikipedia.userstatistics.StatisticFragment;
 
 public enum NavTab implements EnumCode {
     EXPLORE(R.string.nav_item_feed, R.drawable.ic_globe) {
@@ -32,6 +33,11 @@ public enum NavTab implements EnumCode {
     NEARBY(R.string.nav_item_nearby, R.drawable.ic_explore_black_24dp) {
         @NonNull @Override public Fragment newInstance() {
             return NearbyFragment.newInstance();
+        }
+    },
+    STATISTICS(R.string.stat_title, R.drawable.icon_stat_charts) {
+        @NonNull @Override public Fragment newInstance() {
+            return StatisticFragment.newInstance();
         }
     };
 
