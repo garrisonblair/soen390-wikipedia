@@ -15,11 +15,11 @@ public enum AchievementsList {
     TimeSpent2("TimeSpent", "That was a long article...", "Spent more than 3 minutes on an article.", ">", 180),
     TimeSpent3("TimeSpent", "Fell Asleep?", "Spent more than 5 minutes on an article.", ">", 300),
 
-    Read1("Read", "I read an article", "Read more than 5 articles.", ">", 5),
-    Read2("Read", "I read an article", "Read more than 5 articles.", ">", 5),
-    Read3("Read", "I read an article", "Read more than 5 articles.", ">", 5),
-    Read4("Read", "I read an article", "Read more than 5 articles.", ">", 5),
-    Read5("Read", "I read an article", "Read more than 5 articles.", ">", 5),
+    Read1("Read", "I read an article", "Read one article.", ">", 1),
+    Read2("Read", "I read five articles", "Read more than 5 articles.", ">", 5),
+    Read3("Read", "I read a bunch of articles", "Read more than 20 articles.", ">", 20),
+    Read4("Read", "I like reading articles", "Read more than 50 articles.", ">", 50),
+    Read5("Read", "ReadMan", "Read more than 100 articles.", ">", 100),
 
     //Note stat achievements
     Note1("Note", "I took a note", "Created 1 note.", ">", 1),
