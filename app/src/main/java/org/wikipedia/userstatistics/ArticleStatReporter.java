@@ -74,7 +74,7 @@ public class ArticleStatReporter {
     }
 
     //Check if user obtained any new achievements at the end of article visit.
-    private void checkAchievements(Context context){
+    private void checkAchievements(Context context) {
         AchievementChecker checker = new AchievementChecker(context);
         ArticleStatCalculator calculator = new ArticleStatCalculator(context);
         double totalReadingTime = ((double) calculator.getTotalTimeSpentReading()) / TO_SEC;
