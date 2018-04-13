@@ -4,6 +4,7 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +28,7 @@ public class PageActivityTest {
     @Rule
     public ActivityTestRule<PageActivity> pageActivityRule = new ActivityTestRule(PageActivity.class);
 
+    @Ignore
     @Test
     public void notEmptyTreeTest() throws InterruptedException {
 
