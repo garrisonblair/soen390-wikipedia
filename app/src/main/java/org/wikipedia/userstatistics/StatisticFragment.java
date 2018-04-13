@@ -1,6 +1,10 @@
 package org.wikipedia.userstatistics;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -8,7 +12,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import org.wikipedia.R;
@@ -32,69 +39,147 @@ public class StatisticFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_statistics, container, false);
         unbinder = ButterKnife.bind(this, view);
-        setTextViews(view);
+
+        setStatView(view);
+
         ImageButton achievementButton = view.findViewById(R.id.achievement_button);
         achievementButton.setOnClickListener(v -> {
             openAchievementPage();
         });
-
         return view;
+    }
+
+    private void setStatView(View view) {
+        ArrayList<StatObject> stats = getStatList();
+        ListView statList = view.findViewById(R.id.stat_list);
+        CustomAdapter adapter = new CustomAdapter(getContext(), stats);
+        statList.setAdapter(adapter);
+    }
+
+    private ArrayList getStatList() {
+        ArrayList<StatObject> stats = new ArrayList<>();
+        StatCalculator statCalculator = new StatCalculator(getContext());
+        stats.add(new StatObject("Total Articles Read",
+                        Integer.toString(
+                                statCalculator.getArticleStats().getTotalArticlesRead())
+                )
+        );
+
+        if (statCalculator.getArticleStats().getLongestReadArticleTitle() != null) {
+            stats.add(new StatObject("Longest Read Article",
+                            statCalculator.getArticleStats().getLongestReadArticleTitle()
+                                    + ": You spent " + Long.toString(
+                                    TimeUnit.MILLISECONDS.toMinutes(
+                                            statCalculator.getArticleStats().getLongestReadArticleTime()
+                                    )
+                            ) + " minutes"
+                    )
+            );
+        } else {
+            stats.add(new StatObject("Longest Read Article", "No Article has been read yet"));
+        }
+
+        stats.add(new StatObject("Average Time Spent Reading",
+                Long.toString(TimeUnit.MILLISECONDS.toMinutes(
+                        statCalculator.getArticleStats().getAverageTimeSpentReading()))
+                        + " minutes")
+        );
+
+        stats.add(new StatObject("Total Time Spent Reading",
+                Long.toString(TimeUnit.MILLISECONDS.toMinutes(
+                        statCalculator.getArticleStats().getTotalTimeSpentReading()))
+                        + " minutes")
+        );
+
+        stats.add(new StatObject("Total Notes",
+                        Integer.toString(statCalculator.getNoteStats().getTotalNotes())
+                )
+        );
+
+        stats.add(new StatObject("Total Noted Articles",
+                        Integer.toString(statCalculator.getNoteStats().getTotalNotedArticles())
+                )
+        );
+
+        stats.add(new StatObject("Notes per Article Ratio",
+                        Double.toString(statCalculator.getNoteStats().getNotesPerArticle())
+                )
+        );
+        return stats;
+    }
+
+    private class StatObject {
+        private String name;
+        private String description;
+
+        StatObject(String name, String description) {
+            this.name = name;
+            this.description = description;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+    }
+
+    private class CustomAdapter extends BaseAdapter {
+
+        private LayoutInflater inflater;
+        private ArrayList<StatObject> objects;
+
+        private class ViewHolder {
+            private TextView textViewTitle;
+            private TextView textViewDescription;
+            private ImageButton checkStatus;
+        }
+
+        CustomAdapter(Context context, ArrayList<StatObject> objects) {
+            inflater = LayoutInflater.from(context);
+            this.objects = objects;
+        }
+
+        public int getCount() {
+            return objects.size();
+        }
+
+        public StatObject getItem(int position) {
+            return objects.get(position);
+        }
+
+        public long getItemId(int position) {
+            return position;
+        }
+
+        public View getView(int position, View convertView, ViewGroup parent) {
+            StatisticFragment.CustomAdapter.ViewHolder holder = null;
+            if (convertView == null) {
+                holder = new StatisticFragment.CustomAdapter.ViewHolder();
+                convertView = inflater.inflate(R.layout.achievement_row, null);
+                holder.textViewTitle = convertView.findViewById(R.id.achievementRowTitle);
+                holder.textViewDescription = convertView.findViewById(R.id.achievementRowDescription);
+                holder.checkStatus = convertView.findViewById(R.id.check_status);
+                convertView.setTag(holder);
+            } else {
+                holder = (StatisticFragment.CustomAdapter.ViewHolder) convertView.getTag();
+            }
+            holder.textViewTitle.setText(objects.get(position).getName());
+            holder.textViewDescription.setText(objects.get(position).getDescription());
+
+            LinearLayout layout = convertView.findViewById(R.id.achievement_text);
+            Drawable background =  layout.getBackground();
+            background.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC);
+
+            return convertView;
+        }
     }
 
     private void openAchievementPage() {
         Log.d("DEV_DEBUG", "Should open achievement activity");
         Intent intent = new Intent(getContext(), AchievementActivity.class);
         startActivity(intent);
-    }
-
-    public ArrayList getStatisticList() {
-
-        ArrayList<String> stats = new ArrayList();
-        StatCalculator statCalculator = new StatCalculator(getContext());
-
-        stats.add(String.valueOf(statCalculator.getArticleStats().getTotalArticlesRead()));
-
-        if (statCalculator.getArticleStats().getLongestReadArticleTitle() == null) {
-            stats.add("No article has been read yet.");
-        } else {
-            String title = statCalculator.getArticleStats().getLongestReadArticleTitle().replaceAll("_", " ");
-            stats.add(title);
-        }
-
-        stats.add(TimeUnit.MILLISECONDS.toMinutes(statCalculator.getArticleStats().getAverageTimeSpentReading()) + " mins");
-        stats.add(TimeUnit.MILLISECONDS.toMinutes(statCalculator.getArticleStats().getTotalTimeSpentReading()) + " mins");
-        stats.add(String.valueOf(statCalculator.getNoteStats().getTotalNotedArticles()));
-        stats.add(String.valueOf(statCalculator.getNoteStats().getTotalNotes()));
-        stats.add(String.valueOf(statCalculator.getNoteStats().getNotesPerArticle()));
-
-        return stats;
-    }
-
-    private void setTextViews(View view) {
-
-        //avoid magic number error
-        final int index0 = 0;
-        final int index1 = 1;
-        final int index2 = 2;
-        final int index3 = 3;
-        final int index4 = 4;
-        final int index5 = 5;
-        final int index6 = 6;
-        ArrayList<String> statistics = getStatisticList();
-
-        TextView textView = view.findViewById(R.id.totalReadArticles);
-        textView.setText(statistics.get(index0));
-        textView = view.findViewById(R.id.longestReadingArticle);
-        textView.setText(statistics.get(index1));
-        textView = view.findViewById(R.id.averageTimeSpend);
-        textView.setText(statistics.get(index2));
-        textView = view.findViewById(R.id.totalTimeSpend);
-        textView.setText(statistics.get(index3));
-        textView = view.findViewById(R.id.totalNotedArticles);
-        textView.setText(statistics.get(index4));
-        textView = view.findViewById(R.id.totalNotes);
-        textView.setText(statistics.get(index5));
-        textView = view.findViewById(R.id.ratio);
-        textView.setText(statistics.get(index6));
     }
 }

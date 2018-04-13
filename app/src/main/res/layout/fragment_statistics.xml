@@ -18,104 +18,22 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/icon_stat_achievement"
                 android:background="@android:color/transparent"
-                android:layout_alignParentRight="true"
+                android:layout_centerHorizontal="true"
                 android:clickable="true" />
         </RelativeLayout>
     </LinearLayout>
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:text="Total read articles:"
-            android:paddingTop="20dp"/>
-        <TextView
-            android:id="@+id/totalReadArticles"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:textColor="#FF8C00"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:text="Longest reading article:"
-            android:paddingTop="20dp"/>
-        <TextView
-            android:id="@+id/longestReadingArticle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:textColor="#FF8C00"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:text="Average time spend on reading:"
-            android:paddingTop="20dp"/>
-        <TextView
-            android:id="@+id/averageTimeSpend"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:textColor="#FF8C00"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:text="Total time spend on reading:"
-            android:paddingTop="20dp"/>
-        <TextView
-            android:id="@+id/totalTimeSpend"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:textColor="#FF8C00"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:text="Total noted articles:"
-            android:paddingTop="20dp"/>
-        <TextView
-            android:id="@+id/totalNotedArticles"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:textColor="#FF8C00"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:text="Total notes:"
-            android:paddingTop="20dp"/>
-        <TextView
-            android:id="@+id/totalNotes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:textColor="#FF8C00"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:text="Ratio notes/articles:"
-            android:paddingTop="20dp"/>
-        <TextView
-            android:id="@+id/ratio"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:textColor="#FF8C00"/>
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+        <ListView android:id="@+id/stat_list"
+            android:textColor="#FFFFFF"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="5dp"
+            android:paddingTop="20dp"
+            android:dividerHeight="10dp"/>
     </LinearLayout>
 </LinearLayout>
