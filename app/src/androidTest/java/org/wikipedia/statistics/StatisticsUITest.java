@@ -12,6 +12,7 @@ import android.view.ViewParent;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,6 +26,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.*;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 
+@Ignore
 @LargeTest
 @RunWith(AndroidJUnit4.class)
 public class StatisticsUITest {
@@ -34,7 +36,7 @@ public class StatisticsUITest {
 
     @Test
     public void statisticsUITest() {
-/*
+
         //Skip two times onboarding for the wikipedia initial setting
         try {
             Thread.sleep(2000);
@@ -67,7 +69,7 @@ public class StatisticsUITest {
                                 0),
                         isDisplayed()));
         appCompatTextView2.perform(click());
-*/
+
         //Test 1:
         //Check if the statistic page is displayed
         ViewInteraction bottomNavigationItemView = onView(
