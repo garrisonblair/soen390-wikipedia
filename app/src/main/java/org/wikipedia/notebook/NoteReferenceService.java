@@ -231,7 +231,7 @@ public class NoteReferenceService {
         return noteEntity;
     }
 
-    private void checkAchievements() {
+    public void checkAchievements() {
         AchievementChecker checker = new AchievementChecker(context);
         NoteStatCalculator calculator = new NoteStatCalculator(context);
 
