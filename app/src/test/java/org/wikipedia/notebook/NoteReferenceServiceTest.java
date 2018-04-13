@@ -5,7 +5,6 @@ import android.content.Context;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
 import org.robolectric.RobolectricTestRunner;
@@ -20,16 +19,17 @@ import java.util.Iterator;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.wikipedia.notebook.NoteReferenceService.*;
+import static org.wikipedia.notebook.NoteReferenceService.DeleteNoteCallBack;
+import static org.wikipedia.notebook.NoteReferenceService.GetNotesCallback;
+import static org.wikipedia.notebook.NoteReferenceService.SetCommentCallBack;
+import static org.wikipedia.notebook.NoteReferenceService.UpdateNoteTextCallBack;
 
 /**
  * Created by Andres on 2018-03-10.
@@ -50,7 +50,8 @@ public class NoteReferenceServiceTest {
     public void setupTests() {
         when(dbMock.referenceDao()).thenReturn(this.referenceDaoMock);
         when(dbMock.noteDao()).thenReturn(this.noteDaoMock);
-        nrs = new NoteReferenceService(contextMock, dbMock);
+        NoteReferenceService service = new NoteReferenceService(contextMock, dbMock);
+        nrs = spy(service);
     }
 
     @Test
@@ -67,6 +68,7 @@ public class NoteReferenceServiceTest {
 
     @Test
     public void addNoteTest() {
+        doNothing().when(nrs).checkAchievements();
         NoteReferenceService.SaveCallback callback = mock(NoteReferenceService.SaveCallback.class);
         InOrder inOrder = Mockito.inOrder(this.noteDaoMock, this.referenceDaoMock);
         Note noteMock = mock(Note.class);

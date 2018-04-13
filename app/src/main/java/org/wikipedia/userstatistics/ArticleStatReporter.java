@@ -81,10 +81,15 @@ public class ArticleStatReporter {
         double thisReadingTime = ((double) timeSpent) / TO_SEC;
         int totalArticleVisits = calculator.getTotalArticlesRead();
 
-        checker.check(AchievementsList.A1.getName(), totalReadingTime);
-        checker.check(AchievementsList.A2.getName(), thisReadingTime);
-        checker.check(AchievementsList.A3.getName(), thisReadingTime);
-        checker.check(AchievementsList.A4.getName(), totalArticleVisits);
+        for (AchievementsList achievement: AchievementsList.values()) {
+            if (achievement.getCategory().equals("TotalTimeSpent")) {
+                checker.check(achievement, totalReadingTime);
+            } else if (achievement.getCategory().equals("TimeSpent")) {
+                checker.check(achievement, thisReadingTime);
+            } else if (achievement.getCategory().equals("Read")) {
+                checker.check(achievement, totalArticleVisits);
+            }
+        }
     }
 
 }
