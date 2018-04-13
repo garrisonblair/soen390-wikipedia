@@ -34,7 +34,7 @@ public class AchievementChecker {
         }
     }
 
-    private void unlockAchievement(String achievementName) {
+    public void unlockAchievement(String achievementName) {
         AchievementService service = new AchievementService(context);
         service.getLockedAchievements(achievements -> {
             for (AchievementEntity achievementEntity: achievements) {
@@ -43,29 +43,8 @@ public class AchievementChecker {
                     achievement.unlocked();
                     service.unlockAchievement(achievement, () -> {
 
-//                        // Open achievement notification dialog
-//                        SweetAlertDialog dialog = new SweetAlertDialog(context, SUCCESS_TYPE);
-//                        dialog.setTitleText("New Achievement Unlocked: " + achievementName);
-//                        dialog.setConfirmText("See Achievements");
-//                        dialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-//                            @Override
-//                            public void onClick(SweetAlertDialog sDialog) {
-//                                sDialog.dismissWithAnimation();
-//
-//                                // Open achievements activity
-//                                Intent intent = new Intent(context, AchievementActivity.class);
-//                                context.startActivity(intent);
-//                            }
-//                        });
-//                        dialog.setCancelButton("Close", new SweetAlertDialog.OnSweetClickListener() {
-//                            @Override
-//                            public void onClick(SweetAlertDialog sDialog) {
-//                                sDialog.dismissWithAnimation();
-//                            }
-//                        });
-//                        dialog.show();
                     });
-
+                    //TODO: Make a better message notification when unlocking a new achievement. Currently using a toast.
                     Toast.makeText(context, "Achievement Unlocked: " + achievementName, Toast.LENGTH_SHORT).show();
                     return;
                 }
