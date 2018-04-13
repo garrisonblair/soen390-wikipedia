@@ -90,8 +90,11 @@ public class AchievementFragment extends Fragment {
             holder.textViewTitle.setText(objects.get(position).getName());
             holder.textViewDescription.setText(objects.get(position).getDescription());
 
-            // TODO: Fix color
-            if (objects.get(position).getChecked() == 1) {
+            if (objects.get(position).getChecked() == 0) {
+                // TODO: display new achievement notice
+            }
+
+            if (objects.get(position).getObtained() == 1) {
                 LinearLayout layout = convertView.findViewById(R.id.achievement_text);
                 Drawable background =  layout.getBackground();
                 background.setColorFilter(Color.rgb(R_GOLD_COLOR, G_GOLD_COLOR, B_GOLD_COLOR), PorterDuff.Mode.SRC);
@@ -132,6 +135,15 @@ public class AchievementFragment extends Fragment {
 
         achievementList.setAdapter(customAdapter);
 
+        service.checkAchievements(() -> {
+
+        });
+
         return view;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 }

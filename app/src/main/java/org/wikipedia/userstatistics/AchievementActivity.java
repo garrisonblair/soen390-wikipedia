@@ -66,4 +66,9 @@ public class AchievementActivity extends BaseActivity {
     public void onDestroy() {
         super.onDestroy();
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }
