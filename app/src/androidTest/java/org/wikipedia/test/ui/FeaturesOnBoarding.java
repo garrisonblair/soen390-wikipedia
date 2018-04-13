@@ -87,7 +87,7 @@ public class FeaturesOnBoarding {
         onView(withId(R.id.inflate_features_onboarding_page_one)).perform(swipeLeft());
         // Wait for search response
         try{
-            Thread.sleep(1000);
+            Thread.sleep(2000);
         }
         catch(InterruptedException e){
 
@@ -95,11 +95,35 @@ public class FeaturesOnBoarding {
         onView(withId(R.id.inflate_features_onboarding_page_two)).perform(swipeLeft());
         // Wait for search response
         try{
-            Thread.sleep(1000);
+            Thread.sleep(2000);
         }
         catch(InterruptedException e){
 
         }
-        onView(withId(R.id.inflate_features_onboarding_page_three)).check(matches(isDisplayed()));
+        onView(withId(R.id.inflate_features_onboarding_page_three)).perform(swipeLeft());
+        // Wait for search response
+        try{
+            Thread.sleep(2000);
+        }
+        catch(InterruptedException e){
+
+        }
+        onView(withId(R.id.inflate_features_onboarding_page_five)).perform(swipeLeft());
+        // Wait for search response
+        try{
+            Thread.sleep(2000);
+        }
+        catch(InterruptedException e){
+
+        }
+        onView(withId(R.id.inflate_features_onboarding_page_six)).perform(swipeLeft());
+        // Wait for search response
+        try{
+            Thread.sleep(2000);
+        }
+        catch(InterruptedException e){
+
+        }
+        onView(withId(R.id.inflate_features_onboarding_page_seven)).check(matches(isDisplayed()));
     }
 }
