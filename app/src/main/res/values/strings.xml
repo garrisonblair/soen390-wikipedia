@@ -632,7 +632,7 @@
 
     <!-- Our Wikipedia extra features onboarding strings -->
     <string name="features_onboarding_welcome_title">Wikipedia New Updates!</string>
-    <string name="features_onboarding_welcome_text"> Version: RELEASE 2</string>
+    <string name="features_onboarding_welcome_text"> Version: RELEASE 3</string>
     <string name="features_onboarding_feature_one_title">Text To Speech</string>
     <string name="features_onboarding_feature_one_text"><![CDATA[Too lazy to read the document? Our Text To Speech engine can read it out loud for you! <a href="#tts">Learn More</a>]]></string>
     <string name="features_onboarding_feature_two_title">Image Search</string>
@@ -640,6 +640,13 @@
     <string name="features_onboarding_feature_three_title">Notes</string>
     <string name="features_onboarding_feature_three_text"><![CDATA[Want to quickly access something interesting you read in an article? <a href="#notes_add_note">Save your personalized notes</a> with the new Notes feature and <a href="#notes_ui">access them later!</a> <a href="#notes_button">Learn More</a>]]></string>
     <string name="features_onboarding_feature_three_title_ui">Notes UI</string>
+    <string name="features_onboarding_feature_four_text"><![CDATA[Want to see videos related to a an article you are reading? Our related videos engine can search and find related videos for you! <a href="#tts">Learn More</a>]]></string>
+    <string name="features_onboarding_feature_five_title">Journey Tracker</string>
+    <string name="features_onboarding_feature_five_text"><![CDATA[Want to know how you ended up on the article you are reading and see the map of this journey? Our Journey Tracker will show you just that! <a href="#tts">Learn More</a>]]></string>
+    <string name="features_onboarding_feature_six_title">Article Statistics</string>
+    <string name="features_onboarding_feature_six_text"><![CDATA[Curious about how much may times you have read an article or similar article statistics?<a href="#tts">Learn More</a>]]></string>
+    <string name="features_onboarding_feature_seven_title">Wiki Achievements</string>
+    <string name="features_onboarding_feature_seven_text"><![CDATA[Do you want recognition for your curiosity and extreme Wikipedia article reading skills? Look no further, as Wiki Achievements are here!<a href="#tts">Learn More</a>]]></string>
     <!-- Our Wikipedia extra features onboarding strings -->
 
 
