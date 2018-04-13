@@ -1,4 +1,4 @@
-package org.wikipedia.statistics.database;
+package org.wikipedia.userstatistics.Database;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
@@ -14,14 +14,14 @@ import java.util.List;
 @Dao
 public interface ArticleVisitDao {
 
-    @Query("SELECT * FROM articleVisits ORDER BY articleId ASC")
+    @Query("SELECT * FROM articleVisits ORDER BY id ASC")
     List<ArticleVisitEntity> getTotalUniqueVisits();
 
-    @Query("SELECT * FROM articleVisits WHERE articleId = :articleId")
-    List<ArticleVisitEntity> getSpecificArticleUniqueVisits(int articleId);
+    @Query("SELECT * FROM articleVisits WHERE articleTitle = :articleTitle")
+    List<ArticleVisitEntity> getSpecificArticleUniqueVisits(String articleTitle);
 
-    @Query("DELETE FROM articleVisits WHERE articleId = :articleId")
-    void deleteSpecificArticleVisits(int articleId);
+    @Query("DELETE FROM articleVisits WHERE articleTitle = :articleTitle")
+    void deleteSpecificArticleVisits(int articleTitle);
 
     @Query("UPDATE articleVisits SET timeSpentReading = :timeSpentReading WHERE id = :id")
     void upDateTimeSpentReading(long timeSpentReading, int id);

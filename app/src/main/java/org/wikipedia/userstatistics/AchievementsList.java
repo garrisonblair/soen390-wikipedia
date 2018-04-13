@@ -9,7 +9,7 @@ public enum AchievementsList {
     //Article stat achievements
     A1("Big Reader!", "Spent more than 1 minute reading articles.", ">", 60),
     A2("That was a long article...", "Spent more than 3 minutes on an article.", ">", 180),
-    A3("ADHD much?", "Spent less than 10 seconds on an article.", "<", 10),
+    A3("In a Hurry?", "Spent less than 10 seconds on an article.", "<", 10),
     A4("Wikinerd", "Read more than 5 articles.", ">", 5),
 
     //Note stat achievements

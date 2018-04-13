@@ -4,14 +4,13 @@ import android.content.Context;
 import android.util.Log;
 
 import org.wikipedia.database.room.AppDatabase;
-import org.wikipedia.statistics.database.ArticleVisitDao;
-import org.wikipedia.statistics.database.ArticleVisitEntity;
+import org.wikipedia.userstatistics.Database.ArticleVisitDao;
+import org.wikipedia.userstatistics.Database.ArticleVisitEntity;
 
 import java.util.Date;
 
 public class ArticleStatReporter {
 
-    private int articleId;
     private String articleTitle;
     private long timeSpent;
     private Date start;
@@ -21,20 +20,26 @@ public class ArticleStatReporter {
     private AppDatabase db;
     private ArticleVisitDao articleVisitDao;
 
-    private static final double TO_SEC = 1 / 1000;
+    private static final double TO_SEC = 1000.00;
     public ArticleStatReporter() {
     }
 
     public void enterArticle() {
         start = new Date();
+
+        Log.i("DEBUG: ENTER", "");
     }
 
     public void pauseVisit() {
         pause = new Date();
+
+        Log.i("DEBUG: PAUSE", "");
     }
 
     public void resumeVisit() {
         resume = new Date();
+
+        Log.i("DEBUG: RESUME", "");
     }
 
     public void endVisit() {
@@ -46,22 +51,18 @@ public class ArticleStatReporter {
 
         }
         Log.i("DEBUG: TIME SPENT", Long.toString(timeSpent));
-        Log.i("DEBUG: ARTICLE ID", Integer.toString(articleId));
+        Log.i("DEBUG: TITLE", articleTitle);
     }
 
     public void saveVisit(Context context) {
         this.db = AppDatabase.getInstance(context);
         this.articleVisitDao = db.articleVisitDao();
 
-        ArticleVisitEntity articleVisitEntity = new ArticleVisitEntity(articleId, articleTitle, timeSpent, start.getTime());
+        ArticleVisitEntity articleVisitEntity = new ArticleVisitEntity(articleTitle, timeSpent, start.getTime());
         articleVisitDao.addArticleVisit(articleVisitEntity);
         Log.i("DEBUG", "ARTICLE SAVED");
 
         checkAchievements(context);
-    }
-
-    public void setArticleId(int articleId) {
-        this.articleId = articleId;
     }
 
     public void setArticleTitle(String articleTitle) {
@@ -73,11 +74,11 @@ public class ArticleStatReporter {
     }
 
     //Check if user obtained any new achievements at the end of article visit.
-    private void checkAchievements(Context context){
+    private void checkAchievements(Context context) {
         AchievementChecker checker = new AchievementChecker(context);
         ArticleStatCalculator calculator = new ArticleStatCalculator(context);
-        double totalReadingTime = (double) calculator.getTotalTimeSpentReading() * TO_SEC;
-        double thisReadingTime = (double) timeSpent * TO_SEC;
+        double totalReadingTime = ((double) calculator.getTotalTimeSpentReading()) / TO_SEC;
+        double thisReadingTime = ((double) timeSpent) / TO_SEC;
         int totalArticleVisits = calculator.getTotalArticlesRead();
 
         checker.check(AchievementsList.A1.getName(), totalReadingTime);

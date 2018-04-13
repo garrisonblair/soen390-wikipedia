@@ -1,4 +1,4 @@
-package org.wikipedia.statistics;
+package org.wikipedia.userstatistics;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -65,5 +65,10 @@ public class AchievementActivity extends BaseActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }

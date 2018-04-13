@@ -1,4 +1,4 @@
-package org.wikipedia.statistics;
+package org.wikipedia.userstatistics;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,7 +12,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import org.wikipedia.R;
-import org.wikipedia.userstatistics.StatCalculator;
 
 import java.util.ArrayList;
 
@@ -33,7 +32,6 @@ public class StatisticFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_statistics, container, false);
         unbinder = ButterKnife.bind(this, view);
         setTextViews(view);
-
         ImageButton achievementButton = view.findViewById(R.id.achievement_button);
         achievementButton.setOnClickListener(v -> {
             openAchievementPage();

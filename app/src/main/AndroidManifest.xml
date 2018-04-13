@@ -164,7 +164,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".statistics.AchievementActivity"
+            android:name=".userstatistics.AchievementActivity"
             android:parentActivityName=".activity.BaseActivity"
             android:screenOrientation="portrait"/>
         <activity

@@ -39,7 +39,7 @@ public class AchievementDaoTest {
     }
 
     @Test
-    public void readAndWriteAchievement() throws Exception {
+    public void readAndWriteAndDeleteAchievement() throws Exception {
         AchievementEntity achievementEntity = new AchievementEntity("Achievement test","this is a test achievement");
 
         mAchievementDao.addAchievement(achievementEntity);
@@ -47,7 +47,31 @@ public class AchievementDaoTest {
         List<AchievementEntity> allAchievements = mAchievementDao.getAllAchievements();
         assertEquals(allAchievements.get(0).getName(),achievementEntity.getName());
         assertEquals(allAchievements.get(0).getDescription(),achievementEntity.getDescription());
-        assertEquals(allAchievements.size(),1);
+        assertEquals(1,allAchievements.size());
+
+        //Delete
+        mAchievementDao.delete("Achievement test");
+        allAchievements = mAchievementDao.getAllAchievements();
+
+        assertEquals(0,allAchievements.size());
+
     }
-    
+
+    @Test
+    public void updateAchievementTest() throws Exception {
+        AchievementEntity achievementEntity = new AchievementEntity("Achievement test","this is a test achievement");
+
+        mAchievementDao.addAchievement(achievementEntity);
+        List<AchievementEntity> allAchievements = mAchievementDao.getAllAchievements();
+        achievementEntity = allAchievements.get(0);
+        achievementEntity.setName("updated Name");
+        achievementEntity.setDescription("updated Description");
+
+        mAchievementDao.updateAchievement(achievementEntity);
+        allAchievements = mAchievementDao.getAllAchievements();
+        assertEquals(1, allAchievements.size());
+        achievementEntity = allAchievements.get(0);
+        assertEquals("updated Name", achievementEntity.getName());
+        assertEquals("updated Description", achievementEntity.getDescription());
+    }
 }

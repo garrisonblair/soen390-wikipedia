@@ -3,13 +3,13 @@
     android:id="@+id/fragment_achievement"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="org.wikipedia.statistics.AchievementFragment">
+    tools:context="org.wikipedia.userstatistics.AchievementFragment"
+    android:background="@color/base20">
 
     <RelativeLayout android:id="@+id/upperView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-    >
+        android:orientation="vertical">
         <ImageButton android:id="@+id/notes_back_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -19,7 +19,7 @@
             android:clickable="true"
             android:paddingTop="23dp"
             android:paddingLeft="40dp"
-        />
+            android:tint="#FFDF00"/>
         <TextView
             android:id="@+id/fragment_achievement_title"
             android:layout_width="match_parent"
@@ -30,7 +30,7 @@
             android:textStyle="bold"
             android:textSize="24sp"
             android:paddingTop="20dp"
-        />
+            android:textColor="#FFDF00"/>
     </RelativeLayout>
     <LinearLayout
         android:orientation="vertical"

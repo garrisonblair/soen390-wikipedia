@@ -11,8 +11,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wikipedia.database.room.AppDatabase;
-import org.wikipedia.statistics.database.ArticleVisitDao;
-import org.wikipedia.statistics.database.ArticleVisitEntity;
+import org.wikipedia.userstatistics.Database.ArticleVisitDao;
+import org.wikipedia.userstatistics.Database.ArticleVisitEntity;
 
 import java.io.IOException;
 import java.util.Date;
@@ -34,7 +34,6 @@ public class ArticleStatCalculatorTest {
     @Before
     public void populateDb() {
         ArticleVisitEntity article1 = new ArticleVisitEntity(
-                1234,
                 "Article 1",
                 60000,
                 new Date().getTime()
@@ -42,7 +41,6 @@ public class ArticleStatCalculatorTest {
         articleVisitDao.addArticleVisit(article1);
 
         ArticleVisitEntity article2 = new ArticleVisitEntity(
-                4567,
                 "Article 2",
                 120000,
                 new Date().getTime()
@@ -50,7 +48,6 @@ public class ArticleStatCalculatorTest {
         articleVisitDao.addArticleVisit(article2);
 
         ArticleVisitEntity article3 = new ArticleVisitEntity(
-                1234,
                 "Article 1",
                 30000,
                 new Date().getTime()

@@ -9,8 +9,8 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 
 import org.wikipedia.database.room.AppDatabase;
-import org.wikipedia.statistics.database.ArticleVisitDao;
-import org.wikipedia.statistics.database.ArticleVisitEntity;
+import org.wikipedia.userstatistics.Database.ArticleVisitDao;
+import org.wikipedia.userstatistics.Database.ArticleVisitEntity;
 
 public class ArticleStatCalculator {
 
@@ -18,7 +18,7 @@ public class ArticleStatCalculator {
     private AppDatabase db;
     private ArticleVisitDao articleVisitDao;
     private List<ArticleVisitEntity> visitedArticles;
-    private List<Integer> uniqueVisitedArticles;
+    private List<String> uniqueVisitedArticles;
 
     private long totalTimeSpentReading;
     private String longestReadArticleTitle;
@@ -42,8 +42,8 @@ public class ArticleStatCalculator {
                 longestReadArticleTime = article.getTimeSpentReading();
                 longestReadArticleTitle = article.getArticleTitle();
             }
-            if (!(uniqueVisitedArticles.contains(article.getArticleId()))) {
-                uniqueVisitedArticles.add(article.getArticleId());
+            if (!(uniqueVisitedArticles.contains(article.getArticleTitle()))) {
+                uniqueVisitedArticles.add(article.getArticleTitle());
             }
         }
     }
@@ -53,12 +53,12 @@ public class ArticleStatCalculator {
     }
 
     public long getTotalTimeSpentReading() {
-        return TimeUnit.MILLISECONDS.toMinutes(totalTimeSpentReading);
+        return totalTimeSpentReading;
     }
 
     public long getAverageTimeSpentReading() {
         if (visitedArticles.size() > 0) {
-            return TimeUnit.MILLISECONDS.toMinutes(totalTimeSpentReading / visitedArticles.size());
+            return totalTimeSpentReading / visitedArticles.size();
         } else {
             return 0;
         }
