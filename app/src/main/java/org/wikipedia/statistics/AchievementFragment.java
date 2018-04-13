@@ -88,7 +88,7 @@ public class AchievementFragment extends Fragment {
             if (objects.get(position).getChecked() == 0) {
                 LinearLayout layout = convertView.findViewById(id.achievement_text);
                 Drawable background =  layout.getBackground();
-                background.setColorFilter(Color.rgb(255,223,0), PorterDuff.Mode.SRC);
+                background.setColorFilter(Color.rgb(255, 223, 0), PorterDuff.Mode.SRC);
             }
             return convertView;
         }
@@ -157,7 +157,7 @@ public class AchievementFragment extends Fragment {
 //                        }
 //                    });
 //                    dialog.show();
-                    AchievementChecker checker = new AchievementChecker("Wikinerd", 1, getContext());
+                    //AchievementChecker checker = new AchievementChecker("Wikinerd", 1, getContext());
 
                     mSecretClickCount = 0;
                 }
