@@ -98,8 +98,7 @@ public class StatisticsUITest {
                                 0),
                         isDisplayed()));
         noSwipeViewPager.perform(swipeLeft());
-        onView(allOf(withId(R.id.fragment_main_view_pager), withText("Totad read articles:")));
-        onView(allOf(withId(R.id.fragment_main_view_pager), withText("Totad read articles:")));
+        onView(allOf(withId(R.layout.fragment_statistics), withText("Totad read articles:")));
 
     }
 

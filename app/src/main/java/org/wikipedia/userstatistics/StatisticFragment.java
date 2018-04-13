@@ -14,6 +14,7 @@ import android.widget.TextView;
 import org.wikipedia.R;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -60,8 +61,8 @@ public class StatisticFragment extends Fragment {
             stats.add(title);
         }
 
-        stats.add(statCalculator.getArticleStats().getAverageTimeSpentReading() + " mins");
-        stats.add(statCalculator.getArticleStats().getTotalTimeSpentReading() + " mins");
+        stats.add(TimeUnit.MILLISECONDS.toMinutes(statCalculator.getArticleStats().getAverageTimeSpentReading()) + " mins");
+        stats.add(TimeUnit.MILLISECONDS.toMinutes(statCalculator.getArticleStats().getTotalTimeSpentReading()) + " mins");
         stats.add(String.valueOf(statCalculator.getNoteStats().getTotalNotedArticles()));
         stats.add(String.valueOf(statCalculator.getNoteStats().getTotalNotes()));
         stats.add(String.valueOf(statCalculator.getNoteStats().getNotesPerArticle()));
