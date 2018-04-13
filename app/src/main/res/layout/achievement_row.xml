@@ -19,14 +19,16 @@
             android:layout_height="wrap_content"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:paddingLeft="10dp"/>
+            android:paddingLeft="10dp"
+            android:textAlignment="center"/>
 
         <TextView
             android:id="@+id/achievementRowDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="13sp"
-            android:paddingLeft="15dp"/>
+            android:paddingLeft="15dp"
+            android:textAlignment="center"/>
 
     </LinearLayout>
 
