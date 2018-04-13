@@ -56,7 +56,8 @@ public class StatisticFragment extends Fragment {
         if (statCalculator.getArticleStats().getLongestReadArticleTitle() == null) {
             stats.add("No article has been read yet.");
         } else {
-            stats.add(statCalculator.getArticleStats().getLongestReadArticleTitle());
+            String title = statCalculator.getArticleStats().getLongestReadArticleTitle().replaceAll("_", " ");
+            stats.add(title);
         }
 
         stats.add(statCalculator.getArticleStats().getAverageTimeSpentReading() + " mins");
