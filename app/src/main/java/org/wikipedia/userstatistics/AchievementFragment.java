@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -37,6 +38,7 @@ public class AchievementFragment extends Fragment {
         private class ViewHolder {
             private TextView textViewTitle;
             private TextView textViewDescription;
+            private ImageButton checkStatus;
         }
 
         CustomAdapter(Context context, ArrayList<AchievementEntity> objects) {
@@ -63,6 +65,7 @@ public class AchievementFragment extends Fragment {
                 convertView = inflater.inflate(R.layout.achievement_row, null);
                 holder.textViewTitle = convertView.findViewById(R.id.achievementRowTitle);
                 holder.textViewDescription = convertView.findViewById(R.id.achievementRowDescription);
+                holder.checkStatus = convertView.findViewById(R.id.check_status);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -70,8 +73,15 @@ public class AchievementFragment extends Fragment {
             holder.textViewTitle.setText(objects.get(position).getName());
             holder.textViewDescription.setText(objects.get(position).getDescription());
 
-            if (objects.get(position).getChecked() == 0) {
-                // TODO: display new achievement notice
+            if (objects.get(position).getObtained() == 1 && objects.get(position).getChecked() == 0) {
+                holder.checkStatus.setVisibility(View.VISIBLE);
+                ViewHolder finalHolder = holder;
+                holder.checkStatus.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v){
+                        finalHolder.checkStatus.setVisibility(View.INVISIBLE);
+                    }
+                });
             }
 
             if (objects.get(position).getObtained() == 1) {
