@@ -39,7 +39,7 @@ public class AchievementDaoTest {
     }
 
     @Test
-    public void readAndWriteAndDeleteAchievement() throws Exception {
+    public void readAndWriteAndDeleteAchievementTest() throws Exception {
         AchievementEntity achievementEntity = new AchievementEntity("Achievement test","this is a test achievement");
 
         mAchievementDao.addAchievement(achievementEntity);
@@ -55,6 +55,29 @@ public class AchievementDaoTest {
 
         assertEquals(0,allAchievements.size());
 
+    }
+
+    @Test
+    public void getLockedAndUnlockedAchievementsTest() throws Exception {
+        AchievementEntity a1 = new AchievementEntity("Achievement1 test","this is a test achievement");
+        AchievementEntity a2 = new AchievementEntity("Achievement2 test","this is a test achievement");
+        AchievementEntity a3 = new AchievementEntity("Achievement3 test","this is a test achievement");
+        a1.setObtained(1);
+
+        mAchievementDao.addAchievement(a1);
+        mAchievementDao.addAchievement(a2);
+        mAchievementDao.addAchievement(a3);
+
+        List<AchievementEntity> allAchievements = mAchievementDao.getAllAchievements();
+        assertEquals(3,allAchievements.size());
+
+        List<AchievementEntity> lockedAchievements = mAchievementDao.getLockedAchievements();
+        assertEquals(2,lockedAchievements.size());
+        assertEquals("Achievement2 test", lockedAchievements.get(0).getName());
+
+        List<AchievementEntity> unlockedAchievements = mAchievementDao.getUnlockedAchievements();
+        assertEquals(1,unlockedAchievements.size());
+        assertEquals("Achievement1 test", unlockedAchievements.get(0).getName());
     }
 
     @Test
