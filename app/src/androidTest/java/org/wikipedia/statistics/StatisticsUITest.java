@@ -34,7 +34,7 @@ public class StatisticsUITest {
 
     @Test
     public void statisticsUITest() {
-
+/*
         //Skip two times onboarding for the wikipedia initial setting
         try {
             Thread.sleep(2000);
@@ -67,7 +67,7 @@ public class StatisticsUITest {
                                 0),
                         isDisplayed()));
         appCompatTextView2.perform(click());
-
+*/
         //Test 1:
         //Check if the statistic page is displayed
         ViewInteraction bottomNavigationItemView = onView(
