@@ -88,9 +88,7 @@ public class JourneyRecorder {
             currentVisit = pageStack.pop();
         } else {
             //journey done
-            Log.d("DEBUG", getJourneyString());
-            persist();
-            root = null;
+            endJourney();
         }
 
     }
@@ -98,6 +96,11 @@ public class JourneyRecorder {
     public void startJourney(PageProperties startPage) {
         root = new Visit(startPage);
         currentVisit = root;
+    }
+
+    public void endJourney() {
+        persist();
+        root = null;
     }
 
     public boolean isJourneyInProgress() {

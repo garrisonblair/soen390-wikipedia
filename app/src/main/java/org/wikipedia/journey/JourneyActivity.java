@@ -47,6 +47,13 @@ public class JourneyActivity extends BaseActivity {
                 text.append(journeyRecorder.getJourneyString());
                 ShareUtil.shareText(this, title, text.toString());
             });
+
+            ImageButton clearJourneyButton = findViewById(R.id.journey_clear_button);
+
+            clearJourneyButton.setOnClickListener(v -> {
+                JourneyRecorder journeyRecorder = JourneyRecorder.getInstance(this);
+                journeyRecorder.endJourney();
+            });
         }
     }
 
