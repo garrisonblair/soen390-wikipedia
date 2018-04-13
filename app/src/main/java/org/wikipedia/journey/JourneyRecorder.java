@@ -56,12 +56,18 @@ public class JourneyRecorder {
         return currentVisit;
     }
 
+    void setCurrentVisit(Visit visit) {
+        this.currentVisit = visit;
+    }
+
     public void visitPage(PageProperties page) {
         if (!isJourneyInProgress()) {
             startJourney(page);
             return;
         } else if (backStackPop) {
             backStackPop = false;
+            return;
+        } else if (currentVisit.getPageInfo().getPageId() == page.getPageId()) {
             return;
         }
 
@@ -82,9 +88,7 @@ public class JourneyRecorder {
             currentVisit = pageStack.pop();
         } else {
             //journey done
-            Log.d("DEBUG", getJourneyString());
-            persist();
-            root = null;
+            endJourney();
         }
 
     }
@@ -94,11 +98,19 @@ public class JourneyRecorder {
         currentVisit = root;
     }
 
+    public void endJourney() {
+        persist();
+        root = null;
+    }
+
     public boolean isJourneyInProgress() {
         return root != null;
     }
 
     public String getJourneyString() {
+        if (root == null) {
+            return "";
+        }
 
         return root.toString();
     }

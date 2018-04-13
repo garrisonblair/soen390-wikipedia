@@ -53,6 +53,7 @@ import org.wikipedia.edit.EditHandler;
 import org.wikipedia.gallery.GalleryActivity;
 import org.wikipedia.history.HistoryEntry;
 import org.wikipedia.history.UpdateHistoryTask;
+import org.wikipedia.journey.JourneyActivity;
 import org.wikipedia.journey.JourneyRecorder;
 import org.wikipedia.language.LangLinksActivity;
 import org.wikipedia.notebook.NoteReferenceService;
@@ -921,11 +922,17 @@ public class PageFragment extends Fragment implements BackPressedHandler {
             case R.id.menu_page_font_and_theme:
                 showThemeChooser();
                 return true;
+            case R.id.menu_page_view_journey:
+                showJourney();
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+    private void showJourney() {
+        Intent intent = new Intent(getActivity(), JourneyActivity.class);
+        startActivity(intent);
+    }
     private void showRemoveFromListsDialog() {
         CallbackTask.execute(() -> {
             List<ReadingListPage> pageOccurrences = ReadingListDbHelper.instance().getAllPageOccurrences(model.getTitle());

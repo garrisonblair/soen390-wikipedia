@@ -51,6 +51,7 @@ import org.wikipedia.history.HistoryFragment;
 import org.wikipedia.imagesearch.ImageRecognitionLabel;
 import org.wikipedia.imagesearch.ImageRecognitionService;
 import org.wikipedia.imagesearch.KeywordSelectActivity;
+import org.wikipedia.journey.JourneyRecorder;
 import org.wikipedia.login.LoginActivity;
 import org.wikipedia.navtab.NavTab;
 import org.wikipedia.navtab.NavTabFragmentPagerAdapter;
@@ -153,6 +154,8 @@ public class MainFragment extends Fragment implements BackPressedHandler, FeedFr
         getActivity().invalidateOptionsMenu();
         // reset the last-page-viewed timer
         Prefs.pageLastShown(0);
+
+        JourneyRecorder.getInstance(getContext()).endJourney();
     }
 
     @Override public void onDestroyView() {

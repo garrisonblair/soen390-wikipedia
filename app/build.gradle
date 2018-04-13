@@ -300,6 +300,9 @@ dependencies {
     // Test helpers for Room
     testImplementation "android.arch.persistence.room:testing:1.0.0"
 
+    // Android Tree View
+    compile 'com.github.bmelnychuk:atv:1.2.+'
+
     // Required by Espresso
 //    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 //    androidTestImplementation 'com.android.support.test.espresso:espresso-contrib:3.0.1'
