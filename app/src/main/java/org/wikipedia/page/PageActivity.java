@@ -227,6 +227,7 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
         MenuItem similarTitles = menu.findItem(R.id.menu_page_similar_titles);
         MenuItem themeChooserItem = menu.findItem(R.id.menu_page_font_and_theme);
         MenuItem addNoteItem = menu.findItem(R.id.menu_text_add_note);
+        MenuItem viewJourney = menu.findItem(R.id.menu_page_view_journey);
 
         if (pageFragment.isLoading() || pageFragment.getErrorState()) {
             otherLangItem.setEnabled(false);
@@ -236,6 +237,7 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
             contentIssues.setEnabled(false);
             similarTitles.setEnabled(false);
             themeChooserItem.setEnabled(false);
+            viewJourney.setEnabled(false);
             removeFromListsItem.setEnabled(false);
         } else {
             // Only display "Read in other languages" if the article is in other languages
@@ -247,6 +249,7 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
             removeFromListsItem.setEnabled(pageFragment.isPresentInOfflineLists());
             findInPageItem.setEnabled(true);
             themeChooserItem.setEnabled(true);
+            viewJourney.setEnabled(true);
             updateMenuPageInfo(menu);
         }
         return true;

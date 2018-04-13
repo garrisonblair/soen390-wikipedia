@@ -17,6 +17,11 @@
           android:title="@string/reading_list_remove_from_lists"
           app:showAsAction="never"
           android:enabled="false" />
+    <item
+        android:id="@+id/menu_page_view_journey"
+        android:enabled="false"
+        android:title="@string/menu_page_view_journey"
+        app:showAsAction="never" />
     <item android:id="@+id/menu_page_find_in_page"
           android:title="@string/menu_page_find_in_page"
           app:showAsAction="never"

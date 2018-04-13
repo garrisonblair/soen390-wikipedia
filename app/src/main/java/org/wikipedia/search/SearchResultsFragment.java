@@ -25,6 +25,7 @@ import org.wikipedia.activity.FragmentUtil;
 import org.wikipedia.analytics.SearchFunnel;
 import org.wikipedia.dataclient.mwapi.MwQueryResponse;
 import org.wikipedia.history.HistoryEntry;
+import org.wikipedia.journey.JourneyRecorder;
 import org.wikipedia.offline.OfflineManager;
 import org.wikipedia.page.PageTitle;
 import org.wikipedia.readinglist.AddToReadingListDialog;
@@ -135,6 +136,7 @@ public class SearchResultsFragment extends Fragment {
         if (callback != null) {
             PageTitle item = ((SearchResult) getAdapter().getItem(position)).getPageTitle();
             callback.navigateToTitle(item, false, position);
+            JourneyRecorder.getInstance(getContext()).endJourney();
         }
     }
 

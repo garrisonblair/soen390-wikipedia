@@ -39,6 +39,7 @@
     <string name="menu_page_font_and_theme">Font and theme</string>
     <string name="menu_page_add_to_list">Add to reading list</string>
     <string name="menu_page_share">Share link</string>
+    <string name="menu_page_view_journey">View my journey</string>
 
     <!-- Long press menu -->
     <string name="menu_long_press_open_page">Open</string>
@@ -691,5 +692,7 @@
     <!-- YouTube Player -->
     <string name="error_player">There was an error initializing the YouTubePlayer (%1$s)</string>
     <string name="youtube_player_title">Related YouTube Video</string>
+    <string name="menu_journey_view_article">View article</string>
+    <string name="nothing_to_display">Nothing to display</string>
 
 </resources>

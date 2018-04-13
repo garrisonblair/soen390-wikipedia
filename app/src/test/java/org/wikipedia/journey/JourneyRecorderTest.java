@@ -17,9 +17,19 @@ import org.wikipedia.page.PageProperties;
 
 public class JourneyRecorderTest {
 
+    private PageProperties page1;
+    private PageProperties page2;
+
+
     @Before
     public void setUp() {
         JourneyRecorder.reset();
+
+        page1 = mock(PageProperties.class);
+        page2 = mock(PageProperties.class);
+
+        when(page1.getPageId()).thenReturn(1);
+        when(page2.getPageId()).thenReturn(2);
     }
 
     @Test
@@ -65,6 +75,10 @@ public class JourneyRecorderTest {
         PageProperties page1 = mock(PageProperties.class);
         PageProperties page2 = mock(PageProperties.class);
 
+        when(page1.getPageId()).thenReturn(1);
+        when(page2.getPageId()).thenReturn(2);
+
+
 
         jr.visitPage(page1);
 
@@ -81,8 +95,7 @@ public class JourneyRecorderTest {
     @Test
     public void testJourneyLeaveInnerPage() {
         JourneyRecorder jr = JourneyRecorder.getInstance(mock(Context.class));
-        PageProperties page1 = mock(PageProperties.class);
-        PageProperties page2 = mock(PageProperties.class);
+
 
         jr.visitPage(page1);
 
