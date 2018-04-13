@@ -1,37 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/achievement_text"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:padding="8dp"
-    android:background="@drawable/list_view_borders">
-
-    <TextView
-        android:id="@+id/achievementRowTitle"
+>
+    <LinearLayout
+        android:id="@+id/achievement_text"
+        android:layout_height="match_parent"
         android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:padding="8dp"
+        android:background="@drawable/list_view_borders">
+
+        <TextView
+            android:id="@+id/achievementRowTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:paddingLeft="10dp"/>
+
+        <TextView
+            android:id="@+id/achievementRowDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:paddingLeft="15dp"/>
+
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/check_status"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:paddingLeft="10dp"/>
+        android:src="@drawable/new_icon"
+        android:background="@android:color/transparent"
+        android:layout_alignParentRight="true"
+        android:clickable="true"
+        android:paddingTop="15dp"
+        android:paddingRight="15dp"
+        android:visibility="invisible"
+        />
 
-    <TextView
-        android:id="@+id/achievementRowDescription"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="13sp"
-        android:paddingLeft="15dp"/>
-
-    <!--<ImageButton-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:src="@drawable/ic_star_black_24dp"-->
-        <!--android:background="@android:color/transparent"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:clickable="true"-->
-        <!--android:paddingTop="23dp"-->
-        <!--android:paddingLeft="40dp"-->
-    <!--/>-->
-
-</LinearLayout>
+</RelativeLayout>
