@@ -78,7 +78,7 @@ public class AchievementFragment extends Fragment {
                 ViewHolder finalHolder = holder;
                 holder.checkStatus.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v){
+                    public void onClick(View v) {
                         finalHolder.checkStatus.setVisibility(View.INVISIBLE);
                     }
                 });
@@ -119,15 +119,16 @@ public class AchievementFragment extends Fragment {
             for (AchievementEntity achievementEntity: achievements1) {
                 achievements.add(achievementEntity);
             }
-        });
+            ListView achievementList = view.findViewById(R.id.achievement_list);
 
-        ListView achievementList = view.findViewById(R.id.achievement_list);
+            CustomAdapter customAdapter = new CustomAdapter(getContext(), achievements);
 
-        CustomAdapter customAdapter = new CustomAdapter(getContext(), achievements);
+            achievementList.setAdapter(customAdapter);
 
-        achievementList.setAdapter(customAdapter);
+            service.checkAchievements(() -> {
 
-        service.checkAchievements(() -> {
+            });
+
 
         });
 
