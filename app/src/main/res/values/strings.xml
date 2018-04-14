@@ -640,13 +640,13 @@
     <string name="features_onboarding_feature_three_title">Notes</string>
     <string name="features_onboarding_feature_three_text"><![CDATA[Want to quickly access something interesting you read in an article? <a href="#notes_add_note">Save your personalized notes</a> with the new Notes feature and <a href="#notes_ui">access them later!</a> <a href="#notes_button">Learn More</a>]]></string>
     <string name="features_onboarding_feature_three_title_ui">Notes UI</string>
-    <string name="features_onboarding_feature_four_text"><![CDATA[Want to see videos related to a an article you are reading? Our related videos engine can search and find related videos for you! <a href="#tts">Learn More</a>]]></string>
+    <string name="features_onboarding_feature_four_text"><![CDATA[Want to see videos <a href="#tts">related</a> to a an article you are reading? Our <a href="#related_videos">related videos</a> engine can search, find and <a href="#video_player">play</a> related videos for you! <a href="#video_player_button">Learn More</a>]]></string>
     <string name="features_onboarding_feature_five_title">Journey Tracker</string>
-    <string name="features_onboarding_feature_five_text"><![CDATA[Want to know how you ended up on the article you are reading and see the map of this journey? Our Journey Tracker will show you just that! <a href="#tts">Learn More</a>]]></string>
+    <string name="features_onboarding_feature_five_text"><![CDATA[Want to know how you ended up on the article you are reading and see the map of this journey? Our <a href="#journey_tree">Journey Tracker</a> will show you just that and let you <a href="#journey_export">export</a> it too! <a href="#player_button_paint">Learn More</a>]]></string>
     <string name="features_onboarding_feature_six_title">Article Statistics</string>
-    <string name="features_onboarding_feature_six_text"><![CDATA[Curious about how much may times you have read an article or similar article statistics?<a href="#tts">Learn More</a>]]></string>
+    <string name="features_onboarding_feature_six_text"><![CDATA[Curious about how much may times you have read an article or similar article statistics? <a href="#statistics">Learn More</a>]]></string>
     <string name="features_onboarding_feature_seven_title">Wiki Achievements</string>
-    <string name="features_onboarding_feature_seven_text"><![CDATA[Do you want recognition for your curiosity and extreme Wikipedia article reading skills? Look no further, as Wiki Achievements are here!<a href="#tts">Learn More</a>]]></string>
+    <string name="features_onboarding_feature_seven_text"><![CDATA[Do you want <a href="#recognition">recognition</a> for your curiosity and extreme Wikipedia article reading skills? Look no further, as <a href="#wiki_achievements">Wiki Achievements</a> are here!]]></string>
     <!-- Our Wikipedia extra features onboarding strings -->
 
 
