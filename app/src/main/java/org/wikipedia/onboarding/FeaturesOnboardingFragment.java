@@ -96,7 +96,7 @@ public class FeaturesOnboardingFragment extends OnboardingFragment {
                 new AlertDialog.Builder(getContext())
                         .setView(R.layout.suggested_videos)
                         .show();
-            } else if (url.equals("journey_export")) {
+            } else if (url.equals("#journey_export")) {
                 new AlertDialog.Builder(getContext())
                         .setView(R.layout.journey_export)
                         .show();
