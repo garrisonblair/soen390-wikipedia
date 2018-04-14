@@ -71,6 +71,39 @@ public class FeaturesOnboardingFragment extends OnboardingFragment {
                 new AlertDialog.Builder(getContext())
                         .setView(R.layout.view_notes_button)
                         .show();
+            } else if (url.equals("#recognition")) {
+                new AlertDialog.Builder(getContext())
+                        .setView(R.layout.achievement_unlocked_paint)
+                        .show();
+            }
+            else if (url.equals("#wiki_achievements")) {
+                new AlertDialog.Builder(getContext())
+                        .setView(R.layout.achievements)
+                        .show();
+            } else if (url.equals("#video_player_button")) {
+                new AlertDialog.Builder(getContext())
+                        .setView(R.layout.player_button_paint)
+                        .show();
+            } else if (url.equals("#statistics")) {
+                new AlertDialog.Builder(getContext())
+                        .setView(R.layout.statistics)
+                        .show();
+            } else if (url.equals("#video_player")) {
+                new AlertDialog.Builder(getContext())
+                        .setView(R.layout.video_player)
+                        .show();
+            } else if (url.equals("#related_videos")) {
+                new AlertDialog.Builder(getContext())
+                        .setView(R.layout.suggested_videos)
+                        .show();
+            } else if (url.equals("#journey_export")) {
+                new AlertDialog.Builder(getContext())
+                        .setView(R.layout.journey_export)
+                        .show();
+            } else if (url.equals("#journey_tree")) {
+                new AlertDialog.Builder(getContext())
+                        .setView(R.layout.journey_tree)
+                        .show();
             }
         }
     }
@@ -112,7 +145,10 @@ public class FeaturesOnboardingFragment extends OnboardingFragment {
         PAGE_NEW_UPDATES(R.layout.inflate_features_onboarding_page_zero),
         TTS(R.layout.inflate_features_onboarding_page_one),
         IMAGE_SEARCH(R.layout.inflate_features_onboarding_page_two),
-        NOTES(R.layout.inflate_features_onboarding_page_three);
+        NOTES(R.layout.inflate_features_onboarding_page_three),
+        RELATED_VIDEOS(R.layout.inflate_features_onboarding_page_five),
+        ARTICLE_STATISTICS(R.layout.inflate_features_onboarding_page_six),
+        JOURNEY(R.layout.inflate_features_onboarding_page_seven);
 
         private static EnumCodeMap<OnboardingPage> MAP
                 = new EnumCodeMap<>(OnboardingPage.class);
