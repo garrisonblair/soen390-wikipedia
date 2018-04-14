@@ -73,45 +73,41 @@ public class FeaturesOnboardingFragment extends OnboardingFragment {
                         .show();
             } else if (url.equals("#recognition")) {
                 new AlertDialog.Builder(getContext())
-                        .setView(R.layout.achievement_unlocked_paint)
+                        .setView(R.drawable.achievement_unlocked_paint)
                         .show();
             }
             else if (url.equals("#wiki_achievements")) {
                 new AlertDialog.Builder(getContext())
-                        .setView(R.layout.achievements)
+                        .setView(R.drawable.achievements)
                         .show();
             } else if (url.equals("#notes_button")) {
                 new AlertDialog.Builder(getContext())
-                        .setView(R.layout.player_button_paint)
+                        .setView(R.drawable.player_button_paint)
                         .show();
             } else if (url.equals("#statistics")) {
                 new AlertDialog.Builder(getContext())
-                        .setView(R.layout.statistics)
-                        .show();
-            } else if (url.equals("#notes_button")) {
-                new AlertDialog.Builder(getContext())
-                        .setView(R.layout.statistics_videos)
+                        .setView(R.drawable.statistics)
                         .show();
             } else if (url.equals("#video_player")) {
                 new AlertDialog.Builder(getContext())
-                        .setView(R.layout.video_player)
+                        .setView(R.drawable.video_player)
                         .show();
             } else if (url.equals("#video_player_button")) {
                 new AlertDialog.Builder(getContext())
-                        .setView(R.layout.player_button_paint)
+                        .setView(R.drawable.player_button_paint)
                         .show();
             } else if (url.equals("#related_videos")) {
                 new AlertDialog.Builder(getContext())
-                        .setView(R.layout.suggested_videos)
+                        .setView(R.drawable.suggested_videos)
                         .show();
             }
             else if (url.equals("journey_export")) {
                 new AlertDialog.Builder(getContext())
-                        .setView(R.layout.journey_export)
+                        .setView(R.drawable.journey_export)
                         .show();
             } else if (url.equals("#journey_tree")) {
                 new AlertDialog.Builder(getContext())
-                        .setView(R.layout.journey_tree)
+                        .setView(R.drawable.journey_tree)
                         .show();
             }
         }
