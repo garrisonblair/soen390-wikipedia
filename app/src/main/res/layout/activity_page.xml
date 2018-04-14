@@ -82,7 +82,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical|end">
-
                     <android.support.v7.widget.AppCompatImageView
                         android:id="@+id/page_toolbar_button_videos"
                         android:layout_width="wrap_content"

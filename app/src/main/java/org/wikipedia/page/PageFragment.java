@@ -76,6 +76,7 @@ import org.wikipedia.readinglist.database.ReadingListDbHelper;
 import org.wikipedia.readinglist.database.ReadingListPage;
 import org.wikipedia.settings.Prefs;
 import org.wikipedia.theme.ThemeBridgeAdapter;
+import org.wikipedia.userstatistics.ArticleStatReporter;
 import org.wikipedia.util.ActiveTimer;
 import org.wikipedia.util.DeviceUtil;
 import org.wikipedia.util.DimenUtil;
@@ -179,6 +180,8 @@ public class PageFragment extends Fragment implements BackPressedHandler {
     private ShareHandler shareHandler;
     private TabsProvider tabsProvider;
     private ActiveTimer activeTimer = new ActiveTimer();
+
+    private ArticleStatReporter articleStatReporter;
 
     private WikipediaApp app;
 
@@ -312,7 +315,6 @@ public class PageFragment extends Fragment implements BackPressedHandler {
         pageFragmentLoadState = new PageFragmentLoadState();
         noteReferenceService = new NoteReferenceService(getContext());
 
-
         initTabs();
     }
 
@@ -350,7 +352,14 @@ public class PageFragment extends Fragment implements BackPressedHandler {
                 new PageActionToolbarHideHandler(rootView.findViewById(R.id.fragment_page_coordinator), null);
         snackbarHideHandler.setScrollView(webView);
 
+        Log.i("DEBUG", "ON CREATE VIEW");
         return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+//        articleStatReporter = new ArticleStatReporter();
+//        articleStatReporter.enterArticle();
     }
 
     @Override
@@ -366,6 +375,9 @@ public class PageFragment extends Fragment implements BackPressedHandler {
 
     @Override
     public void onDestroy() {
+        articleStatReporter.setArticleTitle(getPage().getTitle().toString());
+        articleStatReporter.endVisit();
+        articleStatReporter.saveVisit(getContext());
         super.onDestroy();
         app.getRefWatcher().watch(this);
     }
@@ -638,6 +650,10 @@ public class PageFragment extends Fragment implements BackPressedHandler {
                 ? System.currentTimeMillis()
                 : 0;
         Prefs.pageLastShown(time);
+
+        if (articleStatReporter != null) {
+            articleStatReporter.pauseVisit();
+        }
     }
 
     @Override
@@ -645,6 +661,10 @@ public class PageFragment extends Fragment implements BackPressedHandler {
         super.onResume();
         initPageScrollFunnel();
         activeTimer.resume();
+
+        if (articleStatReporter != null) {
+            articleStatReporter.resumeVisit();
+        }
     }
 
     @Override
@@ -759,6 +779,11 @@ public class PageFragment extends Fragment implements BackPressedHandler {
         // clear the title in case the previous page load had failed.
         clearActivityActionBarTitle();
 
+        Log.i("DEBUG: LOAD", "BEFORE");
+        if (model.getPage() != null) {
+            articleStatReporter.saveVisit(getContext());
+        }
+
         // update the time spent reading of the current page, before loading the new one
         addTimeSpentReading(activeTimer.getElapsedSec());
         activeTimer.reset();
@@ -786,6 +811,11 @@ public class PageFragment extends Fragment implements BackPressedHandler {
         pageFragmentLoadState.load(pushBackStack, stagedScrollY);
         bottomContentView.hide();
         updateBookmarkAndMenuOptions();
+
+        Log.i("DEBUG: LOAD AFTER", model.getTitle().toString());
+        articleStatReporter = new ArticleStatReporter();
+        articleStatReporter.setArticleTitle(model.getTitle().toString());
+        articleStatReporter.enterArticle();
     }
 
     public Bitmap getLeadImageBitmap() {

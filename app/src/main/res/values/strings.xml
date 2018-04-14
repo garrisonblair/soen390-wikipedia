@@ -674,7 +674,6 @@
     <string name="title_activity_ttssettings">TTSSettingsActivity</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="TTS_preview">Preview Settings</string>
     <string name="tts_preview_btn">Preview</string>
     <string name="tts_preview_default">Testing text to speech</string>
@@ -701,5 +700,8 @@
     <string name="youtube_player_title">Related YouTube Video</string>
     <string name="menu_journey_view_article">View article</string>
     <string name="nothing_to_display">Nothing to display</string>
+
+    <!-- Statistics -->
+    <string name="stat_title">User Statistics</string>
 
 </resources>

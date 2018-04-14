@@ -20,6 +20,9 @@ public interface NoteDao {
     @Query("SELECT DISTINCT articleTitle FROM notes")
     List<String> getAllArticles();
 
+    @Query("SELECT * FROM notes")
+    List<NoteEntity> getAllNotes();
+
     @Insert
     long addNote(NoteEntity note);
 
