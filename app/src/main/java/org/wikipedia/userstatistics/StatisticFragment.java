@@ -21,7 +21,6 @@ import android.widget.TextView;
 import org.wikipedia.R;
 
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -66,13 +65,10 @@ public class StatisticFragment extends Fragment {
         );
 
         if (statCalculator.getArticleStats().getLongestReadArticleTitle() != null) {
+            String time = convertMilliseconds(statCalculator.getArticleStats().getLongestReadArticleTime());
             stats.add(new StatObject("Longest Read Article",
-                            statCalculator.getArticleStats().getLongestReadArticleTitle()
-                                    + ": You spent " + Long.toString(
-                                    TimeUnit.MILLISECONDS.toMinutes(
-                                            statCalculator.getArticleStats().getLongestReadArticleTime()
-                                    )
-                            ) + " minutes"
+                            statCalculator.getArticleStats().getLongestReadArticleTitle().replaceAll("_", " ")
+                                    + "\nYou spent " + convertMilliseconds(statCalculator.getArticleStats().getLongestReadArticleTime())
                     )
             );
         } else {
@@ -80,15 +76,11 @@ public class StatisticFragment extends Fragment {
         }
 
         stats.add(new StatObject("Average Time Spent Reading",
-                Long.toString(TimeUnit.MILLISECONDS.toMinutes(
-                        statCalculator.getArticleStats().getAverageTimeSpentReading()))
-                        + " minutes")
+                convertMilliseconds(statCalculator.getArticleStats().getAverageTimeSpentReading()))
         );
 
         stats.add(new StatObject("Total Time Spent Reading",
-                Long.toString(TimeUnit.MILLISECONDS.toMinutes(
-                        statCalculator.getArticleStats().getTotalTimeSpentReading()))
-                        + " minutes")
+                convertMilliseconds(statCalculator.getArticleStats().getTotalTimeSpentReading()))
         );
 
         stats.add(new StatObject("Total Notes",
@@ -181,5 +173,31 @@ public class StatisticFragment extends Fragment {
         Log.d("DEV_DEBUG", "Should open achievement activity");
         Intent intent = new Intent(getContext(), AchievementActivity.class);
         startActivity(intent);
+    }
+
+    private String convertMilliseconds(long time) {
+        long timeToConvert = time;
+        long hours = 0;
+        long minutes = 0;
+        long seconds = 0;
+        final long toHours = 360000;
+        final long toMinutes = 60000;
+        final long toSeconds = 1000;
+
+        hours = timeToConvert / toHours;
+        timeToConvert = timeToConvert - hours * toHours;
+        minutes = timeToConvert / toMinutes;
+        timeToConvert = timeToConvert - minutes * toMinutes;
+        seconds = timeToConvert / toSeconds;
+
+        StringBuilder timeString = new StringBuilder();
+        if (hours > 0) {
+            timeString.append(Long.toString(hours) + " hours ");
+        }
+        if (minutes > 0) {
+            timeString.append(Long.toString(minutes) + " minutes ");
+        }
+        timeString.append(Long.toString(seconds) + " seconds ");
+        return timeString.toString();
     }
 }
